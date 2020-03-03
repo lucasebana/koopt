@@ -102,22 +102,22 @@
                 uniforms: customUniforms,
                 vertexShader:   document.getElementById( 'vertexShader'   ).textContent,
                 //fragmentShader: document.getElementById( 'fragmentShader' ).textContent,
-                // side: THREE.DoubleSide
+                 side: THREE.DoubleSide
             }   );
 
             var planeGeo2 = new THREE.PlaneGeometry( 50, 50, 100, 100 );
             var plane = new THREE.Mesh(	planeGeo2, customMaterial );
-            plane.rotation.x = -Math.PI / 2;
-            plane.position.y = -100;
+            plane.rotation.x = Math.PI ;
+            plane.position.y = 0;
             scene.add( plane );
 
 
 
             /*plane*/
-            const planeSize = 40;
+            const planeSize = 140;
 
             const loader = new THREE.TextureLoader();
-            const texture = loader.load('https://threejsfundamentals.org/threejs/resources/images/checker.png');
+            const texture = loader.load('js/Fresh-Water-Texture.png');
             texture.wrapS = THREE.RepeatWrapping;
             texture.wrapT = THREE.RepeatWrapping;
             texture.magFilter = THREE.NearestFilter;
@@ -131,6 +131,8 @@
             });
             const mesh = new THREE.Mesh(planeGeo, planeMat);
             scene.add(mesh);
+            var axesHelper = new THREE.AxesHelper( 5 );
+            scene.add( axesHelper );
             /*plane*/
 
             const boxWidth = 1;
