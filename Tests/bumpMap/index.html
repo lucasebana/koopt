@@ -42,9 +42,31 @@
         }
     </script>
 
+    <script id="fragmentShader" type="x-shader/x-vertex">
+        uniform sampler2D oceanTexture;
+        uniform sampler2D sandyTexture;
+        uniform sampler2D grassTexture;
+        /*uniform sampler2D rockyTexture;
+        uniform sampler2D snowyTexture;
+        */
+        varying vec2 vUV;
+        
+        varying float vAmount;
+        
+        void main() 
+        {
+            vec4 water = (smoothstep(0.01, 0.1, vAmount) - smoothstep(0.1, 0.14, vAmount)) * texture2D( oceanTexture, vUV * 10.0 );
+            vec4 sandy = (smoothstep(0.1, 0.15, vAmount) - smoothstep(0.20, 0.31, vAmount)) * texture2D( sandyTexture, vUV * 10.0 );
+            vec4 grass = (smoothstep(0.20, 0.32, vAmount)) * texture2D( grassTexture, vUV * 20.0 );
+            /*vec4 rocky = (smoothstep(0.30, 0.50, vAmount) - smoothstep(0.40, 0.70, vAmount)) * texture2D( rockyTexture, vUV * 20.0 );
+            vec4 snowy = (smoothstep(0.50, 0.65, vAmount))                                   * texture2D( snowyTexture, vUV * 10.0 );*/
+            gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0) + water + sandy + grass /* + rocky + snowy */; //, 1.0);
+        }  
+        </script>
+
     <script type="module">
         import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/110/three.module.js';
-        import {OrbitControls} from 'https://threejsfundamentals.org/threejs/resources/threejs/r113/examples/jsm/controls/OrbitControls.js';
+        import { OrbitControls } from 'https://threejsfundamentals.org/threejs/resources/threejs/r113/examples/jsm/controls/OrbitControls.js';
         function main() {
             const canvas = document.querySelector('#c');
             const renderer = new THREE.WebGLRenderer({ canvas });
@@ -67,8 +89,8 @@
                 /*const light = new THREE.DirectionalLight(color, intensity);
                 light.position.set(-1, 2, 4);
                 scene.add(light);*/
-                var ambient = new THREE.AmbientLight( 0x444444 );
-				scene.add( ambient );
+                var ambient = new THREE.AmbientLight(0x444444);
+                scene.add(ambient);
 
                 var light = new THREE.DirectionalLight(0xefefff, 1.5);
                 light.position.set(1, 1, 1).normalize();
@@ -86,35 +108,49 @@
 
             // texture used to generate "bumpiness"
             const loader2 = new THREE.TextureLoader();
-            var bumpTexture = loader2.load( 'https://stemkoski.github.io/Three.js/images/heightmap.png' );
-            bumpTexture.wrapS = bumpTexture.wrapT = THREE.RepeatWrapping; 
+            var bumpTexture = loader2.load('hmap3.png');
+            bumpTexture.wrapS = bumpTexture.wrapT = THREE.RepeatWrapping;
             // magnitude of normal displacement
-            var bumpScale   = 10.0;
-            
-            
+            var bumpScale = 10.0;
+
+            var oceanTexture = loader2.load('dirt-512.jpg');
+            oceanTexture.wrapS = oceanTexture.wrapT = THREE.RepeatWrapping;
+
+            var sandyTexture = loader2.load('sand-512.jpg');
+            sandyTexture.wrapS = sandyTexture.wrapT = THREE.RepeatWrapping;
+
+            var grassTexture = loader2.load( 'grass-512.jpg' );
+	        grassTexture.wrapS = grassTexture.wrapT = THREE.RepeatWrapping; 
+
             var customUniforms = {
-            bumpTexture:	{ type: "t", value: bumpTexture },
-            bumpScale:	    { type: "f", value: bumpScale }
+                bumpTexture: { type: "t", value: bumpTexture },
+                bumpScale: { type: "f", value: bumpScale },
+                sandyTexture: { type: "t", value: sandyTexture },
+                grassTexture: { type: "t", value: grassTexture }
             };
 
-            var customMaterial = new THREE.ShaderMaterial( 
-            {
-                uniforms: customUniforms,
-                vertexShader:   document.getElementById( 'vertexShader'   ).textContent,
-                //fragmentShader: document.getElementById( 'fragmentShader' ).textContent,
-                 side: THREE.DoubleSide
-            }   );
 
-            var planeGeo2 = new THREE.PlaneGeometry( 50, 50, 100, 100 );
-            var plane = new THREE.Mesh(	planeGeo2, customMaterial );
-            plane.rotation.x = Math.PI ;
+            var customMaterial = new THREE.ShaderMaterial(
+                {
+                    uniforms: customUniforms,
+                    vertexShader: document.getElementById('vertexShader').textContent,
+                    fragmentShader: document.getElementById('fragmentShader').textContent,
+                    side: THREE.DoubleSide
+                });
+
+            var planeGeo2 = new THREE.PlaneGeometry(200, 200, 400, 400);//400*400 bcp...
+            var plane = new THREE.Mesh(planeGeo2, customMaterial);
+            /*
+            plane.rotation.x = -Math.PI ;
+            */
             plane.position.y = 0;
-            scene.add( plane );
+            plane.position.z = -0.3;
+            scene.add(plane);
 
 
 
             /*plane*/
-            const planeSize = 140;
+            const planeSize = 300;
 
             const loader = new THREE.TextureLoader();
             const texture = loader.load('js/Fresh-Water-Texture.png');
@@ -131,8 +167,8 @@
             });
             const mesh = new THREE.Mesh(planeGeo, planeMat);
             scene.add(mesh);
-            var axesHelper = new THREE.AxesHelper( 5 );
-            scene.add( axesHelper );
+            var axesHelper = new THREE.AxesHelper(5);
+            scene.add(axesHelper);
             /*plane*/
 
             const boxWidth = 1;
@@ -149,7 +185,7 @@
 
                 cube.position.x = x;
                 cube.position.y = 3
-                cube.position.z = 1/2;
+                cube.position.z = 1 / 2;
                 return cube;
             }
 
