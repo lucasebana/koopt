@@ -18,55 +18,17 @@
             height: 100%;
         }
     </style>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 </head>
 
 <body>
-    <script id="vertexShader" type="x-shader/x-vertex">
-        uniform sampler2D bumpTexture;
-        uniform float bumpScale;
-        
-        varying float vAmount;
-        varying vec2 vUV;
-        
-        void main() 
-        { 
-            vUV = uv;
-            vec4 bumpData = texture2D( bumpTexture, uv );
-            
-            vAmount = bumpData.r; // assuming map is grayscale it doesn't matter if you use r, g, or b.
-            
-            // move the position along the normal
-            vec3 newPosition = position + normal * bumpScale * vAmount;
-            
-            gl_Position = projectionMatrix * modelViewMatrix * vec4( newPosition, 1.0 );
-        }
-    </script>
-
-    <script id="fragmentShader" type="x-shader/x-vertex">
-        uniform sampler2D oceanTexture;
-        uniform sampler2D sandyTexture;
-        uniform sampler2D grassTexture;
-        /*uniform sampler2D rockyTexture;
-        uniform sampler2D snowyTexture;
-        */
-        varying vec2 vUV;
-        
-        varying float vAmount;
-        
-        void main() 
-        {
-            vec4 water = (smoothstep(0.01, 0.1, vAmount) - smoothstep(0.1, 0.14, vAmount)) * texture2D( oceanTexture, vUV * 10.0 );
-            vec4 sandy = (smoothstep(0.1, 0.15, vAmount) - smoothstep(0.20, 0.31, vAmount)) * texture2D( sandyTexture, vUV * 10.0 );
-            vec4 grass = (smoothstep(0.20, 0.32, vAmount)) * texture2D( grassTexture, vUV * 20.0 );
-            /*vec4 rocky = (smoothstep(0.30, 0.50, vAmount) - smoothstep(0.40, 0.70, vAmount)) * texture2D( rockyTexture, vUV * 20.0 );
-            vec4 snowy = (smoothstep(0.50, 0.65, vAmount))                                   * texture2D( snowyTexture, vUV * 10.0 );*/
-            gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0) + water + sandy + grass /* + rocky + snowy */; //, 1.0);
-        }  
-        </script>
 
     <script type="module">
         import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/110/three.module.js';
         import { OrbitControls } from 'https://threejsfundamentals.org/threejs/resources/threejs/r113/examples/jsm/controls/OrbitControls.js';
+        import { SubdivisionModifier } from 'https://threejsfundamentals.org/threejs/resources/threejs/r113/examples/jsm/modifiers/SubdivisionModifier.js';
+        import { SimplifyModifier } from 'https://threejsfundamentals.org/threejs/resources/threejs/r113/examples/jsm/modifiers/SimplifyModifier.js';
         function main() {
             const canvas = document.querySelector('#c');
             const renderer = new THREE.WebGLRenderer({ canvas });
@@ -104,50 +66,106 @@
                 scene.add(light);
             }
 
-            /*bumpmap*/
+            function chargeMap(src) {
+                var img = new Image(128, 128);
+                var loaded = false;
 
-            // texture used to generate "bumpiness"
-            const loader2 = new THREE.TextureLoader();
-            var bumpTexture = loader2.load('hmap3.png');
-            bumpTexture.wrapS = bumpTexture.wrapT = THREE.RepeatWrapping;
-            // magnitude of normal displacement
-            var bumpScale = 10.0;
+                var cnvs = document.createElement("canvas");
+                cnvs.id="mine"
+                var ctx = cnvs.getContext('2d');
+                img.onload = new function () {
+                    loaded = true;
 
-            var oceanTexture = loader2.load('dirt-512.jpg');
-            oceanTexture.wrapS = oceanTexture.wrapT = THREE.RepeatWrapping;
+                    cnvs.width = img.width;
+                    console.log(img.width)
+                    console.log("loaded")
+                }
+                img.src = "hmap3.png";
 
-            var sandyTexture = loader2.load('sand-512.jpg');
-            sandyTexture.wrapS = sandyTexture.wrapT = THREE.RepeatWrapping;
+                ctx.height = img.height;
+                ctx.drawImage(img, 0, 0, img.width, img.height);
+                document.body.appendChild(cnvs);
+                //console.log(ctx.getImageData(0,0,img.width,img.height).data)
+                while (!loaded) {
+                    console.log("charge " + loaded);
+                }
+                // Get the pixels by draw the image onto a canvas. From the canvas get the Pixel (R,G,B,A)
+                function getTerrainPixelData() {
 
-            var grassTexture = loader2.load( 'grass2.jpg' );
-	        grassTexture.wrapS = grassTexture.wrapT = THREE.RepeatWrapping; 
+                    //while(!loaded) window.setTimeout(()=>{console.log(loaded)},100)
+                    cnvs.width = img.width;
+                    cnvs.height = img.height;
+                    cnvs.getContext('2d').drawImage(img, 0, 0, img.width, img.height);
 
-            var customUniforms = {
-                bumpTexture: { type: "t", value: bumpTexture },
-                bumpScale: { type: "f", value: bumpScale },
-                sandyTexture: { type: "t", value: sandyTexture },
-                grassTexture: { type: "t", value: grassTexture }
-            };
+                    var data = cnvs.getContext('2d').getImageData(0, 0, img.height, img.width).data;
+                    var normPixels = []
+                    for (var i = 0, n = data.length; i < n; i += 4) {
+                        // get the average value of R, G and B.
+                        normPixels.push((data[i] + data[i + 1] + data[i + 2]) / 3); //Essentially render image black and white
+                    }
 
+                    return normPixels;
+                }
+                var ddd = getTerrainPixelData();
+                for(var i = 0 ; i < ddd.length; i++){
+                    if(ddd[i] != 0){
+                        console.log("diffenret")
+                    }
+                }
+            }
+            chargeMap("hmap3.png")
 
-            var customMaterial = new THREE.ShaderMaterial(
-                {
-                    uniforms: customUniforms,
-                    vertexShader: document.getElementById('vertexShader').textContent,
-                    fragmentShader: document.getElementById('fragmentShader').textContent,
-                    side: THREE.DoubleSide
-                });
-
-            var planeGeo2 = new THREE.PlaneGeometry(200, 200, 400, 400);//400*400 bcp...
-            var plane = new THREE.Mesh(planeGeo2, customMaterial);
             /*
-            plane.rotation.x = -Math.PI ;
+            var data = ctx.getImageData(0, 0, img.width, img.height).data;
+            var terrain = []
+            for (var i = 0, n = data.length; i < n; i += 4) {
+                // get the average value of R, G and B.
+                terrain.push((data[i] + data[i + 1] + data[i + 2]) / 3); //Essentially render image black and white
+            }
+            var numSegments = img.width - 1; //Equal to number of image pixels - 1
+
+            var geometriePlan = new THREE.PlaneGeometry(taillePlan, taillePlan, numSegments, numSegments);//400*400 bcp...
+            for (var i = 0, l = geometriePlan.vertices.length; i < l; i++) // For each vertex
+            {
+                var terrainValue = terrain[i] / 255;
+                geometriePlan.vertices[i].z += terrainValue * 800; // Define height of vertices against image pixel data
+            }
             */
+
+            var taillePlan = 100;
+            var geometriePlan = new THREE.PlaneGeometry(taillePlan, taillePlan, 100, 100);
+            const matSol = new THREE.MeshPhongMaterial({
+                color: 0x44aa88,
+                side: THREE.DoubleSide,
+            });
+
+            var plane = new THREE.Mesh(geometriePlan, matSol);
+            //PASTEEEEEEEEEEEEEEEEEEEE
+
+
+
+
             plane.position.y = 0;
             plane.position.z = -0.3;
-            scene.add(plane);
+
+            var modifier = new SimplifyModifier();
+            var simplified = plane.clone();
+            simplified.material = plane.material.clone();
+            simplified.material.flatShading = true;
+            var count = Math.floor(simplified.geometry.vertices.length * 0.8); // number of vertices to remove
+            simplified.geometry = modifier.modify(simplified.geometry, count);
+
+            simplified.geometry.verticesNeedUpdate = true;
+            scene.add(simplified);
 
 
+
+
+            //scene.add(plane);
+
+
+
+            //img.src = "hmap3.png";
 
             /*plane*/
             const planeSize = 300;
@@ -161,9 +179,11 @@
             texture.repeat.set(repeats, repeats);
 
             const planeGeo = new THREE.PlaneBufferGeometry(planeSize, planeSize);
+            var dmap = new THREE.TextureLoader().load("hmap5.png");
             const planeMat = new THREE.MeshPhongMaterial({
                 map: texture,
                 side: THREE.DoubleSide,
+                displacementMap: dmap,
             });
             const mesh = new THREE.Mesh(planeGeo, planeMat);
             scene.add(mesh);
@@ -175,7 +195,7 @@
             const boxHeight = 1;
             const boxDepth = 1;
             const geometry = new THREE.BoxGeometry(boxWidth, boxHeight, boxDepth);
-            const material = new THREE.MeshPhongMaterial({ color: 0x44aa88 });  // greenish blue
+            const material = new THREE.MeshPhongMaterial({ color: 0x44aa88, flatshading: true });  // greenish blue
 
             function makeInstance(geometry, color, x) {
                 const material = new THREE.MeshPhongMaterial({ color });

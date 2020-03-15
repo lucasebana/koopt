@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        body {
+            margin: 0;
+        }
+
+        #canvas {
+            display: none;
+        }
+
+        #assets {
+            display: none;
+        }
+    </style>
+    <script src="three.min.js"></script> <!-- added so user can rotate the scene with the mouse -->
+
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+
+    <script type="module">
+        import { OrbitControls } from 'https://threejsfundamentals.org/threejs/resources/threejs/r113/examples/jsm/controls/OrbitControls.js';
+        // Define variables
+        var camera, scene, renderer, geometry, material, mesh;
+        //var img = document.getElementById("landscape-image");
+        var texture = new THREE.TextureLoader().load("hmap5.png");
+
+        var img = new Image(128,128);
+        var loaded = false;
+        
+        var cnvs = document.createElement("canvas");
+        cnvs.id="mine";
+        var ctx = cnvs.getContext('2d');
+        img.onload = new function(){
+            loaded = true;
+            
+        cnvs.width=img.width;
+        console.log(img.width)
+        console.log("loaded")
+        }
+        img.src="../hmap3.png";
+        
+        ctx.height=img.height;
+        //ctx.drawImage(img,0,0,img.width,img.height);
+        document.body.appendChild(cnvs);
+        //console.log(ctx.getImageData(0,0,img.width,img.height).data)
+
+        while(!loaded){
+        console.log("charge "+ loaded);
+        }
+        // Get the pixels by draw the image onto a canvas. From the canvas get the Pixel (R,G,B,A)
+        function getTerrainPixelData() {
+            //var canvas = document.getElementById("mine");
+            
+            //while(!loaded) window.setTimeout(()=>{console.log(loaded)},100)
+            cnvs.width = img.width;
+            cnvs.height = img.height;
+            cnvs.getContext('2d').drawImage(img, 0, 0, img.width, img.height);
+
+            var data = cnvs.getContext('2d').getImageData(0, 0, img.height, img.width).data;
+            var normPixels = []
+            for (var i = 0, n = data.length; i < n; i += 4) {
+                // get the average value of R, G and B.
+                normPixels.push((data[i] + data[i + 1] + data[i + 2]) / 3); //Essentially render image black and white
+            }
+
+            return normPixels;
+        }
+
+        // Create a mesh from pixel data
+        function addMesh() {
+
+            var numSegments = img.width - 1; //Equal to number of image pixels - 1
+
+            geometry = new THREE.PlaneGeometry(2400, 2400, numSegments, numSegments);
+
+            material = new THREE.MeshBasicMaterial({
+                wireframe: true,
+                map: texture
+            });
+
+            var terrain = getTerrainPixelData();
+
+            for (var i = 0, l = geometry.vertices.length; i < l; i++) // For each vertex
+            {
+                var terrainValue = terrain[i] / 255;
+                geometry.vertices[i].z = geometry.vertices[i].z + terrainValue * 800; // Define height of vertices against image pixel data
+            }
+
+            mesh = new THREE.Mesh(geometry, material);
+            scene.add(mesh)
+        }
+
+        // Function to render scene and camera
+        function render() {
+            requestAnimationFrame(render);
+            renderer.render(scene, camera);
+        }
+
+        scene = new THREE.Scene();
+        camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 10000); //Field-of-View, Aspect Ratio, Near Render, Far Render
+        camera.position.z = 3000; // Camera distance
+
+        renderer = new THREE.WebGLRenderer();
+        var controls = new OrbitControls(camera, renderer.domElement);
+
+        addMesh();
+
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        render();
+    </script>
+</body>
+
+</html>
