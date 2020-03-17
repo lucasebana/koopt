@@ -1,8 +1,12 @@
 #Importation de fichiers
+import sys
+import socketio
+import classe_joueur
 
 
 def main():
     pass
+
 
 
 if __name__ == "__main__":
