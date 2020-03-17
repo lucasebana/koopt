@@ -8,7 +8,9 @@ import socketio
 class Server:
     def __init__(self): #demarrage sur serveur socket.io
         self.running = True
-        self.fps = 60
+        self.fps = 1
+        self.mavariable=0
+
 
     def creerPartie():
         pass
@@ -19,17 +21,36 @@ class Server:
 
     async def run(self,sio):
         while self.running == True:
-            await sio.sleep(1/self.fps) # serveur a 60fps
-            print("server running")
+            await sio.sleep(1/(self.fps)) # serveur a 60fps
+            print("server running" + str(self.mavariable))
+
+    def setmavariable(self):
+        self.mavariable+=100
 
     Parties = []
     Clients = [] # = [{id="",joueurid, cookieID, autres...}]
+
+
+s = Server();
+
+class ServeurHandler(socketio.AsyncNamespace):
+    
+    async def on_connect(self, sid, environ):
+        await sio.emit('my_response', {'data': 'Connected', 'count': 0}, room=sid)
+
+    def on_disconnect(self,sid):
+        print('Client disconnected')
+    
+    def on_mon_event(self,sid,data):
+            print("salut " + sid + " !");
+            s.setmavariable();
+            print(data)
+        
     
 sio = socketio.AsyncServer(async_mode='sanic')
 app = Sanic(name="koopt")
 sio.attach(app)
 
-s = Server();
 
 @app.listener('before_server_start')
 def before_server_start(sanic, loop):
@@ -38,26 +59,12 @@ def before_server_start(sanic, loop):
 
 @app.route('/')
 async def index(request):
-    with open('socket1.html') as f:
+    with open('../client/index.html') as f:
         return html(f.read())
 
-@sio.on('mon_event')
-async def ma_fonction(sid,message):
-    print("salut " + sid + " !");
-    print(message)
+sio.register_namespace(ServeurHandler('/'))
 
-
-@sio.event
-async def connect(sid, environ):
-    await sio.emit('my_response', {'data': 'Connected', 'count': 0}, room=sid)
-    #return False : connexion refusée ??
-
-@sio.event
-def disconnect(sid):
-    print('Client disconnected')
-
-
-app.static('/static', './static')
+app.static('/static', '../client/static')
 
 
 if __name__ == '__main__':
