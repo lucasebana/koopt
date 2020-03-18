@@ -3,6 +3,8 @@ KOOPT
 Jeu multijoueur en ligne utilisant la technologie socket.io.<br/>
 Serveur codé en python avec entre autre la librairie python-socketio et le serveur http Sanic.
 
+https://github.com/lucasebana/koopt
+
 Installation
 ------------
 
