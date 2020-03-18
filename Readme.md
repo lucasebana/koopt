@@ -13,7 +13,7 @@ Utilisation
 -----------
 
 > Executer le serveur : 
-python server/server.py
+python server/main.py
 
 > Lancer le client dans le navigateur : 
 entrer l'URL http://localhost:8000
