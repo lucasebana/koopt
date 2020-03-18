@@ -2,7 +2,7 @@
 import sys
 import socketio
 import classe_joueur
-
+import server.py
 
 def main():
     pass

@@ -8,7 +8,6 @@ import socketio
 
 from client import Client
 
-
 class Server:
     
     Parties = []
@@ -26,7 +25,7 @@ class Server:
         cookie = str(uuid.uuid4())[:8]
         while cookie in [self.Clients[i].cookie for i in range(len(self.Clients))]  :
             cookie = str(uuid.uuid4)[:8]
-
+        #Checker un conflit socketid ?
         self.Clients.append(Client(len(self.Clients),sid,cookie))
         await sio.emit('user_cookie', {'data': cookie}, room=sid)
         print("Nouveau client enregistré ! ")
@@ -42,9 +41,10 @@ class Server:
     async def run(self,sio):
         while self.running == True:
             await sio.sleep(1/(self.fps)) # serveur a 60fps
-            print("server running" + str(self.mavariable))
+            print("server running")
+            #print("mavariable = ", self.mavariable)
 
-    def setmavariable(self):
+    def setmavariable(self): #fonction test qui incrémente mavariable
         self.mavariable+=100
 
 
