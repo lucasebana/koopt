@@ -2,7 +2,7 @@
 <h2>Veuillez entrer votre nom d'utilisateur</h2>
 <form id="username_form" method="POST" action='#'>
         <input type="text" name="emit_data" id="username" placeholder="Nom d'utilisateur">
-        <input type="submit" value="Echo">
+        <input type="submit" id="envoi" value="Echo">
 </form>
 
 <h2>Reception serveur:</h2>
@@ -14,7 +14,7 @@
 var home_page = function(socket){
     $('form#username_form').submit(function(event){
                 var d = $("input#username").val()
-                socket.emit("mon_event",{donnees:d})
+                socket.emit("mon_username",{donnees:d})
                 return false;
             });
 }

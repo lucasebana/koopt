@@ -1,11 +1,18 @@
 import asyncio
+import uuid 
 
 from sanic import Sanic
 from sanic.response import html
 
 import socketio
 
+from client import Client
+
+
 class Server:
+    
+    Parties = []
+    Clients = [] # = [{id="",joueurid, cookieID, autres...}]
     def __init__(self): #demarrage sur serveur socket.io
         self.running = True
         self.fps = 1
@@ -15,10 +22,23 @@ class Server:
     def creerPartie():
         pass
 
-    def nouveauClient():
+    async def nouveauClient(self,sid,username,sio):
+        cookie = str(uuid.uuid4())[:8]
+        while cookie in [self.Clients[i].cookie for i in range(len(self.Clients))]  :
+            cookie = str(uuid.uuid4)[:8]
+
+        self.Clients.append(Client(len(self.Clients),sid,cookie))
+        await sio.emit('user_cookie', {'data': cookie}, room=sid)
+        print("Nouveau client enregistré ! ")
+        print(cookie)
         pass
 
-
+    async def checkClient(self,sid,cookie,sio):
+        if cookie["data"] in [self.Clients[i].cookie for i in range(len(self.Clients))]:
+            await sio.emit('user_cookie_check', {'data': 'client_valide'}, room=sid)
+        else:
+            await sio.emit('user_cookie_check', {'data': 'client_invalide'}, room=sid)
+        
     async def run(self,sio):
         while self.running == True:
             await sio.sleep(1/(self.fps)) # serveur a 60fps
@@ -27,8 +47,6 @@ class Server:
     def setmavariable(self):
         self.mavariable+=100
 
-    Parties = []
-    Clients = [] # = [{id="",joueurid, cookieID, autres...}]
 
 
 s = Server();
@@ -42,11 +60,19 @@ class ServeurHandler(socketio.AsyncNamespace):
         print('Client disconnected')
     
     def on_mon_event(self,sid,data):
-            print("salut " + sid + " !");
-            s.setmavariable();
-            print(data)
-        
+        print("salut " + sid + " !");
+        s.setmavariable();
+        print(data)
     
+    async def on_envoi_cookie(self,sid,data):
+        await s.checkClient(sid,data,sio);
+        
+
+    async def on_mon_username(self,sid,data):
+        await s.nouveauClient(sid,data,sio);
+        
+
+
 sio = socketio.AsyncServer(async_mode='sanic')
 app = Sanic(name="koopt")
 sio.attach(app)
@@ -63,9 +89,7 @@ async def index(request):
         return html(f.read())
 
 sio.register_namespace(ServeurHandler('/'))
-
 app.static('/static', '../client/static')
-
 
 if __name__ == '__main__':
     app.run()
