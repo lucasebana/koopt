@@ -9,32 +9,35 @@ import socketio
 
 
 #Importation de fichiers du projet
+import partie
+import map
 from client import Client
 import joueur
+import ressource
+
+
 
 
 class Server:
-    
+    ''' Classe principale de l'application '''
+
     Parties = []
     Clients = [] # = [{id="",joueurid, cookieID, autres...}]
 
-
-
-
-    def __init__(self): #demarrage sur serveur socket.io
+    def __init__(self):
         self.running = True
-        self.fps = 1
-        self.mavariable=0
+        self.fps = 1 # Valeur de production plus proche de 60
+        self.mavariable=0 # Variable test
 
 
-        ''' Serveurs http et websocket'''
+        ''' Serveurs http et websocket '''
         self.sio = socketio.AsyncServer(async_mode='sanic')
         self.app = Sanic(name="koopt")
         self.sio.attach(self.app)
 
 
-    def start(self):
-
+    def start(self): 
+        ''' Démarrage des serveurs et routage '''
         @self.app.listener('before_server_start')
         def before_server_start(sanic, loop):
             self.sio.start_background_task(self.run,self.sio)
@@ -63,12 +66,16 @@ class Server:
         pass
 
     async def checkClient(self,sid,cookie,sio):
+        ''' fonction serveur vérifiant que l'utilisateur
+        possède bien un identifiant(stocké ss forme de cookie) unique '''
         if cookie["data"] in [self.Clients[i].cookie for i in range(len(self.Clients))]:
             await self.sio.emit('user_cookie_check', {'data': 'client_valide'}, room=sid)
         else:
             await self.sio.emit('user_cookie_check', {'data': 'client_invalide'}, room=sid)
         
     async def run(self,sio):
+        ''' boucle principale de la logique du serveur de jeu 
+        cette boucle s'éxécute en parallèle des serveurs web'''
         while self.running == True:
             await self.sio.sleep(1/(self.fps)) # serveur a 60fps
             print("server running")
@@ -79,19 +86,22 @@ class Server:
 
 
 class ServeurHandler(socketio.AsyncNamespace):
-    
+    ''' Classe s'occupant des évènements socketio recus en '/' '''
     def __init__(self,addr,sio_,serveur_):
         super().__init__(addr)
         self.sio = sio_
         self.s = serveur_
 
     async def on_connect(self, sid, environ):
+        ''' fonction executée a la reception de l'evenement 'connect' '''
         await self.sio.emit('my_response', {'data': 'Connected', 'count': 0}, room=sid)
 
     def on_disconnect(self,sid):
         print('Client disconnected')
     
     def on_mon_event(self,sid,data):
+        ''' evenement test qui appelle s.setmavariable 
+        qui incrémente un variable test du serveur'''
         print("salut " + sid + " !");
         self.s.setmavariable();
         print(data)

@@ -2,8 +2,9 @@
 from server import Server,ServeurHandler
 
 def main():
-    s = Server();
-    s.start();
+    s = Server(); 
+    ''' Démarrage du serveur '''
+    s.start(); 
 
 
 if __name__ == "__main__":
