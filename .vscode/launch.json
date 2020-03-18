@@ -9,7 +9,7 @@
             "type": "python",
             "request": "launch",
             //"program": "${file}",
-            "program":"server.py",
+            "program":"main.py",
             "cwd": "${workspaceRoot}/server",
             "console": "integratedTerminal"
         }

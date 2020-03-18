@@ -1,12 +1,9 @@
 #Importation de fichiers
-import sys
-import socketio
-import classe_joueur
-import server.py
+from server import Server,ServeurHandler
 
 def main():
-    pass
-
+    s = Server();
+    s.start();
 
 
 if __name__ == "__main__":
