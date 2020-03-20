@@ -88,6 +88,7 @@ export class Client{
             return false;
 
         })
+
         $(document).on("submit","form#rejoindre_form",function(event){
             var d = $("input#id_partie").val()
             socket.emit("join_partie",d)
@@ -114,12 +115,10 @@ export class Client{
         liste.forEach((element,i) => {
             if(element != null){
                 n_utilisateurs+=1
-                $("#j" + String(i)).text(element)
+                $("#j" + String(i+1)).text(element)
             }
         });
         $("#lobby_n_users").text(n_utilisateurs)
-
-        
 
     }
 

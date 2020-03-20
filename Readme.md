@@ -15,7 +15,8 @@ Utilisation
 -----------
 
 > Executer le serveur : 
-python server/main.py
+se déplacer vers le dossier server et lancer l'application
+> cd server; python main.py
 
 > Lancer le client dans le navigateur : 
 entrer l'URL http://localhost:8000
