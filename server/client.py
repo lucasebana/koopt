@@ -6,5 +6,6 @@ class Client:
         self.id = id;
         self.socketid = socketid;
         self.username = username;
+        self.etape = 0
         #liste des sids ?
         self.cookie = cookie;

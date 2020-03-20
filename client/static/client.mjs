@@ -35,34 +35,39 @@ export class Client{
         $("body").load(page);
     }
 
-    /* scripts de navigation */
-    home_page(socket){
-        /* page d'accueil */        
-        if (Cookies.get("userid") != undefined) { // Si le cookie est deja défini
-            //trouver un moyen d'attendre la validation...
-            socket.emit('envoi_cookie',{data : Cookies.get("userid")});
-        
-        }
-        
-        $(document).on("submit","form#username_form",function(event){
-                    var d = $("input#username").val()
-                    socket.emit("mon_username",{data:d})
-                    return false;
-                });
-    
-    }
+    /*  */
 
-    home_cookie_check(client, data){
-        if(data == "client_valide"){
-            if  (client.etape == 0){
+    cookie_check(client, data){
+        if(data.data == "client_valide"){
+            /*if  (client.etape == 0){
                 client.etape = 1;
-            }
+            }*/
+            client.etape = data.etape
         }
         else{
             Cookies.remove("userid")
             //afficher message d'erreur...(message vide, etc..)
         }
     }
+
+    /* scripts de navigation */
+    home_page(socket){
+        /* page d'accueil */        
+        if (Cookies.get("userid") != undefined) { // Si le cookie est deja défini
+            //trouver un moyen d'attendre la validation...
+            socket.emit('envoi_cookie',{'data' : Cookies.get("userid")});
+        
+        }
+        
+        $(document).on("submit","form#username_form",function(event){
+                    var d = $("input#username").val()
+                    socket.emit("mon_username",{'data':d})
+                    return false;
+                });
+    
+    }
+
+    
 
     home_registration(client,data){
         if(data != "erreur"){

@@ -26,5 +26,15 @@ class Partie:
         self.sio.emit(header,data,room=joueur.client.socketid)
         pass
 
+    def pause(self):
+        self.etat = 4
     def context(self):
+        if len(self.joueurs) < 4:
+            self.etat = 2
+        if len(self.joueurs) == 4:
+            self.etat = 3
+        if(self.etat == 4):
+            self.broadcast('lobby',{'nomSalle':'nom','j1':'nomj1','j2':'nomj2'})
+
+        
         pass

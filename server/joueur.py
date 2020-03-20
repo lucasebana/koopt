@@ -1,5 +1,5 @@
 class Joueur:
-    ''' Classe spécifique a l'interface '''
+    ''' Classe spécifique au jeu '''
     '''
     nom;
     energie;

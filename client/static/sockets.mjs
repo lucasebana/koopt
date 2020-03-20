@@ -17,10 +17,13 @@ import {Client} from '/static/client.mjs'
         console.log('Disconnected');
     });
 
-    /* Page d'accueil */
-    socket.on('user_cookie_check',  function(msg){
-        client.home_cookie_check(client,msg.data);
+    /* Toutes les pages */
+
+    socket.on('user_cookie_check',  function(data){
+        client.cookie_check(client,data);
     })
+
+    /* Page d'accueil */    
 
     socket.on('user_registration_cookie', function (msg) {
         client.home_registration(client,msg.data)

@@ -57,13 +57,15 @@ class Server:
             cookie = str(uuid.uuid4)[:8]
         #Checker un conflit socketid ?
         #Il faudrait vérifier si le nom est correct (different/non vide ...)
-        self.Clients.append(Client(len(self.Clients),username,sid,cookie))
+        c = Client(len(self.Clients),username,sid,cookie)
+        self.Clients.append(c)
         await self.sio.emit('user_cookie', {'data': cookie}, room=sid)
         print("Nouveau client enregistré ! ")
         print(cookie)
 
         #Si tout est correct on envoie une validation au client
         await self.sio.emit('user_registration_cookie', {'data': cookie}, room=sid)
+        c.etape=1
         #Sinon message d'erreur...     
 
         pass
@@ -72,7 +74,9 @@ class Server:
         ''' fonction serveur vérifiant que l'utilisateur
         possède bien un identifiant(stocké ss forme de cookie) unique '''
         if cookie["data"] in [self.Clients[i].cookie for i in range(len(self.Clients))]:
-            await self.sio.emit('user_cookie_check', {'data': 'client_valide'}, room=sid)
+            index = [self.Clients[i].cookie for i in range(len(self.Clients))].index(cookie["data"])
+            self.Clients[index].socketid = sid
+            await self.sio.emit('user_cookie_check', {'data': 'client_valide','etape':self.Clients[index].etape}, room=sid)
         else:
             await self.sio.emit('user_cookie_check', {'data': 'client_invalide'}, room=sid)
     
@@ -94,6 +98,7 @@ class Server:
         idPartie = len(self.Parties)
         self.Parties.append(Partie("partie"+str(idPartie), len(self.Parties),self.sio,j))
         await self.sio.emit('acces_partie', "success", room=sid)
+        j.client.etape=2
         pass
 
     async def rejoindrePartie(self,sid,data):
@@ -104,6 +109,7 @@ class Server:
             if data < len(Parties):
                 Parties[data].rejoindrePartie(j)
                 await self.sio.emit('acces_partie', "success", room=sid)
+                j.client.etape=2
             else:
                 pass #Erreur, id de partie inexistant
 
