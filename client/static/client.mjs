@@ -1,7 +1,19 @@
 export class Client{
-    constructor(){}
     etape = 0;
     etape_prec = null;
+
+    constructor(){
+        $.get( "static/home.html", function( data ) {
+            $(".container").append(data);
+          });
+          $.get( "static/partie.html", function( data ) {
+            $(".container").append(data);
+          });
+          $.get( "static/lobby.html", function( data ) {
+            $(".container").append(data);
+          });
+          
+    }
 
     affichage(client,socket){
         var c = client;
@@ -10,19 +22,20 @@ export class Client{
         switch(c.etape){
             case 0:
                 //affiche home.html et appelle le code correspondant à sa page
-                c.loadPage("/static/home.html");
+                //c.loadPage("home");
+                //c.home();
                 c.home_page(socket)
                 break;
             case 1: 
                 //affiche partie.html
-                c.loadPage("/static/partie.html");
                 c.partie_page(socket)
                 break;
             case 2:
-                //affiche lobby.html
-                c.loadPage("/static/lobby.html");
+                c.lobby_page()
+                break;
             case 3: 
                 //affiche game.html et charge game.js
+                c.run_game();
                 break;
             default:
                 console.log("Erreur d'affichage")
@@ -31,13 +44,7 @@ export class Client{
         c.etape_prec = c.etape;
     }
     }
-
-    loadPage(page){
-        $("body").load(page);
-    }
-
-    /*  */
-
+    
     cookie_check(client, data){
         if(data.data == "client_valide"){
             /*if  (client.etape == 0){
@@ -60,15 +67,12 @@ export class Client{
         
         }
         
-        $(document).on("submit","form#username_form",function(event){
+        $(".home #username_form").submit(function(event){
                     var d = $("input#username").val()
                     socket.emit("mon_username",d)
                     return false;
-                });
-    
+        });
     }
-
-    
 
     home_registration(client,data){
         if(data != "erreur"){
@@ -77,34 +81,36 @@ export class Client{
                 client.etape=1
         }
         else{
-            console.log("Erreur page 0 : enregistrement")
+            console.log("Erreur page 0")
         }
-            
     }
+
+
     /* page dediee aux parties */
     partie_page(socket){
-        $(document).on("click","#creer_partie",function(event){
+        $(".home").css("display","none")
+        $(".partie").css("display","block")
+        $("#creer_partie").click(function(event){
             socket.emit("host_partie",null)
             return false;
-
         })
-
-        $(document).on("submit","form#rejoindre_form",function(event){
+        $("form#rejoindre_form").submit(function(event){
             var d = $("input#id_partie").val()
             socket.emit("join_partie",d)
             return false;
         });
-
-
     }
-    
     partie_check(client,data){
         if(data == "success" && client.etape == 1){
             client.etape = 2
         }
     }
-
     /* page dediee aux lobbies */
+    lobby_page(){
+        $(".home").css("display","none")
+        $(".partie").css("display","none")
+        $(".lobby").css("display","block")
+    }
 
     lobby_update(client,data){
         //$("lobby_n_users").text("hello !")
@@ -119,7 +125,14 @@ export class Client{
             }
         });
         $("#lobby_n_users").text(n_utilisateurs)
+    }
+    /* fonctions dédiées au jeu */
 
+    run_game(){
+        $(".home").css("display","none")
+        $(".partie").css("display","none")
+        $(".lobby").css("display","none")
+        $("canvas").css("display","block")
     }
 
 }

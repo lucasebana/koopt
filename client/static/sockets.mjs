@@ -5,7 +5,7 @@ import {Client} from '/static/client.mjs'
     //npm i js-cookie
     //pip3 install socketio
 
-    var client = new Client()
+    var client = new Client();
     var socket = io.connect();
 
     //Cookies.set("userid","6651a24c")
@@ -32,12 +32,13 @@ import {Client} from '/static/client.mjs'
     /* Page partie */
     socket.on('acces_partie',  function(data){
         client.partie_check(client,data);
-    })
+    });
 
     /* Page lobby */
     socket.on('lobby',  function(data){
         client.lobby_update(client,data);
-    })
+    });
 
     /* Appel a la fonction toutes les 100ms */
-window.setInterval((()=>client.affichage(client,socket)),100)
+window.setInterval((()=>client.affichage(client,socket)),60);
+
