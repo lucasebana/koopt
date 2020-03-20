@@ -9,12 +9,11 @@ import socketio
 
 
 #Importation de fichiers du projet
-import partie
+from partie import Partie
 import map
 from client import Client
-import joueur
+from joueur import Joueur
 import ressource
-
 
 
 
@@ -22,8 +21,9 @@ class Server:
     ''' Classe principale de l'application '''
 
     Parties = []
-    Clients = [] # = [{id="",joueurid, cookieID, autres...}]
-
+    Clients = [] # = [{id="",joueurid, cookieID, sid, autres...}]
+    Joueurs = []
+    
     def __init__(self):
         self.running = True
         self.fps = 1 # Valeur de production plus proche de 60
@@ -40,7 +40,7 @@ class Server:
         ''' Démarrage des serveurs et routage '''
         @self.app.listener('before_server_start')
         def before_server_start(sanic, loop):
-            self.sio.start_background_task(self.run,self.sio)
+            self.sio.start_background_task(self.run)
 
         @self.app.route('/')
         async def index(request):
@@ -49,34 +49,71 @@ class Server:
 
         self.sio.register_namespace(ServeurHandler('/',self.sio,self))
         self.app.static('/static', '../client/static')
-        self.app.run();
+        self.app.run()
 
-    def creerPartie(self):
-        pass
-
-    async def nouveauClient(self,sid,username,sio):
+    async def creerClient(self,sid,username):
         cookie = str(uuid.uuid4())[:8]
         while cookie in [self.Clients[i].cookie for i in range(len(self.Clients))]  :
             cookie = str(uuid.uuid4)[:8]
         #Checker un conflit socketid ?
-        self.Clients.append(Client(len(self.Clients),sid,cookie))
+        #Il faudrait vérifier si le nom est correct (different/non vide ...)
+        self.Clients.append(Client(len(self.Clients),username,sid,cookie))
         await self.sio.emit('user_cookie', {'data': cookie}, room=sid)
         print("Nouveau client enregistré ! ")
         print(cookie)
+
+        #Si tout est correct on envoie une validation au client
+        await self.sio.emit('user_registration_cookie', {'data': cookie}, room=sid)
+        #Sinon message d'erreur...     
+
         pass
 
-    async def checkClient(self,sid,cookie,sio):
+    async def checkClient(self,sid,cookie):
         ''' fonction serveur vérifiant que l'utilisateur
         possède bien un identifiant(stocké ss forme de cookie) unique '''
         if cookie["data"] in [self.Clients[i].cookie for i in range(len(self.Clients))]:
             await self.sio.emit('user_cookie_check', {'data': 'client_valide'}, room=sid)
         else:
             await self.sio.emit('user_cookie_check', {'data': 'client_invalide'}, room=sid)
-        
-    async def run(self,sio):
+    
+    def creerJoueur(self,sid,coords):
+        idClient = self.trouverClient(sid)
+        j = Joueur(self.Clients[idClient].username,self.Clients[idClient],coords)
+        self.Joueurs.append(j)
+        return j
+
+    def trouverClient(self,sid):
+        for i in range(len(self.Clients)):
+            if self.Clients[i].socketid == sid:
+                return i
+        return -1 #erreur.. gérer l'exception ?
+
+    async def creerPartie(self,sid,data):
+        #if j != None:#Si on n'a pas donné j en param
+        j = self.creerJoueur(sid,[0,0]) #on crée un joueur sinon on garde celui fourni
+        idPartie = len(self.Parties)
+        self.Parties.append(Partie("partie"+str(idPartie), len(self.Parties),self.sio,j))
+        await self.sio.emit('acces_partie', "success", room=sid)
+        pass
+
+    async def rejoindrePartie(self,sid,data):
+        j = self.creerJoueur(sid,[0,0])
+        if(type(data) is int):
+            #idealement on conserve un lien entre les ids et les index dans la liste
+            #idealement index != id et id pas forcement un entier
+            if data < len(Parties):
+                Parties[data].rejoindrePartie(j)
+                await self.sio.emit('acces_partie', "success", room=sid)
+            else:
+                pass #Erreur, id de partie inexistant
+
+
+    async def run(self):
         ''' boucle principale de la logique du serveur de jeu 
         cette boucle s'éxécute en parallèle des serveurs web'''
         while self.running == True:
+            for p in self.Parties:
+                p.context()
             await self.sio.sleep(1/(self.fps)) # serveur a 60fps
             print("server running")
             #print("mavariable = ", self.mavariable)
@@ -105,11 +142,17 @@ class ServeurHandler(socketio.AsyncNamespace):
         print("salut " + sid + " !");
         self.s.setmavariable();
         print(data)
-    
+
     async def on_envoi_cookie(self,sid,data):
-        await self.s.checkClient(sid,data,self.sio);
+        await self.s.checkClient(sid,data);
         
 
     async def on_mon_username(self,sid,data):
-        await self.s.nouveauClient(sid,data,self.sio);
+        await self.s.creerClient(sid,data);
+
+    async def on_host_partie(self,sid,data):
+        await self.s.creerPartie(sid,data);
+    
+    async def on_join_partie(self,sid,data):
+        await self.s.rejoindrePartie(sid,data);
         

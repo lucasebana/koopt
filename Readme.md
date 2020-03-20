@@ -8,8 +8,8 @@ https://github.com/lucasebana/koopt
 Installation
 ------------
 
-> Installer python-asyncio :
-dans le terminal pip install python-socketio
+> Installer python-socketio :
+dans le terminal : >pip install python-socketio
 
 Utilisation
 -----------

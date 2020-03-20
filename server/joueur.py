@@ -1,4 +1,5 @@
 class Joueur:
+    ''' Classe spécifique a l'interface '''
     '''
     nom;
     energie;
@@ -7,14 +8,14 @@ class Joueur:
     coordonnées;
     vitesse;
     '''
-    def init(self, nom, coordonnees,idclient):
+    def __init__(self, nom, client,coordonnees):
         self.nom=nom
+        self.client = client;
         self.energie=100
         self.bois=0
         self.nourriture=0
-        self.coordonnees=[0,0]
+        self.coordonnees=coordonnees
         self.vitesse=[0,0]
-        self.idclient = 0;
 
     def hello():
         print("hello")
