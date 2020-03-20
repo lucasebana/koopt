@@ -119,7 +119,7 @@ class Server:
         cette boucle s'éxécute en parallèle des serveurs web'''
         while self.running == True:
             for p in self.Parties:
-                p.context()
+                await p.context()
             await self.sio.sleep(1/(self.fps)) # serveur a 60fps
             print("server running")
             #print("mavariable = ", self.mavariable)

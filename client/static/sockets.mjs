@@ -34,5 +34,10 @@ import {Client} from '/static/client.mjs'
         client.partie_check(client,data);
     })
 
+    /* Page lobby */
+    socket.on('lobby',  function(data){
+        client.lobby_update(client,data);
+    })
+
     /* Appel a la fonction toutes les 100ms */
 window.setInterval((()=>client.affichage(client,socket)),100)

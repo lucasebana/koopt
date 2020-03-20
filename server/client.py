@@ -1,4 +1,3 @@
-import uuid
 class Client:
     ''' Classe spécifique au site '''
     ''' Classe permettant de stocker les informations d'un client '''

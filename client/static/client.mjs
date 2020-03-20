@@ -5,6 +5,7 @@ export class Client{
 
     affichage(client,socket){
         var c = client;
+
         if(c.etape != c.etape_prec){
         switch(c.etape){
             case 0:
@@ -61,7 +62,7 @@ export class Client{
         
         $(document).on("submit","form#username_form",function(event){
                     var d = $("input#username").val()
-                    socket.emit("mon_username",{'data':d})
+                    socket.emit("mon_username",d)
                     return false;
                 });
     
@@ -101,4 +102,25 @@ export class Client{
             client.etape = 2
         }
     }
+
+    /* page dediee aux lobbies */
+
+    lobby_update(client,data){
+        //$("lobby_n_users").text("hello !")
+        $("#lobby_name").text(data.nomSalle)
+        var liste = [data.j0,data.j1,data.j2,data.j3]
+        var n_utilisateurs = 0
+        console.log(liste)
+        liste.forEach((element,i) => {
+            if(element != null){
+                n_utilisateurs+=1
+                $("#j" + String(i)).text(element)
+            }
+        });
+        $("#lobby_n_users").text(n_utilisateurs)
+
+        
+
+    }
+
 }

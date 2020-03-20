@@ -10,6 +10,7 @@ class Partie:
         self.socketroom="s_"+nom
         self.id = id
         self.etat = 0
+        self.joueurs= []
         if joueur != None:
             self.rejoindrePartie(joueur)
         #ETAT 0 : INITIALISATION; 1 : LOBBY; 2 : EN JEU; 3 : EN PAUSE; 4 : TERMINE
@@ -18,9 +19,11 @@ class Partie:
         self.joueurs.append(joueur)
         self.sio.enter_room(joueur.client.socketid,self.socketroom)
     
+    def reconnexionPartie(self, joueur):
+        pass
     
-    def broadcast(self,header,data):
-        self.sio.emit(header,data,room=self.socketroom)
+    async def broadcast(self,header,data):
+        await self.sio.emit(header,data,room=self.socketroom)
 
     def send(self,header,data,joueur): #ou joueur id ? surcharge de la methode ?
         self.sio.emit(header,data,room=joueur.client.socketid)
@@ -28,13 +31,16 @@ class Partie:
 
     def pause(self):
         self.etat = 4
-    def context(self):
+    async def context(self):
         if len(self.joueurs) < 4:
             self.etat = 2
+            jo = [self.joueurs[i].nom if i < len(self.joueurs) else None for i in range(4)]
+            await self.broadcast('lobby',{**{"nomSalle":self.nom,"idSalle":self.id},**{"j"+str(i):jo[i] for i in range(len(jo))}})
         if len(self.joueurs) == 4:
             self.etat = 3
         if(self.etat == 4):
-            self.broadcast('lobby',{'nomSalle':'nom','j1':'nomj1','j2':'nomj2'})
+            pass
+            #self.broadcast('lobby',{'nomSalle':'nom','j1':'nomj1','j2':'nomj2','j3':None,'j4':None})
+            
 
         
-        pass
