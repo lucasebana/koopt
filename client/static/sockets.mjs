@@ -39,6 +39,7 @@ import {Client} from '/static/client.mjs'
         client.lobby_update(client,data);
     });
 
+    
     /* Appel a la fonction toutes les 100ms */
 window.setInterval((()=>client.affichage(client,socket)),60);
 

@@ -13,8 +13,8 @@ export class Client{
             $(".container").append(data);
           });
           
+        $(document).on("click","#logout",()=>{Cookies.remove("userid");location.reload();})
     }
-
     affichage(client,socket){
         var c = client;
 
@@ -64,7 +64,6 @@ export class Client{
         if (Cookies.get("userid") != undefined) { // Si le cookie est deja défini
             //trouver un moyen d'attendre la validation...
             socket.emit('envoi_cookie',{'data' : Cookies.get("userid")});
-        
         }
         
         $(".home #username_form").submit(function(event){
@@ -88,7 +87,7 @@ export class Client{
 
     /* page dediee aux parties */
     partie_page(socket){
-        $(".home").css("display","none")
+        $(".home").fadeOut(0.6)
         $(".partie").css("display","block")
         $("#creer_partie").click(function(event){
             socket.emit("host_partie",null)
@@ -99,6 +98,8 @@ export class Client{
             socket.emit("join_partie",d)
             return false;
         });
+
+        $("#nom_utilisateur").text("("+Cookies.get("userid")+")")
     }
     partie_check(client,data){
         if(data == "success" && client.etape == 1){
