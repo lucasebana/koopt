@@ -110,6 +110,13 @@ class Server:
                 pass #Erreur, id de partie inexistant
 
 
+    async def demarrerPartie(self,sid,data):
+        idJoueur = self.trouverJoueur(sid)
+        j = self.Joueurs[idJoueur]
+        partie = j.partie
+        await partie.start(j)
+
+
     async def run(self):
         ''' boucle principale de la logique du serveur de jeu 
         cette boucle s'éxécute en parallèle des serveurs web'''
@@ -157,4 +164,6 @@ class ServeurHandler(socketio.AsyncNamespace):
     
     async def on_join_partie(self,sid,data):
         await self.s.rejoindrePartie(sid,data);
-        
+    
+    async def on_start_partie(self,sid,data):
+        await self.s.demarrerPartie(sid,data);

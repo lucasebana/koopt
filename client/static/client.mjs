@@ -2,6 +2,8 @@ export class Client{
     etape = 0;
     etape_prec = null;
 
+    
+
     constructor(){
         $.get( "static/home.html", function( data ) {
             $(".container").append(data);
@@ -31,11 +33,11 @@ export class Client{
                 c.partie_page(socket)
                 break;
             case 2:
-                c.lobby_page()
+                c.lobby_page(socket)
                 break;
             case 3: 
                 //affiche game.html et charge game.js
-                c.run_game();
+                c.run_game(c);
                 break;
             default:
                 console.log("Erreur d'affichage")
@@ -107,10 +109,14 @@ export class Client{
         }
     }
     /* page dediee aux lobbies */
-    lobby_page(){
+    lobby_page(socket){
         $(".home").css("display","none")
         $(".partie").css("display","none")
         $(".lobby").css("display","block")
+        
+        $("#start_game").click(()=>{
+            socket.emit("start_partie",null)
+        })
     }
 
     lobby_update(client,data){
@@ -126,10 +132,16 @@ export class Client{
             }
         });
         $("#lobby_n_users").text(n_utilisateurs)
+
     }
+
+    lobby_game_start(client,data){
+        client.etape = 3
+    }
+
     /* fonctions dédiées au jeu */
 
-    run_game(){
+    run_game(client){
         $(".home").css("display","none")
         $(".partie").css("display","none")
         $(".lobby").css("display","none")

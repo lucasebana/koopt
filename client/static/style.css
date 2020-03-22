@@ -7,6 +7,8 @@ html,body{
 }
 
 canvas{
+    width:100%;
+    height:100%;
     display:none;
 }
 
@@ -93,5 +95,4 @@ canvas{
     margin:30px auto;
     width:150px;
     height:50px;
-
 }
