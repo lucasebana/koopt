@@ -9,14 +9,17 @@ Installation
 ------------
 
 > Installer python-socketio et sanic:
-dans le terminal : >pip3 install python-socketio sanic
+
+`$ pip3 install python-socketio sanic`
 
 Utilisation
 -----------
 
 > Executer le serveur : 
-se déplacer vers le dossier server et lancer l'application
-> cd server; python3 main.py
+se déplacer vers le dossier server et lancer l'application:
+
+`$ cd server; python3 ./main.py`
 
 > Lancer le client dans le navigateur : 
+
 entrer l'URL http://localhost:8000
