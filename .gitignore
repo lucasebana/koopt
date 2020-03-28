@@ -1,1 +1,8 @@
 vscode/
+koopt.code-workspace
+server/__pycache__/joueur.cpython-37.pyc
+server/__pycache__/map.cpython-37.pyc
+server/__pycache__/partie.cpython-37.pyc
+server/__pycache__/ressource.cpython-37.pyc
+server/__pycache__/server.cpython-37.pyc
+.vscode/extensions.json
