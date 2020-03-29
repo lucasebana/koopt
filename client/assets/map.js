@@ -26,7 +26,7 @@ window.onresize(()=>{
 
 var controls;
 var game = new Phaser.Game(config);
-
+game.renderer.renderSession.roundPixels = true
 function preload ()
 {
     /*
