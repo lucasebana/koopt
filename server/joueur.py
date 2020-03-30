@@ -15,6 +15,7 @@ class Joueur:
         self.cookie = cookie;
         self.etape = 0;
         self.partie = None
+        self.position = [0,0]
         
         #liste des sids ?
     def reset_sid(self,newSid):

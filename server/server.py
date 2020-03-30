@@ -25,7 +25,7 @@ class Server:
     
     def __init__(self):
         self.running = True
-        self.fps = 1 # Valeur de production plus proche de 60
+        self.fps = 70 # Valeur de production plus proche de 60
         self.mavariable=0 # Variable test
 
 
@@ -81,14 +81,14 @@ class Server:
         else:
             await self.sio.emit('user_cookie_check', {'data': 'client_invalide'}, room=sid)
     
-    def trouverJoueur(self,sid):
+    def getJoueur(self,sid):
         for i in range(len(self.Joueurs)):
             if self.Joueurs[i].socketid == sid:
                 return i
         return -1 #erreur.. gérer l'exception ?
 
     async def creerPartie(self,sid,data):
-        idJoueur = self.trouverJoueur(sid)
+        idJoueur = self.getJoueur(sid)
         j = self.Joueurs[idJoueur]
         self.Parties.append(Partie("partie"+str(idJoueur), idJoueur, self.sio,j))
         await self.sio.emit('acces_partie', "success", room=sid)
@@ -96,7 +96,7 @@ class Server:
         pass
 
     async def rejoindrePartie(self,sid,data):
-        idJoueur = self.trouverJoueur(sid)
+        idJoueur = self.getJoueur(sid)
         j = self.Joueurs[idJoueur]
         if(data.isdigit()):
             data= int(data)
@@ -111,11 +111,16 @@ class Server:
 
 
     async def demarrerPartie(self,sid,data):
-        idJoueur = self.trouverJoueur(sid)
+        idJoueur = self.getJoueur(sid)
         j = self.Joueurs[idJoueur]
         partie = j.partie
         await partie.start(j)
 
+    def getPartie(self,sid):
+        j = self.getJoueur(sid)
+        if j != -1 :
+            return self.Joueurs[j].partie
+        return -1
 
     async def run(self):
         ''' boucle principale de la logique du serveur de jeu 
@@ -130,7 +135,7 @@ class Server:
     def setmavariable(self): #fonction test qui incrémente mavariable
         self.mavariable+=100
 
-
+#TODO Heriter de GameHandler qui gere uniquement les events gameplay
 class ServeurHandler(socketio.AsyncNamespace):
     ''' Classe s'occupant des évènements socketio recus en '/' '''
     def __init__(self,addr,sio_,serveur_):
@@ -166,6 +171,12 @@ class ServeurHandler(socketio.AsyncNamespace):
     
     async def on_start_partie(self,sid,data):
         await self.s.demarrerPartie(sid,data);
-        
+
     async def on_demande_etape(self,sid,data):
         await self.sio.emit('user_cookie_check', {'data': 'client_valide','etape':0}, room=sid) #a modifier : verifier que le sid n'est pas deja enregistré
+    async def on_send_position(self,sid,data):
+        j = self.s.getJoueur(sid)
+        p = self.s.getPartie(sid)
+        if p != -1:
+            p.setPosition(self.s.Joueurs[j],data)
+

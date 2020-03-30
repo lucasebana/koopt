@@ -8,7 +8,7 @@ export class LoadScene extends Phaser.Scene{
         })
     }
     init(data){
-        console.log("INIT de LOADSCENE !")
+        console.log("INIT de LOADSCENE !");
     }
     preload(){
 
