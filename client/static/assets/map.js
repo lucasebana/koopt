@@ -15,8 +15,8 @@ var config = {
     }
 };
 
-config.height = document.getElementById("b").clientHeight;//ou offsetHeight ? 
-config.width = document.getElementById("b").clientWidth;//ou offsetHeight ? 
+//config.height = document.getElementById("b").clientHeight;//ou offsetHeight ? 
+//config.width = document.getElementById("b").clientWidth;//ou offsetHeight ? 
 
 /*
 window.onresize(()=>{
@@ -26,7 +26,7 @@ window.onresize(()=>{
 
 var controls;
 var game = new Phaser.Game(config);
-game.renderer.renderSession.roundPixels = true
+//game.renderer.renderSession.roundPixels = true
 function preload ()
 {
     /*
@@ -36,8 +36,8 @@ function preload ()
     this.load.image('logo', 'assets/sprites/phaser3-logo.png');
     this.load.image('red', 'assets/particles/red.png');
     */
-   this.load.image('pkm', './assets//tilesetpkmn2xT.png');
-   this.load.tilemapTiledJSON('map', './assets/map2.json');
+   this.load.image('pkm', 'static/assets//tilesetpkmn2xT.png');
+   this.load.tilemapTiledJSON('map', 'static/assets/map2.json');
 }
 
 function create ()

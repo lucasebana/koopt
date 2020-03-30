@@ -155,7 +155,6 @@ class ServeurHandler(socketio.AsyncNamespace):
     async def on_envoi_cookie(self,sid,data):
         await self.s.checkJoueur(sid,data);
         
-
     async def on_mon_username(self,sid,data):
         await self.s.creerJoueur(sid,data);
 
@@ -167,3 +166,6 @@ class ServeurHandler(socketio.AsyncNamespace):
     
     async def on_start_partie(self,sid,data):
         await self.s.demarrerPartie(sid,data);
+        
+    async def on_demande_etape(self,sid,data):
+        await self.sio.emit('user_cookie_check', {'data': 'client_valide','etape':0}, room=sid) #a modifier : verifier que le sid n'est pas deja enregistré

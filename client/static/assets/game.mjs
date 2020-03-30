@@ -1,9 +1,12 @@
-import {cst} from '/assets/cst.mjs'
-import {LoadScene} from '/assets/LoadScene.mjs'
+import {cst} from '/static/assets/cst.mjs'
+import {LoadScene} from '/static/assets/LoadScene.mjs'
+i
+
 var config = {
     type: Phaser.WebGL,
     width: 800,
     height: 600,
+    parent:"b",
     //roundPixels: true,
     scene:[
         LoadScene
@@ -22,5 +25,13 @@ var config = {
 config.height = document.getElementById("b").clientHeight;//ou offsetHeight ? 
 config.width = document.getElementById("b").clientWidth;//ou offsetHeight ? 
 
+window.config = config
 
-var game = new Phaser.Game(config)
+
+export class Game extends Phaser.Game{
+    constructor(config, Handler){
+        super(config)
+        this.Handler = Handler;
+    }
+}
+//var game = new Phaser.Game(config)

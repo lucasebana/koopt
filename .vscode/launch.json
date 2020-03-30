@@ -8,7 +8,9 @@
             "name": "Python : Fichier actuel",
             "type": "python",
             "request": "launch",
-            "program": "${file}",
+            //"program": "${file}",	
+            "program":"main.py",	
+            "cwd": "${workspaceRoot}/server",	
             "console": "integratedTerminal"
         }
     ]

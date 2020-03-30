@@ -1,5 +1,5 @@
-import { cst } from '/assets/cst.mjs'
-import {JoueurSprite} from '/assets/JoueurSprite.mjs'
+import { cst } from '/static/assets/cst.mjs'
+import {JoueurSprite} from '/static/assets/JoueurSprite.mjs'
 
 export class GameScene extends Phaser.Scene{
     constructor(){
@@ -12,9 +12,9 @@ export class GameScene extends Phaser.Scene{
         console.log(data)
     }
     preload(){
-        this.load.spritesheet("armel", "./assets/armel.png", {frameHeight: 64, frameWidth: 64});
-        this.load.image('pkm', './assets//tilesetpkmnX.png');
-        this.load.tilemapTiledJSON('map', './assets/map2.json');        
+        this.load.spritesheet("armel", "static/assets/armel.png", {frameHeight: 64, frameWidth: 64});
+        this.load.image('pkm', 'static/assets/tilesetpkmnX.png');
+        this.load.tilemapTiledJSON('map', 'static/assets/map2.json');        
     }
     create(){
         var map = this.make.tilemap({ key: 'map' });

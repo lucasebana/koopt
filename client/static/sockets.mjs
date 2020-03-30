@@ -1,5 +1,7 @@
 import {Client} from '/static/client.mjs'
 
+
+
 //$(document).ready(function () {
 
     //npm i js-cookie
@@ -11,7 +13,14 @@ import {Client} from '/static/client.mjs'
     //Cookies.set("userid","6651a24c")
     //Cookies.remove("userid")
     socket.on('connect', function () {
-        socket.emit('my_event', { data: 'I\'m connected!' });
+        if (Cookies.get("userid") != undefined) { // Si le cookie est deja défini
+            //trouver un moyen d'attendre la validation...
+            socket.emit('envoi_cookie',{'data' : Cookies.get("userid")});
+        }
+        else{
+            socket.emit('demande_etape',null)
+        }
+        //socket.emit('my_event', { data: 'I\'m connected!' });
     });
     socket.on('disconnect', function () {
         console.log('Disconnected');
@@ -20,7 +29,7 @@ import {Client} from '/static/client.mjs'
     /* Toutes les pages */
 
     socket.on('user_cookie_check',  function(data){
-        client.cookie_check(client,data);
+        client.cookie_check(data);
     })
 
     /* Page d'accueil */    
@@ -46,5 +55,4 @@ import {Client} from '/static/client.mjs'
 
     
     /* Appel a la fonction toutes les 100ms */
-window.setInterval((()=>client.affichage(client,socket)),60);
-
+window.setInterval((()=>client.affichage(socket)),60);

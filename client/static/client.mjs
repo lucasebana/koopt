@@ -1,8 +1,9 @@
-export class Client{
-    etape = 0;
-    etape_prec = null;
+import { Game } from "./assets/game.mjs";
 
-    
+export class Client{
+    etape = -1;
+    etape_prec = null;
+    stop = false;
 
     constructor(){
         $.get( "static/home.html", function( data ) {
@@ -17,42 +18,41 @@ export class Client{
           
         $(document).on("click","#logout",()=>{Cookies.remove("userid");location.reload();})
     }
-    affichage(client,socket){
-        var c = client;
-
-        if(c.etape != c.etape_prec){
-        switch(c.etape){
+    affichage(socket){
+        
+        if(this.etape != this.etape_prec && this.stop === false){
+        switch(this.etape){
             case 0:
                 //affiche home.html et appelle le code correspondant à sa page
                 //c.loadPage("home");
                 //c.home();
-                c.home_page(socket)
+                this.home_page(socket)
                 break;
             case 1: 
                 //affiche partie.html
-                c.partie_page(socket)
+                this.partie_page(socket)
                 break;
             case 2:
-                c.lobby_page(socket)
+                this.lobby_page(socket)
                 break;
             case 3: 
                 //affiche game.html et charge game.js
-                c.run_game(c);
+                this.run_game(this);
                 break;
             default:
                 console.log("Erreur d'affichage")
                 break;
         }
-        c.etape_prec = c.etape;
+        this.etape_prec = this.etape;
     }
     }
     
-    cookie_check(client, data){
+    cookie_check(data){
         if(data.data == "client_valide"){
             /*if  (client.etape == 0){
                 client.etape = 1;
             }*/
-            client.etape = data.etape
+            this.etape = data.etape
         }
         else{
             Cookies.remove("userid")
@@ -63,11 +63,9 @@ export class Client{
     /* scripts de navigation */
     home_page(socket){
         /* page d'accueil */        
-        if (Cookies.get("userid") != undefined) { // Si le cookie est deja défini
-            //trouver un moyen d'attendre la validation...
-            socket.emit('envoi_cookie',{'data' : Cookies.get("userid")});
-        }
         
+        $(".home").fadeIn(0.6)
+        $(".home").css("display","block")
         $(".home #username_form").submit(function(event){
                     var d = $("input#username").val()
                     socket.emit("mon_username",d)
@@ -142,10 +140,13 @@ export class Client{
     /* fonctions dédiées au jeu */
 
     run_game(client){
+        this.stop = true
         $(".home").css("display","none")
         $(".partie").css("display","none")
         $(".lobby").css("display","none")
-        $("canvas").css("display","block")
+        $('.container').css("display","none")
+        //this.game = new Phaser.Game(window.config)
+        this.game = new Game(window.config)
     }
 
 }
