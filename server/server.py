@@ -8,12 +8,15 @@ from sanic.response import html
 import socketio
 
 
+
 #Importation de fichiers du projet
+
+
+from handler.ServerHandler import ServerHandler
 from partie import Partie
 import map
 from joueur import Joueur
 import ressource
-
 
 
 class Server:
@@ -23,16 +26,16 @@ class Server:
     #Clients = [] # = [{id="",joueurid, cookieID, sid, autres...}]
     Joueurs = []
     
-    def __init__(self):
+    def __init__(self,ip = None):
         self.running = True
-        self.fps = 70 # Valeur de production plus proche de 60
+        self.fps = 60 # Valeur de production plus proche de 60
         self.mavariable=0 # Variable test
-
 
         ''' Serveurs http et websocket '''
         self.sio = socketio.AsyncServer(async_mode='sanic')
         self.app = Sanic(name="koopt")
         self.sio.attach(self.app)
+        self.ip = ip
 
 
     def start(self): 
@@ -46,9 +49,12 @@ class Server:
             with open('../client/index.html') as f:
                 return html(f.read())
 
-        self.sio.register_namespace(ServeurHandler('/',self.sio,self))
+        self.sio.register_namespace(ServerHandler('/',self.sio,self))
         self.app.static('/static', '../client/static')
-        self.app.run()
+        if self.ip is None:
+            self.app.run()
+        else:
+            self.app.run(host=self.ip,port='8000')
 
     async def creerJoueur(self,sid,username):
         cookie = str(sid)[:8]
@@ -129,54 +135,11 @@ class Server:
             for p in self.Parties:
                 await p.context()
             await self.sio.sleep(1/(self.fps)) # serveur a 60fps
-            print("server running")
+            #print("server running")
             #print("mavariable = ", self.mavariable)
 
     def setmavariable(self): #fonction test qui incrémente mavariable
         self.mavariable+=100
 
 #TODO Heriter de GameHandler qui gere uniquement les events gameplay
-class ServeurHandler(socketio.AsyncNamespace):
-    ''' Classe s'occupant des évènements socketio recus en '/' '''
-    def __init__(self,addr,sio_,serveur_):
-        super().__init__(addr)
-        self.sio = sio_
-        self.s = serveur_
-
-    async def on_connect(self, sid, environ):
-        ''' fonction executée a la reception de l'evenement 'connect' '''
-        await self.sio.emit('my_response', {'data': 'Connected', 'count': 0}, room=sid)
-
-    def on_disconnect(self,sid):
-        print('Client disconnected')
-    
-    def on_mon_event(self,sid,data):
-        ''' evenement test qui appelle s.setmavariable 
-        qui incrémente un variable test du serveur'''
-        print("salut " + sid + " !");
-        self.s.setmavariable();
-        print(data)
-
-    async def on_envoi_cookie(self,sid,data):
-        await self.s.checkJoueur(sid,data);
-        
-    async def on_mon_username(self,sid,data):
-        await self.s.creerJoueur(sid,data);
-
-    async def on_host_partie(self,sid,data):
-        await self.s.creerPartie(sid,data);
-    
-    async def on_join_partie(self,sid,data):
-        await self.s.rejoindrePartie(sid,data);
-    
-    async def on_start_partie(self,sid,data):
-        await self.s.demarrerPartie(sid,data);
-
-    async def on_demande_etape(self,sid,data):
-        await self.sio.emit('user_cookie_check', {'data': 'client_valide','etape':0}, room=sid) #a modifier : verifier que le sid n'est pas deja enregistré
-    async def on_send_position(self,sid,data):
-        j = self.s.getJoueur(sid)
-        p = self.s.getPartie(sid)
-        if p != -1:
-            p.setPosition(self.s.Joueurs[j],data)
 

@@ -25,12 +25,16 @@ export class GameScene extends Phaser.Scene{
         /* TODO : organiser les données */
     }
     create(){
-        
         //this.armel = new JoueurSprite(this, 30, 40, "armel", 26).setDepth(0);
         this.joueurs = [] // stocke 3 joueurs de numero diff de numero
 
         for(var i = 0; i<this.usernames.length;i++){
-            this.joueurs.push(new JoueurSprite(this,30,40,"armel").setDepth(0))
+            if (i === this.numero){
+                this.joueurs.push(new JoueurSprite(this,30,40,"armel",true,this.usernames[i]).setDepth(0))
+            }
+            else{
+                this.joueurs.push(new JoueurSprite(this,30,40,"armel",false,this.usernames[i]).setDepth(0))
+            }
         }
 
 
@@ -45,12 +49,15 @@ export class GameScene extends Phaser.Scene{
         this.layer = map.createStaticLayer(0, tiles, 0, 0).setDepth(-1);
         this.layer2 = map.createStaticLayer(1, tiles, 0, 0).setDepth(1);
 
+
+        
+        //var txt = this.add.text(0, 0, 'hello');
         
         //window.armel = this.armel;
 
         this.keyboard = this.input.keyboard.addKeys("Z, Q, S, D");
         
-        this.cameras.main.roundPixels = true;
+        //this.cameras.main.roundPixels = true;
         this.cameras.main.startFollow(this.joueurs[this.numero],true, 0.2, 0.2);
         this.physics.world.setBounds(0,0, map.widthInPixels, map.heightInPixels);
         
@@ -60,7 +67,6 @@ export class GameScene extends Phaser.Scene{
         this.updateData();
         this.sendData();
         this.updateObjects();
-        this.joueurs[this.numero].context(this)
     }
 
 
@@ -94,6 +100,7 @@ export class GameScene extends Phaser.Scene{
             if(this.numero != nj){
                 this.joueurs[nj].setPosition(this.pos[nj][0],this.pos[nj][1])
             }
+            this.joueurs[nj].context(this)            
         }
     }
     resize(gameSize,baseSize,displaySize,resolution){

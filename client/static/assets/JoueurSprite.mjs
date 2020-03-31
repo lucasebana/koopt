@@ -1,6 +1,6 @@
 export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
 
-    constructor(scene, x, y, texture, frame) {
+    constructor(scene, x, y, texture, playable,name, frame=0) {
         super(scene, x, y, texture, frame);
 
         scene.sys.updateList.add(this);
@@ -9,7 +9,9 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
         this.setScale(2);
         scene.physics.world.enableBody(this);
         this.setImmovable(true);
-        this.hp = 10;
+
+        this.playable = playable;
+
         scene.anims.create({
             key: "stretch",
             frameRate: 10,
@@ -18,14 +20,22 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
                 end: 6
             })
         });
+        this.name = name;
+        this.textname = scene.add.text(this.x - this.width /2 , this.y + this.height, this.name, 
+        { font: '16px Courier', fill: '#FFFFFF', backgroundColor:"#000000", align:'center'}
+        );
 
+        this.textname.setPosition(this.x - this.textname.width /2 , this.y + this.height+5)
+
+        this.textname.setDepth(20)
+        
         //set smaller hitbox
         this.setSize(30, 52).setOffset(17, 12);
         this.setCollideWorldBounds(true);
     }
-    context(scene){
-        this.play("stretch",true)
-        this.update();
+
+
+    controlPlayer(scene){
         if (scene.keyboard.D.isDown === true) {
             this.setVelocityX(200);
         }
@@ -46,6 +56,14 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
         }
         if (scene.keyboard.Z.isUp && scene.keyboard.S.isUp) { //not pressing y movement
             this.setVelocityY(0);
+        }
+    }
+    context(scene){
+        this.play("stretch",true)
+        this.update();
+        this.textname.setPosition(this.x - this.textname.width/2, this.y + this.height + 5)
+        if (this.playable){
+            this.controlPlayer(scene);
         }
     }
 

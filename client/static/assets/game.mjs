@@ -3,7 +3,7 @@ import {LoadScene} from '/static/assets/LoadScene.mjs'
 
 
 var config = {
-    type: Phaser.WebGL,
+    type: Phaser.AUTO,/*WebGL */
     width: 800,
     height: 600,
     parent:"b",
@@ -21,6 +21,7 @@ var config = {
             debug: true
         }
     }
+
 };
 
 config.height = document.getElementById("b").clientHeight;//ou offsetHeight ? 

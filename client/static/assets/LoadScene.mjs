@@ -11,7 +11,7 @@ export class LoadScene extends Phaser.Scene{
         console.log("INIT de LOADSCENE !");
     }
     preload(){
-
+        
     }
     create(){
         this.scene.add("GAME",GameScene)
