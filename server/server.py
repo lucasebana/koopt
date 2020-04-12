@@ -42,12 +42,17 @@ class Server:
         ''' Démarrage des serveurs et routage '''
         @self.app.listener('before_server_start')
         def before_server_start(sanic, loop):
-            self.sio.start_background_task(self.run)
+            self.back_task = self.sio.start_background_task(self.run)
+            
 
         @self.app.route('/')
         async def index(request):
             with open('../client/index.html') as f:
                 return html(f.read())
+        @self.app.listener('before_server_stop')
+        def before_server_stop(sanic,loop):
+            self.running = False;
+            self.back_task.cancel()
 
         self.sio.register_namespace(ServerHandler('/',self.sio,self))
         self.app.static('/static', '../client/static')
@@ -56,27 +61,24 @@ class Server:
         else:
             self.app.run(host=self.ip,port='8000')
 
+        
     async def creerJoueur(self,sid,username):
         cookie = str(sid)[:8]
         '''
         while cookie in [self.Clients[i].cookie for i in range(len(self.Clients))]  :
             cookie = str(uuid.uuid4)[:8]
         '''
-        #Checker un conflit socketid ?
         #Il faudrait vérifier si le nom est correct (different/non vide ...)
         j = Joueur(len(self.Joueurs),username,sid,cookie)
         self.Joueurs.append(j)
         await self.sio.emit('user_cookie', {'data': cookie}, room=sid)
         print("Nouveau client enregistré ! ")
         print(cookie)
-
         #Si tout est correct on envoie une validation au client
         await self.sio.emit('user_registration_cookie', {'data': cookie}, room=sid)
         j.etape=1
-        #Sinon message d'erreur...     
-
-        pass
-
+        #Sinon message d'erreur...  
+        
     async def checkJoueur(self,sid,cookie):
         ''' fonction serveur vérifiant que l'utilisateur
         possède bien un identifiant(stocké ss forme de cookie) unique '''
@@ -131,12 +133,33 @@ class Server:
     async def run(self):
         ''' boucle principale de la logique du serveur de jeu 
         cette boucle s'éxécute en parallèle des serveurs web'''
+
+        '''
+        import threading 
+        def read_kbd_input():
+            while self.running == True:
+                i = input()
+                if i == "exit":
+                    str = i
+                    self.running = False;
+                else: 
+                    print("entrez 'exit' pour quitter")
+        
+
+        str = ""
+        inputThread = threading.Thread(target=read_kbd_input, daemon=False)#daemon necessaire ?
+        inputThread.start()
+        '''
+
         while self.running == True:
             for p in self.Parties:
                 await p.context()
             await self.sio.sleep(1/(self.fps)) # serveur a 60fps
             #print("server running")
             #print("mavariable = ", self.mavariable)
+        
+        self.app.stop()
+        return 0
 
     def setmavariable(self): #fonction test qui incrémente mavariable
         self.mavariable+=100

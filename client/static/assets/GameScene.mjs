@@ -10,22 +10,19 @@ export class GameScene extends Phaser.Scene{
 
     init(data){
         console.log(data)
-        this.initialisation = false; // initialisation a chaque envoi ? 
         this.numero = null;
         this.usernames = []
         this.pos = []
-
+        this.vel = []
         this.updateData();
     }
     preload(){
         this.load.spritesheet("armel", "static/assets/armel.png", {frameHeight: 64, frameWidth: 64});
         this.load.image('pkm', 'static/assets/tilesetpkmnX.png');
-        this.load.tilemapTiledJSON('map', 'static/assets/map2.json');    
-        
-        /* TODO : organiser les données */
+        this.load.tilemapTiledJSON('map', 'static/assets/map3.json');
     }
     create(){
-        //this.armel = new JoueurSprite(this, 30, 40, "armel", 26).setDepth(0);
+        /* Création de la scène */
         this.joueurs = [] // stocke 3 joueurs de numero diff de numero
 
         for(var i = 0; i<this.usernames.length;i++){
@@ -37,40 +34,38 @@ export class GameScene extends Phaser.Scene{
             }
         }
 
-
-        for(var i=0; i < 3; i++){
-            if(i != this.numero){
-                console.log(i)
-            }
-        }
-
+        /* Chargement de la map */
         var map = this.make.tilemap({ key: 'map' });
         var tiles = map.addTilesetImage('pkm', 'pkm');
         this.layer = map.createStaticLayer(0, tiles, 0, 0).setDepth(-1);
         this.layer2 = map.createStaticLayer(1, tiles, 0, 0).setDepth(1);
-
+        this.collision = map.createStaticLayer(2, tiles, 0, 0).setDepth(5);
+        //this.physics.add.collider(this.joueurs[this.numero], this.collision);
+        this.physics.add.collider(this.joueurs[this.numero],this.collision)
+        map.setCollision([10646])
 
         
-        //var txt = this.add.text(0, 0, 'hello');
-        
-        //window.armel = this.armel;
-
+        /* Gestion de la caméra */
         this.keyboard = this.input.keyboard.addKeys("Z, Q, S, D");
         
-        //this.cameras.main.roundPixels = true;
-        this.cameras.main.startFollow(this.joueurs[this.numero],true, 0.2, 0.2);
+        this.cameras.main.startFollow(this.joueurs[this.numero],false, 0.2, 0.2);
         this.physics.world.setBounds(0,0, map.widthInPixels, map.heightInPixels);
-        
         this.scale.on("resize",this.resize,this)
+        this.positionClock = this.time.addEvent({loop:true,delay:1000,callback:this.on_position_clock,callbackScope:this})
+        this.actualiserPosition=true;
+
+        
     }
     update(){
+        /* Fonction appelée chaque frame */
         this.updateData();
         this.sendData();
         this.updateObjects();
     }
 
-
-    updateData(){ /* a benchmarquer ? */
+    updateData(){
+        /* Fonction mettant à jour les données issues du serveur */
+        /* a benchmarquer ? */
        var d = window.gh.getData()
        for (var n_data = 0; n_data < d.length; n_data++){
         if("load_i" in d[n_data]){
@@ -79,30 +74,44 @@ export class GameScene extends Phaser.Scene{
         if("load_game" in d[n_data]){
             this.usernames = d[n_data].load_game.noms;
             var p = []
+            var v = []
             var t = d[n_data].load_game
             for(var i = 0; i < d[n_data].load_game.posx.length;i++){
                 p.push([t.posx[i],t.posy[i]]);
+                v.push([t.velx[i],t.vely[i]]);
             }
             this.pos = p;
-            
+            this.vel = v;            
         }
-        
         }
     }
 
     sendData(){
+        /* Fonction envoyant les données au serveur */
         window.gh.sendData("send_position",[this.joueurs[this.numero].x,this.joueurs[this.numero].y])
+        window.gh.sendData("send_vel",[this.joueurs[this.numero].body.velocity.x,this.joueurs[this.numero].body.velocity.y])
     }
 
-
+    on_position_clock(){
+        /* Fonction callback horloge de position */
+        this.actualiserPosition = true;
+    }
+    
     updateObjects(){
+        /* Fonction mettant à jour les joueurs et objets du jeu */
         for(var nj = 0; nj < this.joueurs.length;nj++){
             if(this.numero != nj){
-                this.joueurs[nj].setPosition(this.pos[nj][0],this.pos[nj][1])
+                if(this.actualiserPosition == true){
+                    this.actualiserPosition = false;
+                    this.joueurs[nj].setPosition(this.pos[nj][0],this.pos[nj][1])
+                }
+                
+                this.joueurs[nj].setVelocity(this.vel[nj][0],this.vel[nj][1])
             }
             this.joueurs[nj].context(this)            
         }
     }
+
     resize(gameSize,baseSize,displaySize,resolution){
         console.log("GAMESCENE RESIZE ! ")
         /*var width = displaySize.width

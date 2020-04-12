@@ -79,6 +79,8 @@ class Partie:
         info["noms"] = [self.joueurs[i].username for i in range(njoueurs)]
         info["posx"] = [self.joueurs[i].position[0] for i in range(njoueurs)]
         info["posy"] = [self.joueurs[i].position[1] for i in range(njoueurs)]
+        info["velx"] = [self.joueurs[i].velocity[0] for i in range(njoueurs)]
+        info["vely"] = [self.joueurs[i].velocity[1] for i in range(njoueurs)]
         #url de la map ?
         await self.broadcast("load_game",info)
         #await self.broadcast("load_game",{"data1":["jean","jacques","pierre"]})
@@ -87,6 +89,9 @@ class Partie:
     def setPosition(self,joueur,data):
         if joueur in self.joueurs:#Nécessaire ????
             joueur.position = data
+    def setVelocity(self,joueur,data):
+        if joueur in self.joueurs:#Nécessaire ????
+            joueur.velocity = data
         
 
     async def load_sync(self):
