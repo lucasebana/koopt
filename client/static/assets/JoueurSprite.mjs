@@ -12,6 +12,10 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
 
         this.playable = playable;
         this.orientation = 0;
+        this.realVelocity = {
+            x:0,
+            y:0
+        }
         /* orientation :
             0 : haut
             1 : droite
@@ -62,6 +66,12 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
         
         //set smaller hitbox
         this.setSize(30, 52).setOffset(17, 12);
+
+        /*
+        this.body.offset.set(17,35)
+        this.body.height = 60   
+        */
+
         this.setCollideWorldBounds(true);
     }
 
@@ -110,7 +120,6 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
 
         if(vx == 0 && vy == 0){
             //set idle animation
-            //this.stop(null, true);
         }
         else{
             
@@ -131,6 +140,42 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
                     break;
             }
         }
+
+        if(this.body.velocity.x > 0){
+            if(this.body.blocked.right){
+                this.realVelocity.x = 0;
+            }else{
+                this.realVelocity.x = this.body.velocity.x;
+            }
+        }
+        else if(this.body.velocity.x < 0){
+            if(this.body.blocked.left){
+                this.realVelocity.x = 0;
+            }else{
+                this.realVelocity.x = this.body.velocity.x;
+            }
+        }
+        else{
+            this.realVelocity.x = 0
+        }
+        if(this.body.velocity.y > 0){
+            if(this.body.blocked.top){
+                this.realVelocity.y = 0;
+            }else{
+                this.realVelocity.y = this.body.velocity.y;
+            }
+        }
+        else if(this.body.velocity.y < 0){
+            if(this.body.blocked.bottom){
+                this.realVelocity.y = 0;
+            }else{
+                this.realVelocity.y = this.body.velocity.y;
+            }
+        }
+        else{
+            this.realVelocity.y = 0
+        }
+
 
     }
 

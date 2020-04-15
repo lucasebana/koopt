@@ -165,4 +165,4 @@ class Server:
         self.mavariable+=100
 
 #TODO Heriter de GameHandler qui gere uniquement les events gameplay
-
+#CTRL+K Z

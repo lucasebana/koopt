@@ -51,16 +51,15 @@ export class GameScene extends Phaser.Scene{
         this.cameras.main.startFollow(this.joueurs[this.numero],false, 0.2, 0.2);
         this.physics.world.setBounds(0,0, map.widthInPixels, map.heightInPixels);
         this.scale.on("resize",this.resize,this)
-        this.positionClock = this.time.addEvent({loop:true,delay:1000,callback:this.on_position_clock,callbackScope:this})
+        this.positionClock = this.time.addEvent({looxp:true,delay:2500,callback:this.on_position_clock,callbackScope:this})
         this.actualiserPosition=true;
 
-        
     }
     update(){
         /* Fonction appelée chaque frame */
         this.updateData();
         this.sendData();
-        this.updateObjects();
+        this.updateObjects();        
     }
 
     updateData(){
@@ -89,7 +88,7 @@ export class GameScene extends Phaser.Scene{
     sendData(){
         /* Fonction envoyant les données au serveur */
         window.gh.sendData("send_position",[this.joueurs[this.numero].x,this.joueurs[this.numero].y])
-        window.gh.sendData("send_vel",[this.joueurs[this.numero].body.velocity.x,this.joueurs[this.numero].body.velocity.y])
+        window.gh.sendData("send_vel",[this.joueurs[this.numero].realVelocity.x,this.joueurs[this.numero].realVelocity.y])
     }
 
     on_position_clock(){
