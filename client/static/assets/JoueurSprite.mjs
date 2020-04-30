@@ -1,6 +1,7 @@
+import { HealthBar } from './HealthBar.mjs'
 export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
 
-    constructor(scene, x, y, texture, playable,name, frame=0) {
+    constructor(scene, x, y, texture, playable,name, frame=0,healthbar) {
         super(scene, x, y, texture, frame);
 
         scene.sys.updateList.add(this);
@@ -64,6 +65,9 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
 
         this.textname.setDepth(20)
         
+        
+        this.healthbar = new HealthBar(scene,this.x - this.width/2 - 2, this.y-this.height)
+
         //set smaller hitbox
         this.setSize(30, 52).setOffset(17, 12);
 
@@ -184,6 +188,8 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
         this.setAnimation()
         this.update();
         this.textname.setPosition(this.x - this.textname.width/2, this.y + this.height + 5)
+        this.healthbar.bar.x=this.x - this.width/2 -2
+        this.healthbar.bar.y=this.y - this.height 
         if (this.playable){
             this.controlPlayer(scene);
         }
