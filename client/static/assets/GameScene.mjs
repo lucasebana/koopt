@@ -22,6 +22,9 @@ export class GameScene extends Phaser.Scene{
         this.load.tilemapTiledJSON('map', 'static/assets/map3.json');
     }
     create(){
+
+        window.GameScene = this;
+
         /* Création de la scène */
         this.joueurs = [] // stocke 3 joueurs de numero diff de numero
 
@@ -33,6 +36,7 @@ export class GameScene extends Phaser.Scene{
                 this.joueurs.push(new JoueurSprite(this,30,40,"armel",false,this.usernames[i]).setDepth(0))
             }
         }
+        this.mainplayer  = this.joueurs[this.numero];
 
         /* Chargement de la map */
         var map = this.make.tilemap({ key: 'map' });
@@ -41,14 +45,14 @@ export class GameScene extends Phaser.Scene{
         this.layer2 = map.createStaticLayer(1, tiles, 0, 0).setDepth(1);
         this.collision = map.createStaticLayer(2, tiles, 0, 0).setDepth(5);
         //this.physics.add.collider(this.joueurs[this.numero], this.collision);
-        this.physics.add.collider(this.joueurs[this.numero],this.collision)
+        this.physics.add.collider(this.mainplayer,this.collision)
         map.setCollision([10646])
 
         
         /* Gestion de la caméra */
         this.keyboard = this.input.keyboard.addKeys("Z, Q, S, D");
         
-        this.cameras.main.startFollow(this.joueurs[this.numero],false, 0.2, 0.2);
+        this.cameras.main.startFollow(this.mainplayer,false, 0.2, 0.2);
         this.physics.world.setBounds(0,0, map.widthInPixels, map.heightInPixels);
         this.scale.on("resize",this.resize,this)
         this.positionClock = this.time.addEvent({looxp:true,delay:2500,callback:this.on_position_clock,callbackScope:this})
@@ -87,8 +91,8 @@ export class GameScene extends Phaser.Scene{
 
     sendData(){
         /* Fonction envoyant les données au serveur */
-        window.gh.sendData("send_position",[this.joueurs[this.numero].x,this.joueurs[this.numero].y])
-        window.gh.sendData("send_vel",[this.joueurs[this.numero].realVelocity.x,this.joueurs[this.numero].realVelocity.y])
+        window.gh.sendData("send_position",[this.mainplayer.x,this.mainplayer.y])
+        window.gh.sendData("send_vel",[this.mainplayer.realVelocity.x,this.mainplayer.realVelocity.y])
     }
 
     on_position_clock(){
