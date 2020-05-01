@@ -1,12 +1,12 @@
 export class HealthBar {
 
-    constructor (scene, x, y)
+    constructor (scene, x, y, pdv)
     {
         this.bar = new Phaser.GameObjects.Graphics(scene);
 
         this.x = x;
         this.y = y;
-        this.value = 100;
+        this.value = pdv;
         this.p = 76 / 100;
 
         this.draw();
@@ -14,9 +14,9 @@ export class HealthBar {
         scene.add.existing(this.bar);
     }
 
-    decrease (amount)
+    delta (amount)//peut être positif ou négatif
     {
-        this.value -= amount;
+        this.value += amount;
 
         if (this.value < 0)
         {
@@ -57,7 +57,7 @@ export class HealthBar {
 
 }
 
-class Missile extends Phaser.GameObjects.Image {
+/*class Missile extends Phaser.GameObjects.Image {
 
     constructor (scene, frame)
     {
@@ -66,7 +66,7 @@ class Missile extends Phaser.GameObjects.Image {
         this.visible = false;
     }
 
-}
+}*/
 
 /*class Elf extends Phaser.GameObjects.Sprite {
 

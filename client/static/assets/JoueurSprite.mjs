@@ -1,7 +1,7 @@
 import { HealthBar } from './HealthBar.mjs'
 export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
 
-    constructor(scene, x, y, texture, playable,name, frame=0,healthbar) {
+    constructor(scene, x, y, texture, playable,name, frame=0) {
         super(scene, x, y, texture, frame);
 
         scene.sys.updateList.add(this);
@@ -225,7 +225,7 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
     }
     damage (amount)
     {
-        if (this.healthbar.decrease(amount))
+        if (this.healthbar.delta(amount))
         {
             this.alive = false;        
         }
