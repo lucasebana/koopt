@@ -127,7 +127,7 @@ export class Client {
         $("#lobby_name").text(data.nomSalle)
         var liste = [data.j0, data.j1, data.j2, data.j3]
         var n_utilisateurs = 0
-        console.log(liste)
+        //console.log(liste)
         liste.forEach((element, i) => {
             if (element != null) {
                 n_utilisateurs += 1
@@ -135,7 +135,6 @@ export class Client {
             }
         });
         $("#lobby_n_users").text(n_utilisateurs)
-
     }
 
     lobby_game_start(client, data) {
