@@ -56,6 +56,26 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
                 end: 6
             })
         });
+
+        scene.anims.create({
+            key: "danseVictoire",
+            frameRate: 10,
+            frames: scene.anims.generateFrameNumbers("armel", {
+                start: 195,
+                end: 199
+            })
+        })
+        
+        
+        scene.anims.create({
+            key: "death",
+            frameRate: 10,
+            frames: scene.anims.generateFrameNumbers("armel", {
+                start: 262,
+                end: 265
+            })  
+        })
+
         this.name = name;
         this.textname = scene.add.text(this.x - this.width /2 , this.y + this.height, this.name, 
         { font: '16px Courier', fill: '#FFFFFF', backgroundColor:"#000000", align:'center'}
@@ -66,9 +86,10 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
         this.textname.setDepth(20)
         
         
-        this.healthbar = new HealthBar(scene,this.x - this.width/2 - 2, this.y-this.height,0)
+        this.healthbar = new HealthBar(scene,this.x - this.width/2 - 2, this.y-this.height,100)
         this.healthbar.bar.setDepth(20)
         this.alive=true
+        this.alr= false
 
         //set smaller hitbox
         this.setSize(30, 52).setOffset(17, 12);
@@ -184,11 +205,14 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
 
 
     }
+     //pour ne pas display plusieurs fois l'animation dans le update
 
     context(scene){
         //this.play("stretchD",true)
-        if (this.alive===false){
-            this.visible=false
+        if (this.alive===false && this.alr===false){
+            this.play("death",true);
+            this.alr=true;
+            this.playable=false;
         }
         this.setAnimation()
         this.update();
@@ -201,7 +225,7 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
     }
     damage (amount)
     {
-        if (this.hp.decrease(amount))
+        if (this.healthbar.decrease(amount))
         {
             this.alive = false;        
         }
