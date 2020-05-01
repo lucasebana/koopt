@@ -66,7 +66,9 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
         this.textname.setDepth(20)
         
         
-        this.healthbar = new HealthBar(scene,this.x - this.width/2 - 2, this.y-this.height)
+        this.healthbar = new HealthBar(scene,this.x - this.width/2 - 2, this.y-this.height,0)
+        this.healthbar.bar.setDepth(20)
+        this.alive=true
 
         //set smaller hitbox
         this.setSize(30, 52).setOffset(17, 12);
@@ -185,6 +187,9 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
 
     context(scene){
         //this.play("stretchD",true)
+        if (this.alive===false){
+            this.visible=false
+        }
         this.setAnimation()
         this.update();
         this.textname.setPosition(this.x - this.textname.width/2, this.y + this.height + 5)
@@ -192,6 +197,13 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
         this.healthbar.bar.y=this.y - this.height 
         if (this.playable){
             this.controlPlayer(scene);
+        }
+    }
+    damage (amount)
+    {
+        if (this.hp.decrease(amount))
+        {
+            this.alive = false;        
         }
     }
 
