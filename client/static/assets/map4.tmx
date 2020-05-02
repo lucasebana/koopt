@@ -145,7 +145,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <objectgroup id="7" name="Calque d'objets 1">
+ <objectgroup id="7" name="objets">
   <object id="20" x="704" y="128" width="128" height="192">
    <properties>
     <property name="type" value="arbre1"/>

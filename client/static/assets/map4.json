@@ -3,7 +3,8 @@
     {
      "export":
         {
-         "format":"json"
+         "format":"json",
+         "target":"map4.json"
         }
     },
  "height":30,
@@ -66,7 +67,7 @@
         {
          "draworder":"topdown",
          "id":7,
-         "name":"Calque d'objets 1",
+         "name":"objets",
          "objects":[
                 {
                  "height":192,

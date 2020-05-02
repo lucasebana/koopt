@@ -11,9 +11,11 @@ export class WoodLevel extends Phaser.Physics.Arcade.Sprite{
         scene.sys.updateList.add(this);
         scene.sys.displayList.add(this);
         
-        this.setScale(2);
-        scene.physics.world.enableBody(this);
-        this.setImmovable(true);
+        this.setScale(0.5);
+        //scene.physics.world.enableBody(this);
+        //this.setImmovable(true);
+        this.x = 130
+        this.y = 40
         //this.draw()
         //scene.add.existing(this.level);
 
