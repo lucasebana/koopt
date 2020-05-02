@@ -205,7 +205,7 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
 
 
     }
-     //pour ne pas display plusieurs fois l'animation dans le update
+     
 
     context(scene){
         //this.play("stretchD",true)
