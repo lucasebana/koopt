@@ -1,9 +1,7 @@
 import time
+from map import Map
+
 class Partie:
-    nom=""
-    id=""
-    joueurs = []
-    map = None
 
     def __init__(self,nom,id,sio,joueur=None):
         self.ready = False;
@@ -13,7 +11,7 @@ class Partie:
         self.id = id
         self.etat = 2
         self.joueurs= []
-
+        self.map = Map("../client/static/assets/map4.json")
 
         self.start_frametime = 0;
         self.finish_frametime = 0;
@@ -75,7 +73,6 @@ class Partie:
             jo = [self.joueurs[i].username if i < len(self.joueurs) else None for i in range(4)]
             await self.broadcast('lobby',{**{"nomSalle":self.nom,"idSalle":self.id},**{"j"+str(i):jo[i] for i in range(len(jo))}})
 
-
     async def broadcast(self,header,data):
         await self.sio.emit(header,data,room=self.socketroom)
 
@@ -113,7 +110,7 @@ class Partie:
         if (ti - self.fps_time) > 1 :
             self.fps_last = self.fps_current
             self.fps_current = self.fpscounter / (ti - self.fps_time)
-            print("FPS: ", self.fps_current)
+            #print("FPS: ", self.fps_current)
             self.fpscounter = 0
             self.fps_time = time.time()
             fps_delta = self.goal_fps - self.fps_current;
@@ -126,8 +123,8 @@ class Partie:
         """
 
         if self.waittime>0:
-            time.sleep(self.waittime)
-        #await self.sio.sleep(0.015)
+            time.sleep(0.008)
+            #await self.sio.sleep(0.015)
 
 
     def setPosition(self,joueur,data):

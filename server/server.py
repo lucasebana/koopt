@@ -15,7 +15,6 @@ Payload.max_decode_packets = 300
 
 from handler.ServerHandler import ServerHandler
 from partie import Partie
-import map
 from joueur import Joueur
 import ressource
 

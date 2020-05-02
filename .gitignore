@@ -9,3 +9,5 @@ server/__pycache__/server.cpython-37.pyc
 .vscode
 .vscode/launch.json
 .vscode/settings.json
+server/__pycache__/
+server/__pycache__/*
