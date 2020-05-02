@@ -19,7 +19,7 @@ export class GameScene extends Phaser.Scene{
     preload(){
         this.load.spritesheet("armel", "static/assets/armel.png", {frameHeight: 64, frameWidth: 64});
         this.load.image('pkm', 'static/assets/tilesetpkmnX.png');
-        this.load.tilemapTiledJSON('map', 'static/assets/map3.json');
+        this.load.tilemapTiledJSON('map', 'static/assets/map4.json');
     }
     create(){
 
@@ -46,7 +46,7 @@ export class GameScene extends Phaser.Scene{
         this.collision = map.createStaticLayer(2, tiles, 0, 0).setDepth(5);
         //this.physics.add.collider(this.joueurs[this.numero], this.collision);
         this.physics.add.collider(this.mainplayer,this.collision)
-        map.setCollision([10646])
+        map.setCollision([601])
 
         
         /* Gestion de la caméra */

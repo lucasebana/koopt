@@ -6,7 +6,8 @@ from sanic import Sanic
 from sanic.response import html
 
 import socketio
-
+from engineio.payload import Payload
+Payload.max_decode_packets = 300
 
 
 #Importation de fichiers du projet
@@ -32,6 +33,12 @@ class Server:
         self.mavariable=0 # Variable test
 
         ''' Serveurs http et websocket '''
+
+
+
+        #Payload.max_decode_packets = cfg.service.ENGINEIO_MAX_DECODE_PACKETS
+        #socketio = SocketIO(async_mode='gevent', ping_timeout=cfg.service.PING_TIMEOUT, ping_interval=cfg.service.PING_INTERVAL)
+        
         self.sio = socketio.AsyncServer(async_mode='sanic')
         self.app = Sanic(name="koopt")
         self.sio.attach(self.app)
@@ -43,24 +50,33 @@ class Server:
         @self.app.listener('before_server_start')
         def before_server_start(sanic, loop):
             self.back_task = self.sio.start_background_task(self.run)
-            
+            self.back_task.add_done_callback(self.backtask_callback)
+        
+        
+        @self.app.listener('before_server_stop')
+        def before_server_stop(sanic,loop):
+            self.running = False;
+            self.back_task.cancel()
+            print("stop backtask")
+
 
         @self.app.route('/')
         async def index(request):
             with open('../client/index.html') as f:
                 return html(f.read())
-        @self.app.listener('before_server_stop')
-        def before_server_stop(sanic,loop):
-            self.running = False;
-            self.back_task.cancel()
-
         self.sio.register_namespace(ServerHandler('/',self.sio,self))
         self.app.static('/static', '../client/static')
         if self.ip is None:
-            self.app.run()
+            self.app.run(access_log=False)
         else:
-            self.app.run(host=self.ip,port='8000')
+            self.app.run(host=self.ip,port='8000',access_log=False)
 
+    def backtask_callback(self,arg):
+        if self.back_task.exception() != None:
+            print(self.back_task.exception())
+            print(" \n ----- Erreur sur exception ----- \n ")
+        
+        print(arg)
         
     async def creerJoueur(self,sid,username):
         cookie = str(sid)[:8]
@@ -98,10 +114,12 @@ class Server:
     async def creerPartie(self,sid,data):
         idJoueur = self.getJoueur(sid)
         j = self.Joueurs[idJoueur]
-        self.Parties.append(Partie("partie"+str(idJoueur), idJoueur, self.sio,j))
+        partie = Partie("partie"+str(idJoueur), idJoueur, self.sio,j)
+        self.Parties.append(partie)
         await self.sio.emit('acces_partie', "success", room=sid)
         j.etape=2
         pass
+        partie.ready = True
 
     async def rejoindrePartie(self,sid,data):
         idJoueur = self.getJoueur(sid)
@@ -134,30 +152,15 @@ class Server:
         ''' boucle principale de la logique du serveur de jeu 
         cette boucle s'éxécute en parallèle des serveurs web'''
 
-        '''
-        import threading 
-        def read_kbd_input():
-            while self.running == True:
-                i = input()
-                if i == "exit":
-                    str = i
-                    self.running = False;
-                else: 
-                    print("entrez 'exit' pour quitter")
         
-
-        str = ""
-        inputThread = threading.Thread(target=read_kbd_input, daemon=False)#daemon necessaire ?
-        inputThread.start()
-        '''
-
         while self.running == True:
             for p in self.Parties:
-                await p.context()
-            await self.sio.sleep(1/(self.fps)) # serveur a 60fps
-            #print("server running")
+                if p.ready == True:
+                    await p.context()
+
+            await self.sio.sleep(0) # serveur a 60fps
             #print("mavariable = ", self.mavariable)
-        
+            
         self.app.stop()
         return 0
 

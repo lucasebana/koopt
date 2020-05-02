@@ -1,6 +1,8 @@
 #Importation de fichiers
 from server import Server
 import argparse
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--ip", help="Adresse IP du serveur de jeu")

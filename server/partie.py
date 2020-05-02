@@ -1,3 +1,4 @@
+import time
 class Partie:
     nom=""
     id=""
@@ -5,6 +6,7 @@ class Partie:
     map = None
 
     def __init__(self,nom,id,sio,joueur=None):
+        self.ready = False;
         self.sio = sio
         self.nom = nom
         self.socketroom="s_"+nom
@@ -12,9 +14,27 @@ class Partie:
         self.etat = 2
         self.joueurs= []
 
+
+        self.start_frametime = 0;
+        self.finish_frametime = 0;
+        self.goal_fps = 60;
+        self.waittime = 0;
         self.framecount = 0
+        self.fps_time = time.time();
+        self.fpscounter = 0
+        self.fps_current = 0
+        self.fps_last = 0
+        self.realcurrent = 0
+        self.realprevious = 0
+
         if joueur != None:
             self.rejoindrePartie(joueur)
+            pass
+            
+        #TODO :
+        #https://github.com/bitcraft/PyTMX#loading-from-xml
+        #Split partie.py en plusieur fichiers
+        #Deplacer code client de assets.
         
         #ETAT 0 : INITIALISATION; 1 : LOBBY; 2 : EN JEU; 3 : EN PAUSE; 4 : TERMINE
     
@@ -86,6 +106,30 @@ class Partie:
         #await self.broadcast("load_game",{"data1":["jean","jacques","pierre"]})
         #await self.broadcast("load_game",info)
 
+    async def getFps(self):
+        self.framecount+=1
+        self.fpscounter+=1
+        ti = time.time()
+        if (ti - self.fps_time) > 1 :
+            self.fps_last = self.fps_current
+            self.fps_current = self.fpscounter / (ti - self.fps_time)
+            print("FPS: ", self.fps_current)
+            self.fpscounter = 0
+            self.fps_time = time.time()
+            fps_delta = self.goal_fps - self.fps_current;
+            
+            #print("waittime : ",self.waittime)
+                #print("waittime : ")
+
+        """if (self.fps_last+self.fps_current) != 0 :
+            self.waittime = (1/(self.goal_fps) - (self.realcurrent))*0.7;
+        """
+
+        if self.waittime>0:
+            time.sleep(self.waittime)
+        #await self.sio.sleep(0.015)
+
+
     def setPosition(self,joueur,data):
         if joueur in self.joueurs:#Nécessaire ????
             joueur.position = data
@@ -101,7 +145,7 @@ class Partie:
         await self.load_sync_broad()
 
     async def context(self):
-        self.framecount+=1
+        self.start_frametime = time.time()
         await self.checkReconnexions();
         await self.lobby();
 
@@ -112,10 +156,13 @@ class Partie:
         #envoyer au client la position et les actions le plus regulierement
         #les evenements secondaires moins souvent
         #les infos statiques (nom des joueurs, etc.), a l'init
+        
+        await self.update() # mise à jour de la logique du jeu
 
-        self.update() # mise à jour de la logique du jeu
+        await self.getFps();
+        pass
 
-    def update(self):
+    async def update(self):
         #p = self.joueurs[1].position;
         #self.joueurs[1].position = [p[0],p[1]+1]
         pass
