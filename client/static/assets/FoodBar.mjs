@@ -9,8 +9,14 @@ export class FoodBar {
         this.value=pdf
         this.p=(76 * 5) / (100*5);
         this.draw()
+        this.textname = scene.add.text(this.x+10,this.y+20, "Food", 
+        { font: '16px Courier', fill: '#FFFFFF', backgroundColor:"#000000", align:'center'}
+        );
+        this.textname.setPosition(this.x +10 , this.y+20)
+        this.textname.setDepth(20)
 
         scene.add.existing(this.bar);
+
     }
 
     delta (amount)//peut être positif ou négatif
@@ -46,4 +52,5 @@ export class FoodBar {
         this.bar.fillRect(this.x + 2, this.y + 2, d, 12);
 
     }
+    
 }
