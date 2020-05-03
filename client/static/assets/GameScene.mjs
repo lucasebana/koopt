@@ -61,7 +61,8 @@ export class GameScene extends Phaser.Scene{
         this.positionClock = this.time.addEvent({looxp:true,delay:2500,callback:this.on_position_clock,callbackScope:this})
         this.actualiserPosition=true;
 
-        
+
+      
 
     }
     update(){
