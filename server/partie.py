@@ -26,6 +26,8 @@ class Partie:
         self.realprevious = 0
         self.timestamp_ini=time.time();
 
+
+
         if joueur != None:
             self.rejoindrePartie(joueur)
             pass
@@ -125,8 +127,9 @@ class Partie:
         """
 
         if self.waittime>0:
-            time.sleep(0.008)
+            #time.sleep(0.008)
             #await self.sio.sleep(0.015)
+            pass
 
 
     def setPosition(self,joueur,data):
