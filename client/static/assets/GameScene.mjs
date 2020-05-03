@@ -1,5 +1,6 @@
 import { cst } from '/static/assets/cst.mjs'
 import {JoueurSprite} from '/static/assets/JoueurSprite.mjs'
+import {Arrow} from '/static/assets/Arrow.mjs'
 
 export class GameScene extends Phaser.Scene{
     constructor(){
@@ -18,6 +19,7 @@ export class GameScene extends Phaser.Scene{
     }
     preload(){
         this.load.spritesheet("armel", "static/assets/armel.png", {frameHeight: 64, frameWidth: 64});
+        this.load.spritesheet("fleche", "static/assets/fleche.png", {frameHeight: 40, frameWidth: 139});
         this.load.image('pkm', 'static/assets/tilesetpkmnX.png');
         this.load.tilemapTiledJSON('map', 'static/assets/map4.json');
     }
@@ -37,6 +39,7 @@ export class GameScene extends Phaser.Scene{
             }
         }
         this.mainplayer  = this.joueurs[this.numero];
+        //this.fleche=new Arrow(this,20,20,0);
 
         /* Chargement de la map */
         var map = this.make.tilemap({ key: 'map' });
@@ -54,7 +57,7 @@ export class GameScene extends Phaser.Scene{
         
         /* Gestion de la caméra */
         this.keyboard = this.input.keyboard.addKeys("Z, Q, S, D");
-        
+        this.arrowKey = this.input.keyboard.addKeys("SPACE");
         this.cameras.main.startFollow(this.mainplayer,false, 0.2, 0.2);
         this.physics.world.setBounds(0,0, map.widthInPixels, map.heightInPixels);
         this.scale.on("resize",this.resize,this)
@@ -119,6 +122,7 @@ export class GameScene extends Phaser.Scene{
             }
             this.joueurs[nj].context(this)            
         }
+        //this.fleche.update()
     }
 
     resize(gameSize,baseSize,displaySize,resolution){

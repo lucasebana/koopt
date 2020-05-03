@@ -1,4 +1,5 @@
 import { HealthBar } from './HealthBar.mjs'
+import {Arrow} from './Arrow.mjs'
 export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
 
     constructor(scene, x, y, texture, playable,name, frame=0) {
@@ -100,6 +101,7 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
         */
 
         this.setCollideWorldBounds(true);
+        //this.fleche=null;
     }
 
 
@@ -124,6 +126,11 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
         }
         if (scene.keyboard.Z.isUp && scene.keyboard.S.isUp) { //not pressing y movement
             this.setVelocityY(0);
+        }
+        if (scene.arrowKey.SPACE.isDown===true){         
+            this.fleche=new Arrow(this,20,20,0);
+            scene.add.existing(this.fleche);
+            scene.physics.add.existing(this.fleche);
         }
     }
 
@@ -221,6 +228,9 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
         this.healthbar.bar.y=this.y - this.height 
         if (this.playable){
             this.controlPlayer(scene);
+        }
+        if(this.fleche != null){
+            this.fleche.update();
         }
     }
     damage (amount)
