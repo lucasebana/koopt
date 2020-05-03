@@ -24,6 +24,7 @@ class Partie:
         self.fps_last = 0
         self.realcurrent = 0
         self.realprevious = 0
+        self.timestamp_ini=time.time();
 
 
 
@@ -89,6 +90,7 @@ class Partie:
         ''' methode renvoyant les données du joueur i à l'init* client'''
         info_perso = dict()
         info_perso["numero"] = i;
+        info_perso["timestampinit"] = self.timestamp_ini;
         await self.send("load_i",info_perso,self.joueurs[i])
 
     async def load_sync_broad(self):

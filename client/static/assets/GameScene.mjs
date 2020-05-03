@@ -78,6 +78,7 @@ export class GameScene extends Phaser.Scene{
        for (var n_data = 0; n_data < d.length; n_data++){
         if("load_i" in d[n_data]){
             this.numero = d[n_data].load_i.numero;
+            this.timestamp_ini=d[n_data].load_i.timestampinit;
         }
         if("load_game" in d[n_data]){
             this.usernames = d[n_data].load_game.noms;
