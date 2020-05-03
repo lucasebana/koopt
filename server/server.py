@@ -28,7 +28,7 @@ class Server:
     
     def __init__(self,ip = None):
         self.running = True
-        self.fps = 60 # Valeur de production plus proche de 60
+        self.fps = 100 # Valeur de production plus proche de 60
         self.mavariable=0 # Variable test
 
         ''' Serveurs http et websocket '''

@@ -128,9 +128,8 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
             this.setVelocityY(0);
         }
         if (scene.arrowKey.SPACE.isDown===true){         
-            this.fleche=new Arrow(this,20,20,0);
-            scene.add.existing(this.fleche);
-            scene.physics.add.existing(this.fleche);
+            this.fleche=new Arrow(scene,this.x,this.y,0);
+            this.fleche.setOrigin(0,0)
         }
     }
 
