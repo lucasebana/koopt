@@ -222,7 +222,6 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
             this.playable=false;
         }
         this.setAnimation()
-        this.update();
         this.textname.setPosition(this.x - this.textname.width/2, this.y + this.height + 5)
         this.healthbar.bar.x=this.x - this.width/2 -2
         this.healthbar.bar.y=this.y - this.height 
@@ -232,6 +231,7 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
         if(this.fleche != null){
             this.fleche.update();
         }
+        this.update();
     }
     damage (amount)
     {
