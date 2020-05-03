@@ -151,13 +151,14 @@ class Server:
         ''' boucle principale de la logique du serveur de jeu 
         cette boucle s'éxécute en parallèle des serveurs web'''
 
-        
+        import time
         while self.running == True:
             for p in self.Parties:
                 if p.ready == True:
                     await p.context()
 
             await self.sio.sleep(0) # serveur a 60fps
+            #time.sleep(1/120)
             #print("mavariable = ", self.mavariable)
             
         self.app.stop()
