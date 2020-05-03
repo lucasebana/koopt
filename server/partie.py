@@ -114,7 +114,7 @@ class Partie:
         if (ti - self.fps_time) > 1 :
             self.fps_last = self.fps_current
             self.fps_current = self.fpscounter / (ti - self.fps_time)
-            #print("FPS: ", self.fps_current)
+            print("FPS: ", self.fps_current)
             self.fpscounter = 0
             self.fps_time = time.time()
             fps_delta = self.goal_fps - self.fps_current;

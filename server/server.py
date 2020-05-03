@@ -147,18 +147,26 @@ class Server:
             return self.Joueurs[j].partie
         return -1
 
+     
+
     async def run(self):
         ''' boucle principale de la logique du serveur de jeu 
         cette boucle s'éxécute en parallèle des serveurs web'''
 
         import time
+        
+        temps = 0
         while self.running == True:
+            temps = time.time()
             for p in self.Parties:
                 if p.ready == True:
                     await p.context()
 
             await self.sio.sleep(0) # serveur a 60fps
-            #time.sleep(1/120)
+            #await asyncio.sleep(1/64)
+            while time.time() - temps < 1/self.fps:
+                #print (time.time() - temps)
+                pass
             #print("mavariable = ", self.mavariable)
             
         self.app.stop()
