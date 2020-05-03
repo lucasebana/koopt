@@ -1,29 +1,37 @@
 export class WoodLevel extends Phaser.Physics.Arcade.Sprite{
 
-    constructor(scene,x,y,texture,number) {
+    constructor(scene,varx,vary,texture,number) {
 
-        super(scene,x,y,texture)
+        super(scene,varx,vary,texture)
 
-        //this.level = new Phaser.GameObjects.Text(scene);
-        this.value=number
         
+        this.value=number
+        this.place=scene
 
         scene.sys.updateList.add(this);
         scene.sys.displayList.add(this);
         
         this.setScale(0.5);
-        //scene.physics.world.enableBody(this);
-        //this.setImmovable(true);
-        this.x = 130
-        this.y = 40
-        //this.draw()
-        //scene.add.existing(this.level);
+
+        this.x = varx
+        this.y = vary
+        this.draw()
 
 
     }
+    addWood(amount){
+        this.value+=amount
+        this.draw();
+    }
 
-    /*draw{
-        this.level.filltext(this.value,this.x+5,this.y);
-    }*/
+
+    draw(){
+        this.textname = this.place.add.text(this.x+10,this.y+20, this.value, 
+            { font: '16px Courier', fill: '#FFFFFF', backgroundColor:"#000000", align:'center'}
+            );
+            this.textname.setPosition(this.x +10 , this.y+20)
+            this.textname.setDepth(20)
+        }
+    
 
 }

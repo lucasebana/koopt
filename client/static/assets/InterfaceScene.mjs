@@ -29,7 +29,7 @@ this.foodbar=new FoodBar(this,5,5,100*5);
 
 
 /*Wood Level*/
-this.woodlevel=new WoodLevel(this,20,20,'wood',40)
+this.woodlevel=new WoodLevel(this,35,70,'wood',40)
 
 
 }
