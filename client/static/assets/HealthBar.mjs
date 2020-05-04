@@ -7,6 +7,7 @@ export class HealthBar {
         this.x = x;
         this.y = y;
         this.value = pdv;
+        this.value_init=pdv
         this.p = 76 / 100;
 
         this.draw();
@@ -21,6 +22,10 @@ export class HealthBar {
         if (this.value < 0)
         {
             this.value = 0;
+        }
+        if (this.value > this.value_init)
+        {
+            this.value = this.value_init;
         }
 
         this.draw();

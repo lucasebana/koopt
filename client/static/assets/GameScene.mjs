@@ -1,6 +1,7 @@
 import { cst } from '/static/assets/cst.mjs'
 import {JoueurSprite} from '/static/assets/JoueurSprite.mjs'
 import {Arrow} from '/static/assets/Arrow.mjs'
+import {Food} from '/static/assets/food.mjs'
 
 export class GameScene extends Phaser.Scene{
     constructor(){
@@ -20,6 +21,7 @@ export class GameScene extends Phaser.Scene{
     preload(){
         this.load.spritesheet("armel", "static/assets/armel.png", {frameHeight: 64, frameWidth: 64});
         this.load.spritesheet("fleche", "static/assets/fleche.png", {frameHeight: 40, frameWidth: 139});
+        this.load.spritesheet("food", "static/assets/food.png", {frameHeight: 65, frameWidth: 72});
         this.load.image('pkm', 'static/assets/tilesetpkmnX.png');
         this.load.tilemapTiledJSON('map', 'static/assets/map4.json');
     }
@@ -58,11 +60,22 @@ export class GameScene extends Phaser.Scene{
         /* Gestion de la caméra */
         this.keyboard = this.input.keyboard.addKeys("Z, Q, S, D");
         this.arrowKey = this.input.keyboard.addKeys("SPACE");
+        this.foodKey = this.input.keyboard.addKeys("F");
         this.cameras.main.startFollow(this.mainplayer,false, 0.2, 0.2);
         this.physics.world.setBounds(0,0, map.widthInPixels, map.heightInPixels);
         this.scale.on("resize",this.resize,this)
         this.positionClock = this.time.addEvent({looxp:true,delay:2500,callback:this.on_position_clock,callbackScope:this})
         this.actualiserPosition=true;
+
+        /*Temps pour décroissance barre de vie, initialisation*/
+        const e= new Date();
+        this.secondes_passe=e.getTime()/1000-this.timestamp_ini;
+        this.last_update=0;
+        
+        /*Food*/
+        //this.nourriture=new Food(this,this.mainplayer.x,this.mainplayer.y,"food");
+
+
 
 
       
@@ -72,7 +85,8 @@ export class GameScene extends Phaser.Scene{
         /* Fonction appelée chaque frame */
         this.updateData();
         this.sendData();
-        this.updateObjects();        
+        this.updateObjects();
+        this.updateHealth();        
     }
 
     updateData(){
@@ -145,6 +159,23 @@ export class GameScene extends Phaser.Scene{
             this.joueurs[nj].context(this)            
         }
         //this.fleche.update()
+    }
+
+    updateHealth(){
+        const e= new Date();
+        this.secondes_passe=e.getTime()/1000-this.timestamp_ini;
+
+        this.diff=parseInt(this.secondes_passe-this.last_update);
+        if (this.diff>=1) {
+            /*for(var nj = 0; nj < this.joueurs.length;nj++){
+                this.joueurs[nj].damage(this.diff*0,1);
+            }*/
+            this.mainplayer.damage(-(this.diff*0.1));
+            this.last_update=this.secondes_passe;
+
+        }
+        
+        
     }
 
     resize(gameSize,baseSize,displaySize,resolution){
