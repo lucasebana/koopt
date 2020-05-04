@@ -130,12 +130,18 @@ export class GameScene extends Phaser.Scene{
                     this.actualiserPosition = false;
                     this.joueurs[nj].setPosition(this.pos[nj][0],this.pos[nj][1])
                 }
-                this.joueurs[nj].setPosition(this.pos[nj][0],this.pos[nj][1])
+                //this.joueurs[nj].setPosition(this.pos[nj][0],this.pos[nj][1])
                 //this.joueurs[nj].setVelocity(this.vel[nj][0],this.vel[nj][1])
             }
             
-            this.joueurs[nj].setPosition(this.pos[nj][0],this.pos[nj][1])//this.pos[nj][1]
+            //this.joueurs[nj].setPosition(this.pos[nj][0],this.pos[nj][1])//this.pos[nj][1]
             //console.log(this.pos[nj][1])
+            if(this.vel[nj] != undefined){ // si on a recu des donnees
+            this.joueurs[nj].setVelocity(this.vel[nj][0],this.vel[nj][1])
+            
+            }
+            //console.log(this.vel[nj][0],this.vel[nj][1])
+            
             this.joueurs[nj].context(this)            
         }
         //this.fleche.update()

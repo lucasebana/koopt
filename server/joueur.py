@@ -1,3 +1,5 @@
+
+from rect2 import Rect2
 class Joueur:
     ''' Classe spécifique au jeu '''
     '''
@@ -7,6 +9,7 @@ class Joueur:
     coordonnées;
     vitesse;
     '''
+    
     def __init__(self, id, username, socketid, cookie):
         self.id = id;
         self.socketid = socketid;
@@ -15,10 +18,13 @@ class Joueur:
         self.cookie = cookie;
         self.etape = 0;
         self.partie = None
+        '''
         self.x = 0;
         self.y = 0;
         self.w = 60;
         self.h = 60;
+        '''
+        self.body = Rect2(0,0,60,60,0,0)
         self.req_vel_buffer = [0,0] # le joueur n'a d'impact que sur la frame suivante
         self.req_vel = [0,0]
         self.velocity = [0,0]

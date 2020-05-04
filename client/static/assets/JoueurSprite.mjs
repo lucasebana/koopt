@@ -18,6 +18,12 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
             x:0,
             y:0
         }
+
+        this.deplacement_serveur = {
+            x:0,
+            y:0
+        }
+
         /* orientation :
             0 : haut
             1 : droite
@@ -114,21 +120,79 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
 
 
     controlPlayer(scene){
-        if (scene.keyboard.D.isDown === true) {
+        
+        //if (scene.keyboard.D.isUp === true) {
+        if (scene.keyboard.Z.isUp === true) {
             //this.setVelocityX(200);
-            window.gh.sendData("move",1)
+            if (this.deplacement_serveur.y != 0){
+                window.gh.sendData("move",0+4)
+                }
+                this.deplacement_serveur.y = 0
         }
 
-        //if (scene.keyboard.D.isUp === true) {
-        else{
+        if (scene.keyboard.D.isUp === true) {
             //this.setVelocityX(200);
-            window.gh.sendData("move",1+4)
+            if (this.deplacement_serveur.x != 0){
+                window.gh.sendData("move",1+4)
+                }
+                this.deplacement_serveur.x = 0
         }
-        if (scene.keyboard.Z.isDown === true) {
-            //this.setVelocityY(-200);
-            window.gh.sendData("move",0)
+        if (scene.keyboard.S.isUp === true) {
+            //this.setVelocityX(200);
+            if (this.deplacement_serveur.y != 0){
+                window.gh.sendData("move",2+4)
+                }
+                this.deplacement_serveur.y = 0
         }
+
+        if (scene.keyboard.Q.isUp === true) {
+            //this.setVelocityX(200);
+            if (this.deplacement_serveur.x != 0){
+                window.gh.sendData("move",3+4)
+                }
+                this.deplacement_serveur.x = 0
+        }
+
         
+        //if (scene.keyboard.D.isUp === true) {
+        if (scene.keyboard.Z.isUp === true) {
+            //this.setVelocityX(200);
+            if (this.deplacement_serveur.y != 0){
+                window.gh.sendData("move",2+4)
+                }
+                this.deplacement_serveur.y = 0
+        }
+
+        if (scene.keyboard.Z.isDown === true) {
+            //this.setVelocityX(200);
+            if (this.deplacement_serveur.y != -1){
+                window.gh.sendData("move",0)
+                }
+                this.deplacement_serveur.y = -1
+        }
+        if (scene.keyboard.D.isDown === true) {
+            //this.setVelocityX(200);
+            if (this.deplacement_serveur.x != 1){
+                window.gh.sendData("move",1)
+                }
+                this.deplacement_serveur.x = 1
+        }
+        if (scene.keyboard.S.isDown === true) {
+            //this.setVelocityX(200);
+            if (this.deplacement_serveur.y != 1){
+                window.gh.sendData("move",2)
+                }
+                this.deplacement_serveur.y = 1
+        }
+        if (scene.keyboard.Q.isDown === true) {
+            //this.setVelocityX(200);
+            if (this.deplacement_serveur.x != -1){
+                window.gh.sendData("move",3)
+                }
+                this.deplacement_serveur.x = -1
+        }
+        //console.log(this.deplacement_serveur)
+        /* //RETIRER CE /*
         else{
             //this.setVelocityY(-200);
             window.gh.sendData("move",2+4)

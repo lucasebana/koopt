@@ -1,5 +1,7 @@
 #Importation de librairies
 import asyncio
+from threading import Thread
+
 import uuid 
 
 from sanic import Sanic
@@ -48,14 +50,19 @@ class Server:
         ''' Démarrage des serveurs et routage '''
         @self.app.listener('before_server_start')
         def before_server_start(sanic, loop):
-            self.back_task = self.sio.start_background_task(self.run)
-            self.back_task.add_done_callback(self.backtask_callback)
+            #self.back_task = self.sio.start_background_task(self.run)
+            #self.back_task.add_done_callback(self.backtask_callback)
+            self.loop = asyncio.get_event_loop()
+            self.loop.create_task(self.run())
+            self.thread = Thread(target=self.run_it_forever, args=(loop,))
+            self.thread.start()
+            pass
         
         
         @self.app.listener('before_server_stop')
         def before_server_stop(sanic,loop):
             self.running = False;
-            self.back_task.cancel()
+            #self.back_task.cancel()
             print("stop backtask")
 
 
@@ -150,6 +157,9 @@ class Server:
         return -1
 
      
+    def run_it_forever(self,loop):
+        #loop.run_forever();
+        pass
 
     async def run(self):
         ''' boucle principale de la logique du serveur de jeu 
@@ -158,17 +168,24 @@ class Server:
         import time
         
         temps = 0
+        
         while self.running == True:
+            #print("yo")
             temps = time.time()
             for p in self.Parties:
                 if p.ready == True:
+                    
                     await p.context()
-
-            await self.sio.sleep(0) # serveur a 60fps
+                    pass
+            #time.sleep(1/30)
+            await self.sio.sleep(1/70) # serveur a 60fps
             #await asyncio.sleep(1/64)
+            """
             while time.time() - temps < 1/self.fps:
                 #print (time.time() - temps)
                 pass
+            """
+            pass
             #print("mavariable = ", self.mavariable)
             
         self.app.stop()
@@ -179,3 +196,8 @@ class Server:
 
 #TODO Heriter de GameHandler qui gere uniquement les events gameplay
 #CTRL+K Z
+
+
+
+async def HelloWorld():
+    print("Hello world!")

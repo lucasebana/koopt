@@ -32,7 +32,6 @@ export class game_handler {
         this.socket.on('update_pos', function(data){
             self.data.push({"update_pos":data})
         })
-
     }
 
     getData(){
@@ -47,7 +46,5 @@ export class game_handler {
         this.socket.emit(header, data)
     }
 
-
-    
     
 }

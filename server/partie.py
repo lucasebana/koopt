@@ -99,10 +99,10 @@ class Partie:
         info = dict()
         njoueurs= len(self.joueurs)
         info["noms"] = [self.joueurs[i].username for i in range(njoueurs)]
-        info["posx"] = [self.joueurs[i].x for i in range(njoueurs)]
-        info["posy"] = [self.joueurs[i].y for i in range(njoueurs)]
-        info["velx"] = [self.joueurs[i].velocity[0] for i in range(njoueurs)]
-        info["vely"] = [self.joueurs[i].velocity[1] for i in range(njoueurs)]
+        info["posx"] = [self.joueurs[i].body.x for i in range(njoueurs)]
+        info["posy"] = [self.joueurs[i].body.y for i in range(njoueurs)]
+        info["velx"] = [self.joueurs[i].body.vx for i in range(njoueurs)]
+        info["vely"] = [self.joueurs[i].body.vy for i in range(njoueurs)]
         #url de la map ?
         await self.broadcast("load_game",info)
         #await self.broadcast("load_game",{"data1":["jean","jacques","pierre"]})
@@ -132,7 +132,6 @@ class Partie:
             #await self.sio.sleep(0.015)
             pass
 
-
     def setPosition(self,joueur,data):
         if joueur in self.joueurs:#Nécessaire ????
             joueur.position = data
@@ -146,23 +145,23 @@ class Partie:
         #axe y : positif vers le bas
 
         if data == 0:
-            joueur.req_vel[1] = -1
+            joueur.body.vyrB = -1
         elif data == 1:
-            joueur.req_vel[0] = 1
+            joueur.body.vxrB = 1
         elif data == 2:
-            joueur.req_vel[1] = 1
+            joueur.body.vyrB = 1
         elif data == 3:
-            joueur.req_vel[0] = -1
+            joueur.body.vxrB = -1
 
 
         elif data == 4:
-            joueur.req_vel[1] = 0
+            joueur.body.vyrB = 0
         elif data == 5:
-            joueur.req_vel[0] = 0
+            joueur.body.vxrB = 0
         elif data == 6:
-            joueur.req_vel[1] = 0
-        elif data == 7 : 
-            joueur.req_vel[0] = 0
+            joueur.body.vyrB = 0
+        elif data == 7 :
+            joueur.vxrB = 0
 
     async def load_sync(self):
         '''methode envoyant aux clients tt les données du jeu à l'initialisation du client'''
@@ -178,45 +177,52 @@ class Partie:
         #recuperation des inputs
         await self.getInputs()
 
-        
         if self.etat == 3:
             #logique de jeu
-            await self.update() # mise à jour de la logique du jeu
-
+            await self.update() # mise à jour de la logique du jeu  
             await self.sendData();
+            self.updateBodies();
 
         await self.getFps();
         pass
 
     async def getInputs(self):
         for j in self.joueurs:
-            j.req_vel = j.req_vel_buffer
+            #j.req_vel = j.req_vel_buffer
+            j.body.getInputs()
         pass
     
     async def sendData(self):
         info = dict()
         njoueurs= len(self.joueurs)
-        info["posx"] = [self.joueurs[i].x for i in range(njoueurs)]
-        info["posy"] = [self.joueurs[i].y for i in range(njoueurs)]
-        info["velx"] = [self.joueurs[i].velocity[0] for i in range(njoueurs)]
-        info["vely"] = [self.joueurs[i].velocity[1] for i in range(njoueurs)]
-        #url de la map ?
-        await self.broadcast("update_pos",info)
-        pass
+        #On n'envoie que s'il y a changement depuis la derniere frame
+        if(self.joueurs[0].body.changeLast()):
+            
+            info["posx"] = [self.joueurs[i].body.x for i in range(njoueurs)]
+            info["posy"] = [self.joueurs[i].body.y for i in range(njoueurs)]
+            info["velx"] = [self.joueurs[i].body.vx for i in range(njoueurs)]
+            info["vely"] = [self.joueurs[i].body.vy for i in range(njoueurs)]
+            #url de la map ?
+            await self.broadcast("update_pos",info)
 
     async def update(self):
         #p = self.joueurs[1].position;
         #self.joueurs[1].position = [p[0],p[1]+1]
 
         await self.move_objects()
+        
         pass
             
     async def move_objects(self):
         #deplacement des joueurs avant tout
         for joueur in self.joueurs:
-            fc =await self.future_collisions(joueur) #on recupere les collisions du joueur avec son environnement
-            await self.resolve_collisions(joueur,fc) #on ajuste sa position pour la frame suivante
+            fc =await self.future_collisions(joueur.body) #on recupere les collisions du joueur avec son environnement
+            await self.resolve_collisions(joueur.body,fc) #on ajuste sa position pour la frame suivante
 
+    def updateBodies(self):
+        for j in self.joueurs:
+            j.body.newFrame()
+    
     async def collisionAABB(self,objet1,objet2):
         if any(
             [objet2.x >= objet1.x + objet1.w,
@@ -231,8 +237,8 @@ class Partie:
         velocity = 200 #pixel / seconde 
         velocity = velocity/self.goal_fps #en pixel par frame
 
-        fpx = objet.x + objet.req_vel[0]*velocity
-        fpy = objet.y + objet.req_vel[1]*velocity
+        fpx = objet.x + objet.vxr*velocity
+        fpy = objet.y + objet.vyr*velocity
         return fpx,fpy
 
     async def future_collisions(self,objet):
@@ -258,41 +264,37 @@ class Partie:
         
     async def resolve_collisions(self,objet,fc):
         velocity = 200 #pixel / seconde 
-        velocity = velocity/self.goal_fps #en pixel par frame
-
+        velocityFrame = velocity/self.goal_fps #en pixel par frame
+        
 
         co = self.map.collisionObjects
 
         fcx = fc[0] #indice de l'objet collided ou False
         fcy = fc[1]
         
-        vpx = objet.req_vel[0]*velocity #velocité prévue selon x
-        vpy = objet.req_vel[1]*velocity
+        vpx = objet.vxr*velocity #velocité prévue selon x
+        vpy = objet.vyr*velocity
 
-        fpx = objet.x + objet.req_vel[0]*velocity #position prevue selon x
-        fpy = objet.y + objet.req_vel[1]*velocity
+        fpx = objet.x + objet.vxr*velocityFrame #position prevue selon x
+        fpy = objet.y + objet.vyr*velocityFrame
 
         if fcx== False:
-            objet.velocity[0] = vpx
+            objet.vx = vpx
             objet.x = fpx
         else:
-            if objet.req_vel[0] == 1:
+            if objet.vxr == 1:
                 objet.x = co[fcx].x - objet.w
-            elif objet.req_vel[0] == -1:
+            elif objet.vxr == -1:
                 objet.x = co[fcx].x + co[fcx].w
-            objet.velocity[0] = 0
+            objet.vy = 0
         
         if fcy== False:
-            objet.velocity[1] = vpy
+            objet.vy = vpy
             objet.y = fpy
         else:
-            if objet.req_vel[0] == 1: # /!\ vers le bas
+            if objet.vxr == 1: # /!\ vers le bas
                 objet.y = co[fcx].y - objet.h
-            elif objet.req_vel[0] == -1:
+            elif objet.vxr == -1:
                 objet.y = co[fcx].y + co[fcx].h
-            objet.velocity[0] = 0
-        
-
-        
-
+            objet.vy = 0
         
