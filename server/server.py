@@ -72,7 +72,9 @@ class Server:
 
     def backtask_callback(self,arg):
         if self.back_task.exception() != None:
-            print(self.back_task.exception())
+            #print(self.back_task.exception())
+            import traceback
+            traceback.print_tb(self.back_task.exception().__traceback__);
             print(" \n ----- Erreur sur exception ----- \n ")
         
         print(arg)
@@ -113,7 +115,7 @@ class Server:
     async def creerPartie(self,sid,data):
         idJoueur = self.getJoueur(sid)
         j = self.Joueurs[idJoueur]
-        partie = Partie("partie"+str(idJoueur), idJoueur, self.sio,j)
+        partie = Partie("partie"+str(idJoueur), idJoueur, self.sio,self.fps,j)
         self.Parties.append(partie)
         await self.sio.emit('acces_partie', "success", room=sid)
         j.etape=2

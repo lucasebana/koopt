@@ -102,6 +102,10 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
 
         this.setCollideWorldBounds(true);
         //this.fleche=null;
+
+        //W : 60
+        //H:60
+        //OFFSET : 17,34
     }
 
 
@@ -115,7 +119,8 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
         }
 
         if (scene.keyboard.S.isDown === true) {
-            this.setVelocityY(200);
+            //this.setVelocityY(200);
+            window.gh.sendData("move",2)
         }
 
         if (scene.keyboard.Q.isDown === true) {

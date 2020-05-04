@@ -93,8 +93,20 @@ export class GameScene extends Phaser.Scene{
                 p.push([t.posx[i],t.posy[i]]);
                 v.push([t.velx[i],t.vely[i]]);
             }
+            //this.pos = p;
+            //this.vel = v;            
+        }
+        if("update_pos" in d[n_data]){
+            var p = []
+            var v = []
+            var t = d[n_data].update_pos
+            for(var i = 0; i < d[n_data].update_pos.posx.length;i++){
+                p.push([t.posx[i],t.posy[i]]);
+                v.push([t.velx[i],t.vely[i]]);
+                //console.log(t.posx[i],t.posy[i])
+            }
             this.pos = p;
-            this.vel = v;            
+            this.vel = v;   
         }
         }
     }
@@ -118,8 +130,8 @@ export class GameScene extends Phaser.Scene{
                     this.actualiserPosition = false;
                     this.joueurs[nj].setPosition(this.pos[nj][0],this.pos[nj][1])
                 }
-                
-                this.joueurs[nj].setVelocity(this.vel[nj][0],this.vel[nj][1])
+                this.joueurs[nj].setPosition(this.pos[nj][0],this.pos[nj][1])
+                //this.joueurs[nj].setVelocity(this.vel[nj][0],this.vel[nj][1])
             }
             this.joueurs[nj].context(this)            
         }

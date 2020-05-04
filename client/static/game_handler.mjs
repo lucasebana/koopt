@@ -28,6 +28,11 @@ export class game_handler {
             self.data.push({"load_game":data})
             self.init_vars.load_game = true;
         })
+
+        this.socket.on('update_pos', function(data){
+            self.data.push({"update_pos":data})
+        })
+
     }
 
     getData(){

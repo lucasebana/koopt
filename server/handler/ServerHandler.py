@@ -44,4 +44,9 @@ class ServerHandler(socketio.AsyncNamespace):
         p = self.s.getPartie(sid)
         if p != -1:
             p.setVelocity(self.s.Joueurs[j],data)
+    async def on_move(self,sid,data):
+        j = self.s.getJoueur(sid)
+        p = self.s.getPartie(sid)
+        if p != -1:
+            p.move(self.s.Joueurs[j],data);
 

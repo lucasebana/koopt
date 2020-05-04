@@ -1,15 +1,19 @@
 import json
+from rect2 import Rect2
+
 class Map:
     tileset = None
 
     tileLayers = []
     collisionLayer = None
+    collisionObjects = []
     objets = [] # instances (objets)
 
     height = None
     width = None
     tileh = None
     tilew = None
+
 
     def __init__(self,src):
         self.src = src
@@ -27,11 +31,22 @@ class Map:
         self.tilew = self.dump["tilewidth"]
         
         for calque in self.dump["layers"]:
-            if calque["name"] == "collision":
+            if calque["name"] == "collisions":
                 self.collisionLayer = calque
             if calque["name"] == "objets":
                 self.objets = calque
             self.tileLayers.append(calque)
+
+        self.setCollisions()
+    
+    def setCollisions(self):
+        for i in range(len(self.collisionLayer)):
+            x = (i // self.width)*self.tilew
+            y = (i % self.width)*self.tileh
+            h = self.tileh
+            w = self.tilew
+            self.collisionObjects.append(Rect2(x,y,h,w))
+        
 
     def statut_objets(self):
         pass
