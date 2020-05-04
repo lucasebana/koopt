@@ -142,7 +142,9 @@ export class GameScene extends Phaser.Scene{
             if(this.numero != nj){
                 if(this.actualiserPosition == true){
                     this.actualiserPosition = false;
-                    this.joueurs[nj].setPosition(this.pos[nj][0],this.pos[nj][1])
+                    if(this.pos[nj] != undefined){
+                        this.joueurs[nj].setPosition(this.pos[nj][0],this.pos[nj][1])
+                    }
                 }
                 //this.joueurs[nj].setPosition(this.pos[nj][0],this.pos[nj][1])
                 //this.joueurs[nj].setVelocity(this.vel[nj][0],this.vel[nj][1])
