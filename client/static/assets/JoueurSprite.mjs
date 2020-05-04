@@ -100,38 +100,65 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
         this.body.height = 60   
         */
 
-        this.setCollideWorldBounds(true);
+        //this.setCollideWorldBounds(true);
         //this.fleche=null;
 
         //W : 60
         //H:60
         //OFFSET : 17,34
+        this.body.width = 60
+        this.body.height = 60
+        this.body.setOffset(17,34)
+        //this.body.setOrigin(0,0)
     }
 
 
     controlPlayer(scene){
         if (scene.keyboard.D.isDown === true) {
-            this.setVelocityX(200);
+            //this.setVelocityX(200);
+            window.gh.sendData("move",1)
         }
 
+        //if (scene.keyboard.D.isUp === true) {
+        else{
+            //this.setVelocityX(200);
+            window.gh.sendData("move",1+4)
+        }
         if (scene.keyboard.Z.isDown === true) {
-            this.setVelocityY(-200);
+            //this.setVelocityY(-200);
+            window.gh.sendData("move",0)
+        }
+        
+        else{
+            //this.setVelocityY(-200);
+            window.gh.sendData("move",2+4)
         }
 
         if (scene.keyboard.S.isDown === true) {
             //this.setVelocityY(200);
             window.gh.sendData("move",2)
         }
+        else {
+            //this.setVelocityY(200);
+            window.gh.sendData("move",2 + 4)
+        }
 
         if (scene.keyboard.Q.isDown === true) {
-            this.setVelocityX(-200);
+            //this.setVelocityX(-200);
+            window.gh.sendData("move",3)
         }
+        else {
+            //this.setVelocityX(-200);
+            window.gh.sendData("move",3+4)
+        }
+        /*
         if (scene.keyboard.Q.isUp && scene.keyboard.D.isUp) { //not moving on X axis
             this.setVelocityX(0);
         }
         if (scene.keyboard.Z.isUp && scene.keyboard.S.isUp) { //not pressing y movement
             this.setVelocityY(0);
         }
+        */
         if (scene.arrowKey.SPACE.isDown===true){         
             this.fleche=new Arrow(scene,this.x,this.y,0);
             this.fleche.setOrigin(0,0)

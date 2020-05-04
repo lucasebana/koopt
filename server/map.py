@@ -32,20 +32,22 @@ class Map:
         
         for calque in self.dump["layers"]:
             if calque["name"] == "collisions":
-                self.collisionLayer = calque
-            if calque["name"] == "objets":
+                self.collisionLayer = calque["data"]
+            elif calque["name"] == "objets":
                 self.objets = calque
-            self.tileLayers.append(calque)
+            else :
+                self.tileLayers.append(calque["data"])
 
         self.setCollisions()
     
     def setCollisions(self):
         for i in range(len(self.collisionLayer)):
-            x = (i // self.width)*self.tilew
-            y = (i % self.width)*self.tileh
-            h = self.tileh
-            w = self.tilew
-            self.collisionObjects.append(Rect2(x,y,h,w))
+            if  (self.collisionLayer[i] == 601):
+                x = (i // self.width)*self.tilew
+                y = (i % self.width)*self.tileh
+                h = self.tileh
+                w = self.tilew
+                self.collisionObjects.append(Rect2(x,y,h,w))
         
 
     def statut_objets(self):

@@ -146,13 +146,23 @@ class Partie:
         #axe y : positif vers le bas
 
         if data == 0:
-            pass
+            joueur.req_vel[1] = -1
         elif data == 1:
-            pass
+            joueur.req_vel[0] = 1
         elif data == 2:
-            joueur.req_vel_buffer[1] = 1
+            joueur.req_vel[1] = 1
         elif data == 3:
-            pass
+            joueur.req_vel[0] = -1
+
+
+        elif data == 4:
+            joueur.req_vel[1] = 0
+        elif data == 5:
+            joueur.req_vel[0] = 0
+        elif data == 6:
+            joueur.req_vel[1] = 0
+        elif data == 7 : 
+            joueur.req_vel[0] = 0
 
     async def load_sync(self):
         '''methode envoyant aux clients tt les données du jeu à l'initialisation du client'''
@@ -169,10 +179,11 @@ class Partie:
         await self.getInputs()
 
         
-        #logique de jeu
-        await self.update() # mise à jour de la logique du jeu
+        if self.etat == 3:
+            #logique de jeu
+            await self.update() # mise à jour de la logique du jeu
 
-        await self.sendData();
+            await self.sendData();
 
         await self.getFps();
         pass
