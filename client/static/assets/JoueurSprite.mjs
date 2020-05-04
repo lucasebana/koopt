@@ -1,5 +1,6 @@
 import { HealthBar } from './HealthBar.mjs'
 import {Arrow} from './Arrow.mjs'
+import {Food} from './food.mjs'
 export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
 
     constructor(scene, x, y, texture, playable,name, frame=0) {
@@ -74,8 +75,11 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
             frames: scene.anims.generateFrameNumbers("armel", {
                 start: 262,
                 end: 265
-            })  
-        })
+            })
+        })  
+        
+    
+        
 
         this.name = name;
         this.textname = scene.add.text(this.x - this.width /2 , this.y + this.height, this.name, 
@@ -130,6 +134,21 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
         if (scene.arrowKey.SPACE.isDown===true){         
             this.fleche=new Arrow(scene,this.x,this.y,0);
             this.fleche.setOrigin(0,0)
+        }
+        if (scene.foodKey.F.isDown===true){
+            this.quantite_nourriture=5
+            this.food=game.scene.getScene("INTERFACE").foodbar;
+            if (this.food.value < this.quantite_nourriture)
+            {
+                this.food.delta(-(this.food.value));
+                this.healthbar.delta(this.food.value/10)
+
+            }
+            else{
+             this.food.delta(-(this.quantite_nourriture));
+             this.healthbar.delta(this.quantite_nourriture/10);
+            }
+            this.eatin=true
         }
     }
 
@@ -220,6 +239,13 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
             this.alr=true;
             this.playable=false;
         }
+
+        /*if (this.eatin===true){
+            this.nourriture=new Food(this.scene,this.x,this.y+3,"food")
+            this.nourriture.visible=true
+            
+        }*/
+
         this.setAnimation()
         this.textname.setPosition(this.x - this.textname.width/2, this.y + this.height + 5)
         this.healthbar.bar.x=this.x - this.width/2 -2
