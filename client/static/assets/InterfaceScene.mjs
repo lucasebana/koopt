@@ -41,7 +41,7 @@ create(){
     this.temps=d.getTime()/1000-this.timestamp_start;
     var min= this.temps_partie-Math.floor(this.temps/60);
     var sec= 60-(this.temps % 60);
-    this.textname = this.add.text(this.foodbar.x+750,this.foodbar.y+10,min + ":" + parseInt(sec), 
+    this.textname = this.add.text(this.foodbar.x+750,this.foodbar.y+10,"Temps restant:  "+min+":"+ parseInt(sec), 
     { font: '16px Courier', fill: '#FFFFFF', backgroundColor:"#000000", align:'center'}
     );
     this.textname.setPosition(this.foodbar.x +750 , this.foodbar.y+10)
@@ -60,7 +60,7 @@ updateText(){
     this.temps=d.getTime()/1000-this.timestamp_start;
     var min= this.temps_partie-(Math.floor(this.temps/60));
     var sec= 60-(this.temps % 60);
-    this.textname.text=min + ":" + parseInt(sec);
+    this.textname.text="Temps restant:  "+min+":"+parseInt(sec);
 }
 
 }

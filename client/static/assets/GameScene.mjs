@@ -64,6 +64,11 @@ export class GameScene extends Phaser.Scene{
         this.positionClock = this.time.addEvent({looxp:true,delay:2500,callback:this.on_position_clock,callbackScope:this})
         this.actualiserPosition=true;
 
+        /*Temps*/
+        const e= new Date();
+        this.secondes_passe=e.getTime()/1000-this.timestamp_ini;
+        this.last_update=0;
+
 
       
 
@@ -72,7 +77,8 @@ export class GameScene extends Phaser.Scene{
         /* Fonction appelée chaque frame */
         this.updateData();
         this.sendData();
-        this.updateObjects();        
+        this.updateObjects();
+        this.updateHealth();        
     }
 
     updateData(){
@@ -124,6 +130,23 @@ export class GameScene extends Phaser.Scene{
             this.joueurs[nj].context(this)            
         }
         //this.fleche.update()
+    }
+
+    updateHealth(){
+        const e= new Date();
+        this.secondes_passe=e.getTime()/1000-this.timestamp_ini;
+
+        this.diff=parseInt(this.secondes_passe-this.last_update);
+        if (this.diff>=1) {
+            /*for(var nj = 0; nj < this.joueurs.length;nj++){
+                this.joueurs[nj].damage(this.diff*0,1);
+            }*/
+            this.mainplayer.damage(-(this.diff*0.1));
+            this.last_update=this.secondes_passe;
+
+        }
+        
+        
     }
 
     resize(gameSize,baseSize,displaySize,resolution){
