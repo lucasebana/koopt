@@ -21,7 +21,7 @@ export class GameScene extends Phaser.Scene{
     preload(){
         this.load.spritesheet("armel", "static/assets/armel.png", {frameHeight: 64, frameWidth: 64});
         this.load.spritesheet("fleche", "static/assets/fleche.png", {frameHeight: 40, frameWidth: 139});
-        this.load.spritesheet("food", "static/assets/food.png", {frameHeight: 65, frameWidth: 72});
+        this.load.spritesheet("food", "static/assets/burger.png", {frameHeight: 64, frameWidth: 64});
         this.load.image('pkm', 'static/assets/tilesetpkmnX.png');
         this.load.tilemapTiledJSON('map', 'static/assets/map4.json');
     }
@@ -73,7 +73,9 @@ export class GameScene extends Phaser.Scene{
         this.last_update=0;
         
         /*Food*/
-        //this.nourriture=new Food(this,this.mainplayer.x,this.mainplayer.y,"food");
+        this.nourriture=new Food(this,this.mainplayer.x,this.mainplayer.y+10,"food");
+        this.nourriture.visible=false
+
 
 
 
@@ -158,8 +160,16 @@ export class GameScene extends Phaser.Scene{
             }
             //console.log(this.vel[nj][0],this.vel[nj][1])
             
-            this.joueurs[nj].context(this)            
+            
+            this.manger=this.mainplayer.eatin;
+            this.nourriture.x=this.mainplayer.x
+            this.nourriture.y=this.mainplayer.y+10  
+            this.nourriture.context(this);
+            this.manger=this.nourriture.eating;
+            this.joueurs[nj].context(this)
+            
         }
+
         //this.fleche.update()
     }
 

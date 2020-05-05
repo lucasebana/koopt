@@ -13,6 +13,9 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
         scene.physics.world.enableBody(this);
         this.setImmovable(true);
 
+        this.eatin=false;
+    
+
         this.playable = playable;
         this.orientation = 0;
         this.realVelocity = {
@@ -82,7 +85,9 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
                 start: 262,
                 end: 265
             })
-        })  
+        }) 
+        
+
         
     
         
@@ -232,21 +237,30 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
             this.fleche.setOrigin(0,0)
         }
         if (scene.foodKey.F.isDown===true){
+            this.eatin=true
             this.quantite_nourriture=5
+            this.ratio=10
             this.food=game.scene.getScene("INTERFACE").foodbar;
+            
             if (this.food.value < this.quantite_nourriture)
             {
-                this.food.delta(-(this.food.value));
-                this.healthbar.delta(this.food.value/10)
-
+                
+                if (this.healthbar.value+(this.food.value/this.ratio)<this.healthbar.value_init){
+                    this.food.delta(-(this.food.value));
+                    this.healthbar.delta(this.food.value/this.ratio)
+                }
             }
-            else{
-             this.food.delta(-(this.quantite_nourriture));
-             this.healthbar.delta(this.quantite_nourriture/10);
+            else{              
+                if (this.healthbar.value+(this.quantite_nourriture/this.ratio)<this.healthbar.value_init){
+                    this.food.delta(-(this.quantite_nourriture));
+                    this.healthbar.delta(this.quantite_nourriture/this.ratio);
+                }              
             }
-            this.eatin=true
+            
         }
     }
+
+
 
     setAnimation(){
         var vx = this.body.velocity.x;
@@ -335,12 +349,11 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
             this.alr=true;
             this.playable=false;
         }
+        this.eatin=game.scene.getScene("GAME").manger
 
-        /*if (this.eatin===true){
-            this.nourriture=new Food(this.scene,this.x,this.y+3,"food")
-            this.nourriture.visible=true
-            
-        }*/
+        
+
+        
 
         this.setAnimation()
         this.textname.setPosition(this.x - this.textname.width/2, this.y + this.height + 5)
