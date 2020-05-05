@@ -1,6 +1,10 @@
 import time
 from map import Map
 from rect2 import Rect2
+
+debug = False
+if debug:
+    import pygame
 class Partie:
 
     def __init__(self,nom,id,sio,fps,joueur=None):
@@ -26,7 +30,7 @@ class Partie:
         self.realprevious = 0
         self.timestamp_ini=time.time();
 
-
+        self.Tst = 0
 
         if joueur != None:
             self.rejoindrePartie(joueur)
@@ -69,8 +73,23 @@ class Partie:
         ''' Initialisation de la partie (position des joueurs, choix de la map etc.)            
         
         '''
+        
+        self.BLACK = (0, 0, 0)
+        self.WHITE = (255, 255, 255)
+        self.BLUE = (0, 0, 255)
+        self.GREEN = (0, 255, 0)
+        self.RED = (255, 0, 0)
+
+        if debug:
+            pygame.init()
+            self.screen = pygame.display.set_mode((500, 500))
+            self.Tst = 1
+            self.screenpygame.display.set_caption("debug")
+        
+
+        
         #self.joueurs[0].position = [50,50]
-        self.joueurs[0].x = 243 # 236
+        #self.joueurs[0].x = 243 # 236
 
     async def lobby(self):
         if self.etat == 2:
@@ -111,6 +130,8 @@ class Partie:
     async def getFps(self):
         self.framecount+=1
         self.fpscounter+=1
+
+
         ti = time.time()
         if (ti - self.fps_time) > 1 :
             self.fps_last = self.fps_current
@@ -119,6 +140,11 @@ class Partie:
             self.fpscounter = 0
             self.fps_time = time.time()
             fps_delta = self.goal_fps - self.fps_current;
+
+            if len(self.joueurs) != 0:
+                #print(self.joueurs[0].body.x,self.joueurs[0].body.y)
+                pass
+
             
             #print("waittime : ",self.waittime)
                 #print("waittime : ")
@@ -161,7 +187,7 @@ class Partie:
         elif data == 6:
             joueur.body.vyrB = 0
         elif data == 7 :
-            joueur.vxrB = 0
+            joueur.body.vxrB = 0
 
     async def load_sync(self):
         '''methode envoyant aux clients tt les données du jeu à l'initialisation du client'''
@@ -211,13 +237,40 @@ class Partie:
 
         await self.move_objects()
         
-        pass
-            
+        x=self.joueurs[0].body.x
+        y=self.joueurs[0].body.y
+        h = self.joueurs[0].body.h
+        w = self.joueurs[0].body.w
+
+        if debug:
+            self.debug_draw()
+        
+
+
+    def debug_draw(self):
+        if(self.Tst!= 0):
+
+                for event in pygame.event.get():
+                    #if event.type == pygame.QUIT:
+                    pass
+                
+                pygame.draw.rect(self.screen, self.BLACK, [x, y, w, h], 2)
+                co = self.map.collisionObjects
+                for i in range(len(co)):
+                    x = co[i].x
+                    y = co[i].y
+                    w = co[i].w
+                    h = co[i].h
+                    pygame.draw.rect(self.screen, self.RED, [x, y, w, h], 2)
+                
+                pygame.display.flip()
+                self.screen.fill(self.WHITE)     
     async def move_objects(self):
         #deplacement des joueurs avant tout
         for joueur in self.joueurs:
             fc =await self.future_collisions(joueur.body) #on recupere les collisions du joueur avec son environnement
             await self.resolve_collisions(joueur.body,fc) #on ajuste sa position pour la frame suivante
+
 
     def updateBodies(self):
         for j in self.joueurs:
@@ -231,14 +284,34 @@ class Partie:
             objet2.y + objet2.h <= objet1.y]
             ):
             return False
+        if objet1.x==objet1.y==192:
+            pass
         return True
+        
+        """
+        ret = False
+        if objet2.x >= objet1.x + objet1.w:
+            ret = True
+            print("GAUCHE")
+        if objet2.x + objet2.w <= objet1.x:
+            ret = True
+            print("DROITE")  
+        if objet2.y >= objet1.y + objet1.h:
+            ret = True
+            print("HAUT")
+        if objet2.y + objet2.h <= objet1.y:
+            ret = True
+            print("BAS")
+        return ret
+        """
+        
     
     async def future_position(self,objet):
         velocity = 200 #pixel / seconde 
-        velocity = velocity/self.goal_fps #en pixel par frame
+        velocityFrame = velocity/self.goal_fps #en pixel par frame
 
-        fpx = objet.x + objet.vxr*velocity
-        fpy = objet.y + objet.vyr*velocity
+        fpx = objet.x + objet.vxr*velocityFrame
+        fpy = objet.y + objet.vyr*velocityFrame
         return fpx,fpy
 
     async def future_collisions(self,objet):
@@ -247,12 +320,12 @@ class Partie:
         deplacementX = Rect2(fpx,objet.y,objet.h,objet.w) # idem sur X
 
         co = self.map.collisionObjects #liste des collisions fixes de la map 
-
-        collisionY = False
-        collisionX = False
+        
+        collisionY = None
+        collisionX = None
 
         i = 0
-        while i < len(co) and (collisionY == False or collisionX == False):
+        while i < len(co) and (collisionY == None or collisionX == None):
             if await self.collisionAABB(deplacementY,co[i]):
                 collisionY = i
             if await self.collisionAABB(deplacementX,co[i]):
@@ -265,7 +338,6 @@ class Partie:
     async def resolve_collisions(self,objet,fc):
         velocity = 200 #pixel / seconde 
         velocityFrame = velocity/self.goal_fps #en pixel par frame
-        
 
         co = self.map.collisionObjects
 
@@ -278,7 +350,7 @@ class Partie:
         fpx = objet.x + objet.vxr*velocityFrame #position prevue selon x
         fpy = objet.y + objet.vyr*velocityFrame
 
-        if fcx== False:
+        if fcx== None:
             objet.vx = vpx
             objet.x = fpx
         else:
@@ -286,15 +358,15 @@ class Partie:
                 objet.x = co[fcx].x - objet.w
             elif objet.vxr == -1:
                 objet.x = co[fcx].x + co[fcx].w
-            objet.vy = 0
+            objet.vx = 0
         
-        if fcy== False:
+        if fcy== None:
             objet.vy = vpy
             objet.y = fpy
         else:
-            if objet.vxr == 1: # /!\ vers le bas
-                objet.y = co[fcx].y - objet.h
-            elif objet.vxr == -1:
-                objet.y = co[fcx].y + co[fcx].h
+            if objet.vyr == -1: # /!\ vers le haut
+                objet.y = co[fcy].y + co[fcy].h
+            elif objet.vyr == +1:
+                objet.y = co[fcy].y - objet.h
             objet.vy = 0
         

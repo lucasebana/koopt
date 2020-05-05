@@ -9,10 +9,19 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
         scene.sys.updateList.add(this);
         scene.sys.displayList.add(this);
         
-        this.setScale(2);
         scene.physics.world.enableBody(this);
         this.setImmovable(true);
 
+
+        /*this.displayHeight = 60*2
+        this.displayWidth = 120
+        */
+        this.setOffset(0,0)
+        this.body.width = 60
+        this.body.height = 60
+        this.setOrigin(0,0)
+        
+        
         this.playable = playable;
         this.orientation = 0;
         this.realVelocity = {
@@ -22,7 +31,9 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
 
         this.deplacement_serveur = {
             x:0,
-            y:0
+            y:0,
+            xold:0,
+            yold:0
         }
 
         /* orientation :
@@ -103,7 +114,7 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
         this.alr= false
 
         //set smaller hitbox
-        this.setSize(30, 52).setOffset(17, 12);
+        //this.setSize(30, 52).setOffset(17, 12);
 
         /*
         this.body.offset.set(17,35)
@@ -116,10 +127,9 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
         //W : 60
         //H:60
         //OFFSET : 17,34
-        this.body.width = 60
-        this.body.height = 60
-        this.body.setOffset(17,34)
+        //this.body.setOffset(17,34)
         //this.body.setOrigin(0,0)
+        
     }
 
 
@@ -128,74 +138,74 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
         //if (scene.keyboard.D.isUp === true) {
         if (scene.keyboard.Z.isUp === true) {
             //this.setVelocityX(200);
-            if (this.deplacement_serveur.y != 0){
-                window.gh.sendData("move",0+4)
-                }
                 this.deplacement_serveur.y = 0
         }
 
         if (scene.keyboard.D.isUp === true) {
             //this.setVelocityX(200);
-            if (this.deplacement_serveur.x != 0){
-                window.gh.sendData("move",1+4)
-                }
                 this.deplacement_serveur.x = 0
         }
         if (scene.keyboard.S.isUp === true) {
             //this.setVelocityX(200);
-            if (this.deplacement_serveur.y != 0){
-                window.gh.sendData("move",2+4)
-                }
                 this.deplacement_serveur.y = 0
         }
 
         if (scene.keyboard.Q.isUp === true) {
             //this.setVelocityX(200);
-            if (this.deplacement_serveur.x != 0){
-                window.gh.sendData("move",3+4)
-                }
                 this.deplacement_serveur.x = 0
         }
 
         
         //if (scene.keyboard.D.isUp === true) {
-        if (scene.keyboard.Z.isUp === true) {
-            //this.setVelocityX(200);
-            if (this.deplacement_serveur.y != 0){
-                window.gh.sendData("move",2+4)
-                }
-                this.deplacement_serveur.y = 0
-        }
-
+        
         if (scene.keyboard.Z.isDown === true) {
             //this.setVelocityX(200);
-            if (this.deplacement_serveur.y != -1){
-                window.gh.sendData("move",0)
-                }
                 this.deplacement_serveur.y = -1
         }
         if (scene.keyboard.D.isDown === true) {
             //this.setVelocityX(200);
-            if (this.deplacement_serveur.x != 1){
-                window.gh.sendData("move",1)
-                }
                 this.deplacement_serveur.x = 1
         }
         if (scene.keyboard.S.isDown === true) {
             //this.setVelocityX(200);
-            if (this.deplacement_serveur.y != 1){
-                window.gh.sendData("move",2)
-                }
                 this.deplacement_serveur.y = 1
         }
         if (scene.keyboard.Q.isDown === true) {
             //this.setVelocityX(200);
-            if (this.deplacement_serveur.x != -1){
-                window.gh.sendData("move",3)
-                }
                 this.deplacement_serveur.x = -1
         }
-        //console.log(this.deplacement_serveur)
+
+
+        if(this.deplacement_serveur.y != this.deplacement_serveur.yold){
+            if (this.deplacement_serveur.y == -1){
+                window.gh.sendData("move",0)
+            }
+            if (this.deplacement_serveur.y == 1){
+                window.gh.sendData("move",2)
+            }
+
+            if (this.deplacement_serveur.y == 0){
+                window.gh.sendData("move",0+4)
+            }
+        }
+        if(this.deplacement_serveur.x != this.deplacement_serveur.xold){
+            
+            if (this.deplacement_serveur.x == 1){
+                window.gh.sendData("move",1)
+            }
+            
+            if (this.deplacement_serveur.x == -1){
+                window.gh.sendData("move",3)
+            }
+            
+            if (this.deplacement_serveur.x == 0){
+                window.gh.sendData("move",1+4)
+            }
+        }
+        
+        
+        this.deplacement_serveur.xold = this.deplacement_serveur.x
+        this.deplacement_serveur.yold = this.deplacement_serveur.y
         /* //RETIRER CE /*
         else{
             //this.setVelocityY(-200);

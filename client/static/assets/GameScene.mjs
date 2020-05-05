@@ -34,10 +34,10 @@ export class GameScene extends Phaser.Scene{
 
         for(var i = 0; i<this.usernames.length;i++){
             if (i === this.numero){
-                this.joueurs.push(new JoueurSprite(this,30,40,"armel",true,this.usernames[i]).setDepth(0))
+                this.joueurs.push(new JoueurSprite(this,0,0,"armel",true,this.usernames[i]).setDepth(0))
             }
             else{
-                this.joueurs.push(new JoueurSprite(this,30,40,"armel",false,this.usernames[i]).setDepth(0))
+                this.joueurs.push(new JoueurSprite(this,0,0,"armel",false,this.usernames[i]).setDepth(0))
             }
         }
         this.mainplayer  = this.joueurs[this.numero];
@@ -53,7 +53,7 @@ export class GameScene extends Phaser.Scene{
 
         this.collision = map.createStaticLayer(2, tiles, 0, 0).setDepth(5);
         //this.physics.add.collider(this.joueurs[this.numero], this.collision);
-        this.physics.add.collider(this.mainplayer,this.collision)
+        //this.physics.add.collider(this.mainplayer,this.collision)
         map.setCollision([601])
 
         
@@ -64,7 +64,7 @@ export class GameScene extends Phaser.Scene{
         this.cameras.main.startFollow(this.mainplayer,false, 0.2, 0.2);
         this.physics.world.setBounds(0,0, map.widthInPixels, map.heightInPixels);
         this.scale.on("resize",this.resize,this)
-        this.positionClock = this.time.addEvent({looxp:true,delay:2500,callback:this.on_position_clock,callbackScope:this})
+        this.positionClock = this.time.addEvent({loop:true,delay:20,callback:this.on_position_clock,callbackScope:this})
         this.actualiserPosition=true;
 
         /*Temps pour décroissance barre de vie, initialisation*/
@@ -127,23 +127,38 @@ export class GameScene extends Phaser.Scene{
 
     sendData(){
         /* Fonction envoyant les données au serveur */
-        window.gh.sendData("send_position",[this.mainplayer.x,this.mainplayer.y])
-        window.gh.sendData("send_vel",[this.mainplayer.realVelocity.x,this.mainplayer.realVelocity.y])
+        //window.gh.sendData("send_position",[this.mainplayer.x,this.mainplayer.y])
+        //window.gh.sendData("send_vel",[this.mainplayer.realVelocity.x,this.mainplayer.realVelocity.y])
     }
 
     on_position_clock(){
         /* Fonction callback horloge de position */
         this.actualiserPosition = true;
+        
     }
     
     updateObjects(){
         /* Fonction mettant à jour les joueurs et objets du jeu */
         for(var nj = 0; nj < this.joueurs.length;nj++){
-            if(this.numero != nj){
+            if(this.numero != nj || 1==1){
                 if(this.actualiserPosition == true){
                     this.actualiserPosition = false;
                     if(this.pos[nj] != undefined){
-                        this.joueurs[nj].setPosition(this.pos[nj][0],this.pos[nj][1])
+                        //this.joueurs[nj].setPosition(this.pos[nj][0],this.pos[nj][1])
+
+                        var x = this.pos[nj][0]
+                        var y = this.pos[nj][1]
+
+
+                        var tween = this.tweens.add({
+                            targets: this.joueurs[nj],
+                            props: {
+                                x:x,
+                                y:y
+                            },
+                            ease:"Bounce.easeInOut",
+                            duration: 30
+                        });
                     }
                 }
                 //this.joueurs[nj].setPosition(this.pos[nj][0],this.pos[nj][1])
@@ -153,8 +168,9 @@ export class GameScene extends Phaser.Scene{
             //this.joueurs[nj].setPosition(this.pos[nj][0],this.pos[nj][1])//this.pos[nj][1]
             //console.log(this.pos[nj][1])
             if(this.vel[nj] != undefined){ // si on a recu des donnees
-            this.joueurs[nj].setVelocity(this.vel[nj][0],this.vel[nj][1])
-            
+                //this.joueurs[nj].setVelocity(this.vel[nj][0],this.vel[nj][1])
+                //this.joueurs[nj].setPosition(this.pos[nj][0],this.pos[nj][1])
+                //console.log("POS : ",this.joueurs[nj].x,this.joueurs[nj].y, "REC : ",this.pos[nj][0],this.pos[nj][1])
             }
             //console.log(this.vel[nj][0],this.vel[nj][1])
             

@@ -21,6 +21,8 @@ from joueur import Joueur
 import ressource
 
 
+
+
 class Server:
     ''' Classe principale de l'application '''
 
@@ -178,9 +180,10 @@ class Server:
                     await p.context()
                     pass
             #time.sleep(1/30)
-            await self.sio.sleep(1/70) # serveur a 60fps
-            #await asyncio.sleep(1/64)
+            await self.sio.sleep(1/self.fps) # serveur a 60fps
             """
+            await self.sio.sleep()
+            
             while time.time() - temps < 1/self.fps:
                 #print (time.time() - temps)
                 pass

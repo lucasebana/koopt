@@ -43,8 +43,8 @@ class Map:
     def setCollisions(self):
         for i in range(len(self.collisionLayer)):
             if  (self.collisionLayer[i] == 601):
-                x = (i // self.width)*self.tilew
-                y = (i % self.width)*self.tileh
+                y = (i // self.width)*self.tilew
+                x = (i % self.width)*self.tileh
                 h = self.tileh
                 w = self.tilew
                 self.collisionObjects.append(Rect2(x,y,h,w))
