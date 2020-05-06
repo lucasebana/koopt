@@ -222,7 +222,7 @@ class Partie:
         info = dict()
         njoueurs= len(self.joueurs)
         #On n'envoie que s'il y a changement depuis la derniere frame
-        if(self.joueurs[0].body.changeLast()):
+        if(self.joueurs[0].body.changeLast()):#A faire: un programme type changeLast mais général
             
             info["posx"] = [self.joueurs[i].body.x for i in range(njoueurs)]
             info["posy"] = [self.joueurs[i].body.y for i in range(njoueurs)]
@@ -230,6 +230,10 @@ class Partie:
             info["vely"] = [self.joueurs[i].body.vy for i in range(njoueurs)]
             #url de la map ?
             await self.broadcast("update_pos",info)
+        
+        info=dict()
+        info["nrj"] = [self.joueurs[i].energie for i in range(njoueurs)]
+        await self.broadcast("update_gameData",info)
 
     async def update(self):
         #p = self.joueurs[1].position;

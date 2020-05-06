@@ -28,6 +28,7 @@ class Joueur:
         self.req_vel_buffer = [0,0] # le joueur n'a d'impact que sur la frame suivante
         self.req_vel = [0,0]
         self.velocity = [0,0]
+        self.energie= 100
 
         
         #liste des sids ?

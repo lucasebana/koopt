@@ -180,14 +180,14 @@ class Server:
                     await p.context()
                     pass
             #time.sleep(1/30)
-            await self.sio.sleep(1/self.fps) # serveur a 60fps
-            """
+            #await self.sio.sleep(1/self.fps) # serveur a 60fps
+            
             await self.sio.sleep()
             
             while time.time() - temps < 1/self.fps:
                 #print (time.time() - temps)
                 pass
-            """
+            
             pass
             #print("mavariable = ", self.mavariable)
             

@@ -16,6 +16,7 @@ export class GameScene extends Phaser.Scene{
         this.usernames = []
         this.pos = []
         this.vel = []
+        this.energies= []
         this.updateData();
     }
     preload(){
@@ -76,9 +77,10 @@ export class GameScene extends Phaser.Scene{
         this.nourriture=new Food(this,this.mainplayer.x,this.mainplayer.y+10,"food");
         this.nourriture.visible=false
 
-
-
-
+        /*Barres de vie*/
+        for (var i=0; i<this.joueurs.length; i++){
+            this.energies.push(this.joueurs[i].healthbar)
+        }
 
       
 
@@ -123,6 +125,15 @@ export class GameScene extends Phaser.Scene{
             }
             this.pos = p;
             this.vel = v;   
+        }
+        if("update_gameData" in d[n_data]){
+            var e = []
+            var t=d[n_data].update_gameData
+            for(var i = 0; i< d[n_data].update_pos.nrj.length; i++){
+                e.push([t.nrj[i]]);
+            }
+            this.energies= e;
+
         }
         }
     }
