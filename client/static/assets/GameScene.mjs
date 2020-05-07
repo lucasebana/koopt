@@ -1,6 +1,7 @@
 import { cst } from '/static/assets/cst.mjs'
 import {JoueurSprite} from '/static/assets/JoueurSprite.mjs'
 import {Arrow} from '/static/assets/Arrow.mjs'
+import { HealthBar } from './HealthBar.mjs'
 import {Food} from '/static/assets/food.mjs'
 
 export class GameScene extends Phaser.Scene{
@@ -79,7 +80,8 @@ export class GameScene extends Phaser.Scene{
 
         /*Barres de vie*/
         for (var i=0; i<this.joueurs.length; i++){
-            this.energies.push(this.joueurs[i].healthbar)
+            this.energies.push(this.joueurs[i].healthbar.value)
+            //console.log(this.joueurs[i].healthbar.value)
         }
 
       
@@ -87,7 +89,7 @@ export class GameScene extends Phaser.Scene{
     }
     update(){
         /* Fonction appelée chaque frame */
-        this.updateData();
+        this.updateData();//à bien faire en premier
         this.sendData();
         this.updateObjects();
         this.updateHealth();        
@@ -129,10 +131,12 @@ export class GameScene extends Phaser.Scene{
         if("update_gameData" in d[n_data]){
             var e = []
             var t=d[n_data].update_gameData
-            for(var i = 0; i< d[n_data].update_pos.nrj.length; i++){
-                e.push([t.nrj[i]]);
+            for(var i = 0; i< d[n_data].update_gameData.nrj.length; i++){
+                e.push(t.nrj[i]);
             }
+            
             this.energies= e;
+            //console.log(this.energies);
 
         }
         }
@@ -201,7 +205,12 @@ export class GameScene extends Phaser.Scene{
     }
 
     updateHealth(){
-        const e= new Date();
+        for(var i =0; i< this.joueurs.length; i++){
+            this.joueurs[i].healthbar.value=this.energies[i];
+            console.log(this.joueurs[i].healthbar.value)
+            this.joueurs[i].healthbar.draw();
+        }
+        /*const e= new Date();
         this.secondes_passe=e.getTime()/1000-this.timestamp_ini;
 
         this.diff=parseInt(this.secondes_passe-this.last_update);
@@ -209,10 +218,10 @@ export class GameScene extends Phaser.Scene{
             /*for(var nj = 0; nj < this.joueurs.length;nj++){
                 this.joueurs[nj].damage(this.diff*0,1);
             }*/
-            this.mainplayer.damage(-(this.diff*0.1));
+           /* this.mainplayer.damage(-(this.diff*0.1));
             this.last_update=this.secondes_passe;
 
-        }
+        }*/
         
         
     }
