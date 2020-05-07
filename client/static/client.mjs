@@ -19,7 +19,6 @@ export class Client {
         $(document).on("click", "#logout", () => { Cookies.remove("userid"); location.reload(); })
     }
     affichage(socket) {
-
         if (this.etape != this.etape_prec && this.stop === false) {
             switch (this.etape) {
                 case 0:
@@ -61,6 +60,7 @@ export class Client {
         }
         else {
             Cookies.remove("userid")
+            location.reload();
             //afficher message d'erreur...(message vide, etc..)
         }
     }
@@ -127,7 +127,6 @@ export class Client {
         $("#lobby_name").text(data.nomSalle)
         var liste = [data.j0, data.j1, data.j2, data.j3]
         var n_utilisateurs = 0
-        //console.log(liste)
         liste.forEach((element, i) => {
             if (element != null) {
                 n_utilisateurs += 1

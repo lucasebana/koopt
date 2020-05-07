@@ -245,7 +245,12 @@ class Partie:
 
     async def getInputs(self):
         for j in self.joueurs:
-            #j.req_vel = j.req_vel_buffer
+            """
+            Fonction remplaçant les valeurs des objets par le buffer qui leur correspond.
+            les evenements recus du client sont ajoutés au buffer des objets concernés à tout instant (via on_move par ex.)
+            1 fois par frame, les buffers sont appliqués aux vraies variables des objets
+            """
+
             j.body.getInputs()
         pass
     
