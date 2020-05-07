@@ -18,6 +18,7 @@ export class GameScene extends Phaser.Scene{
         this.pos = []
         this.vel = []
         this.energies= []
+        this.miam=100
         this.updateData();
     }
     preload(){
@@ -136,7 +137,8 @@ export class GameScene extends Phaser.Scene{
             }
             
             this.energies= e;
-            //console.log(this.energies);
+            this.miam=t.food
+            //TO DO : mettre à jour la valeur de foodbar coté client à partir de miam (draw) et s'occuper de l'input f
 
         }
         }

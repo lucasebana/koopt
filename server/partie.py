@@ -31,6 +31,7 @@ class Partie:
         self.realprevious = 0
         self.timestamp_ini=time.time();
         self.t0=time.time()
+        self.food=100
 
         self.Tst = 0
 
@@ -200,6 +201,19 @@ class Partie:
                 self.joueurs[i].energie=self.joueurs[i].delta_vie(-diff*0.1)
             self.t0=t   
 
+    def delta_food(self,amount):
+        self.food+=amount
+        if self.food>100:
+            self.food=100
+        elif self.food<0:
+            self.food=0
+        return(self.food)
+    
+    def calcul_food(self):
+        #besoin de gérer les inputs (touche f pour manger) + lier à la vie
+
+
+
 
 
 
@@ -218,6 +232,7 @@ class Partie:
         await self.getInputs()
 
         self.calcul_vie()
+        self.calcul_food()
 
         if self.etat == 3:
             #logique de jeu
@@ -249,6 +264,7 @@ class Partie:
         
         info=dict()
         info["nrj"] = [self.joueurs[i].energie for i in range(njoueurs)]
+        info["food"] = [self.food]
         await self.broadcast("update_gameData",info)
 
     async def update(self):
