@@ -24,7 +24,7 @@ export class Food extends Phaser.Physics.Arcade.Sprite{
     context(scene){
         
     this.eating=game.scene.getScene("GAME").manger
-    console.log(this.eating)
+    
 
     if (this.eating===true){
         this.visible=true

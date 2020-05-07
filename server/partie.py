@@ -1,5 +1,6 @@
 import time
 from map import Map
+
 from rect2 import Rect2
 
 debug = False
@@ -29,6 +30,7 @@ class Partie:
         self.realcurrent = 0
         self.realprevious = 0
         self.timestamp_ini=time.time();
+        self.t0=time.time()
 
         self.Tst = 0
 
@@ -122,6 +124,7 @@ class Partie:
         info["posy"] = [self.joueurs[i].body.y for i in range(njoueurs)]
         info["velx"] = [self.joueurs[i].body.vx for i in range(njoueurs)]
         info["vely"] = [self.joueurs[i].body.vy for i in range(njoueurs)]
+        info["nrj"] = [self.joueurs[i].energie for i in range(njoueurs)]
         #url de la map ?
         await self.broadcast("load_game",info)
         #await self.broadcast("load_game",{"data1":["jean","jacques","pierre"]})
@@ -188,6 +191,17 @@ class Partie:
             joueur.body.vyrB = 0
         elif data == 7 :
             joueur.body.vxrB = 0
+    
+    def calcul_vie(self):#on ajoutera ici tous les types de dommages ou de gain de vie
+        t=time.time()
+        diff=t-self.t0
+        if diff>=1:
+            for i in range(len(self.joueurs)):
+                self.joueurs[i].energie=self.joueurs[i].delta_vie(-diff*0.1)
+            self.t0=t   
+
+
+
 
     async def load_sync(self):
         '''methode envoyant aux clients tt les données du jeu à l'initialisation du client'''
@@ -197,19 +211,21 @@ class Partie:
 
     async def context(self):
         self.start_frametime = time.time()
-        await self.checkReconnexions();
-        await self.lobby();
+        await self.checkReconnexions()
+        await self.lobby()
 
         #recuperation des inputs
         await self.getInputs()
 
+        self.calcul_vie()
+
         if self.etat == 3:
             #logique de jeu
             await self.update() # mise à jour de la logique du jeu  
-            await self.sendData();
-            self.updateBodies();
+            await self.sendData()
+            self.updateBodies()
 
-        await self.getFps();
+        await self.getFps()
         pass
 
     async def getInputs(self):
@@ -227,7 +243,7 @@ class Partie:
         info = dict()
         njoueurs= len(self.joueurs)
         #On n'envoie que s'il y a changement depuis la derniere frame
-        if(self.joueurs[0].body.changeLast()):
+        if(self.joueurs[0].body.changeLast()):#A faire: un programme type changeLast mais général
             
             info["posx"] = [self.joueurs[i].body.x for i in range(njoueurs)]
             info["posy"] = [self.joueurs[i].body.y for i in range(njoueurs)]
@@ -235,6 +251,10 @@ class Partie:
             info["vely"] = [self.joueurs[i].body.vy for i in range(njoueurs)]
             #url de la map ?
             await self.broadcast("update_pos",info)
+        
+        info=dict()
+        info["nrj"] = [self.joueurs[i].energie for i in range(njoueurs)]
+        await self.broadcast("update_gameData",info)
 
     async def update(self):
         #p = self.joueurs[1].position;
@@ -246,6 +266,7 @@ class Partie:
         y=self.joueurs[0].body.y
         h = self.joueurs[0].body.h
         w = self.joueurs[0].body.w
+
 
         if debug:
             self.debug_draw()
@@ -270,6 +291,7 @@ class Partie:
                 
                 pygame.display.flip()
                 self.screen.fill(self.WHITE)     
+
     async def move_objects(self):
         #deplacement des joueurs avant tout
         for joueur in self.joueurs:
