@@ -49,4 +49,9 @@ class ServerHandler(socketio.AsyncNamespace):
         p = self.s.getPartie(sid)
         if p != -1:
             p.move(self.s.Joueurs[j],data);
+    async def on_eatin(self,sid,data):
+        j=self.s.getJoueur(sid)
+        p = self.s.getPartie(sid)
+        if p != -1:
+            p.eatin(self.s.Joueurs[j],data)
 

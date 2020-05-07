@@ -23,6 +23,7 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
         
         
         this.eatin=false;
+        this.eatin_old=false;
     
 
         this.playable = playable;
@@ -38,6 +39,7 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
             xold:0,
             yold:0
         }
+
 
         /* orientation :
             0 : haut
@@ -208,45 +210,26 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
             }
         }
         
+        if (scene.foodKey.F.isDown === true){
+            this.eatin=true
+        }
+
+        if (scene.foodKey.F.isUp === true){
+            this.eatin=false
+        }
+
+        if (this.eatin != this.eatin_old){
+            window.gh.sendData("eatin",this.eatin)
+        }
         
         this.deplacement_serveur.xold = this.deplacement_serveur.x
         this.deplacement_serveur.yold = this.deplacement_serveur.y
-        /* //RETIRER CE /*
-        else{
-            //this.setVelocityY(-200);
-            window.gh.sendData("move",2+4)
-        }
-
-        if (scene.keyboard.S.isDown === true) {
-            //this.setVelocityY(200);
-            window.gh.sendData("move",2)
-        }
-        else {
-            //this.setVelocityY(200);
-            window.gh.sendData("move",2 + 4)
-        }
-
-        if (scene.keyboard.Q.isDown === true) {
-            //this.setVelocityX(-200);
-            window.gh.sendData("move",3)
-        }
-        else {
-            //this.setVelocityX(-200);
-            window.gh.sendData("move",3+4)
-        }
-        /*
-        if (scene.keyboard.Q.isUp && scene.keyboard.D.isUp) { //not moving on X axis
-            this.setVelocityX(0);
-        }
-        if (scene.keyboard.Z.isUp && scene.keyboard.S.isUp) { //not pressing y movement
-            this.setVelocityY(0);
-        }
-        */
+       
         if (scene.arrowKey.SPACE.isDown===true){         
             this.fleche=new Arrow(scene,this.x,this.y,0);
             this.fleche.setOrigin(0,0)
         }
-        if (scene.foodKey.F.isDown===true){
+        /*if (scene.foodKey.F.isDown===true){
             this.eatin=true
             this.quantite_nourriture=5
             this.ratio=10
@@ -267,7 +250,7 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
                 }              
             }
             
-        }
+        }*/
     }
 
 

@@ -18,7 +18,7 @@ export class GameScene extends Phaser.Scene{
         this.pos = []
         this.vel = []
         this.energies= []
-        this.miam=100
+        this.miam=100*5
         this.updateData();
     }
     preload(){
@@ -93,7 +93,7 @@ export class GameScene extends Phaser.Scene{
         this.updateData();//à bien faire en premier
         this.sendData();
         this.updateObjects();
-        this.updateHealth();        
+        this.updateHealth();       
     }
 
     updateData(){
@@ -138,7 +138,8 @@ export class GameScene extends Phaser.Scene{
             
             this.energies= e;
             this.miam=t.food
-            //TO DO : mettre à jour la valeur de foodbar coté client à partir de miam (draw) et s'occuper de l'input f
+            console.log(this.miam)
+            
 
         }
         }
@@ -209,7 +210,6 @@ export class GameScene extends Phaser.Scene{
     updateHealth(){
         for(var i =0; i< this.joueurs.length; i++){
             this.joueurs[i].healthbar.value=this.energies[i];
-            console.log(this.joueurs[i].healthbar.value)
             this.joueurs[i].healthbar.draw();
         }
         /*const e= new Date();
@@ -224,6 +224,8 @@ export class GameScene extends Phaser.Scene{
             this.last_update=this.secondes_passe;
 
         }*/
+    
+    
         
         
     }

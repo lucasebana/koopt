@@ -31,8 +31,10 @@ class Partie:
         self.realprevious = 0
         self.timestamp_ini=time.time();
         self.t0=time.time()
-        self.food=100
-
+        self.food=100*5
+        self.quantite_nourriture=5#quantité de nourriture consommé à chaque pression de F
+        self.ratio=10#ratio de vie ajoutée en fction de la nourriture mangée
+        
         self.Tst = 0
 
         if joueur != None:
@@ -193,7 +195,7 @@ class Partie:
         elif data == 7 :
             joueur.body.vxrB = 0
     
-    def calcul_vie(self):#on ajoutera ici tous les types de dommages ou de gain de vie
+    def calcul_vie(self):#on ajoutera ici tous les types de dommages
         t=time.time()
         diff=t-self.t0
         if diff>=1:
@@ -203,13 +205,31 @@ class Partie:
 
     def delta_food(self,amount):
         self.food+=amount
-        if self.food>100:
-            self.food=100
+        if self.food>100*5:
+            self.food=100*5
         elif self.food<0:
             self.food=0
         return(self.food)
     
-    def calcul_food(self):
+    def eatin(self,joueur,data):
+        if data==True:
+            if self.food<self.quantite_nourriture:#si plus assez de nourriture
+
+                if joueur.energie+(self.food/self.ratio<joueur.energie_init):
+                    self.delta_food(-self.food)
+                    self.delta_vie(self.food/self.ratio)
+
+            else:
+
+                if joueur.energie+(self.quantite_nourriture/self.ratio)<joueur.energie_init:
+                    self.delta_food(-self.quantite_nourriture)
+                    self.delta_vie(self.quantite_nourriture/self.ratio)
+                    
+            
+
+        
+            
+
         #besoin de gérer les inputs (touche f pour manger) + lier à la vie
 
 
@@ -232,7 +252,7 @@ class Partie:
         await self.getInputs()
 
         self.calcul_vie()
-        self.calcul_food()
+        #self.eatin(data)
 
         if self.etat == 3:
             #logique de jeu
