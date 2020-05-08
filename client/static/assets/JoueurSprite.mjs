@@ -225,10 +225,6 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
         this.deplacement_serveur.xold = this.deplacement_serveur.x
         this.deplacement_serveur.yold = this.deplacement_serveur.y
        
-        if (scene.arrowKey.SPACE.isDown===true){         
-            this.fleche=new Arrow(scene,this.x,this.y,0);
-            this.fleche.setOrigin(0,0)
-        }
         /*if (scene.foodKey.F.isDown===true){
             this.eatin=true
             this.quantite_nourriture=5

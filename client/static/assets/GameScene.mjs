@@ -149,6 +149,7 @@ export class GameScene extends Phaser.Scene{
                 //debugger
                 if (this.objets.get(obj.id)==undefined){
                     var fleche=new Arrow(this,this.x,this.y,0);
+                    fleche.setOrigin(0,0);
                     this.objets.set(obj.id,fleche);
 
                 }
