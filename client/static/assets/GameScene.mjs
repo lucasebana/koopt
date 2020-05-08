@@ -4,6 +4,7 @@ import {Arrow} from '/static/assets/Arrow.mjs'
 import { HealthBar } from './HealthBar.mjs'
 import {Food} from '/static/assets/food.mjs'
 
+
 export class GameScene extends Phaser.Scene{
     constructor(){
         super({
@@ -17,6 +18,7 @@ export class GameScene extends Phaser.Scene{
         this.usernames = []
         this.pos = []
         this.vel = []
+        this.objets=new Map();
         this.energies= []
         this.miam=100
         this.updateData();
@@ -139,6 +141,28 @@ export class GameScene extends Phaser.Scene{
             this.energies= e;
             this.miam=t.food
             //TO DO : mettre à jour la valeur de foodbar coté client à partir de miam (draw) et s'occuper de l'input f
+        
+        }
+        if("update_gameItems" in d[n_data]){
+            for (var i=0;i<d[n_data].update_gameItems.length;i++){
+                var obj=d[n_data].update_gameItems[i];
+                //debugger
+                if (this.objets.get(obj.id)==undefined){
+                    var fleche=new Arrow(this,this.x,this.y,0);
+                    this.objets.set(obj.id,fleche);
+
+                }
+                var tween = this.tweens.add({
+                    targets: this.objets.get(obj.id),
+                    props: {
+                        x:obj.x,
+                        y:obj.y
+                    },
+                    ease:"Bounce.easeInOut",
+                    duration: 30
+                });
+
+            }
 
         }
         }

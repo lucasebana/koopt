@@ -1,5 +1,6 @@
 import time
 from map import Map
+from fleche import Fleche
 
 from rect2 import Rect2
 
@@ -16,7 +17,9 @@ class Partie:
         self.id = id
         self.etat = 2
         self.joueurs= []
+        self.objets=[]
         self.map = Map("../client/static/assets/map4.json")
+
 
         self.start_frametime = 0;
         self.finish_frametime = 0;
@@ -192,6 +195,10 @@ class Partie:
             joueur.body.vyrB = 0
         elif data == 7 :
             joueur.body.vxrB = 0
+    def shootArrow(self,joueur,data):
+        fleche=Fleche(len(self.objets),joueur.body.x,joueur.body.y,40,139,300,0)
+        fleche.vxr=1
+        self.objets.append(fleche)
     
     def calcul_vie(self):#on ajoutera ici tous les types de dommages ou de gain de vie
         t=time.time()
@@ -210,12 +217,8 @@ class Partie:
         return(self.food)
     
     def calcul_food(self):
+        pass
         #besoin de gérer les inputs (touche f pour manger) + lier à la vie
-
-
-
-
-
 
     async def load_sync(self):
         '''methode envoyant aux clients tt les données du jeu à l'initialisation du client'''
@@ -271,17 +274,25 @@ class Partie:
         info["nrj"] = [self.joueurs[i].energie for i in range(njoueurs)]
         info["food"] = [self.food]
         await self.broadcast("update_gameData",info)
+        info=[]
+        for i in range(len(self.objets)):
+            info.append(dict())
+            info[i]["x"]=self.objets[i].x
+            info[i]["y"]=self.objets[i].y
+            info[i]["direction"]=self.objets[i].direction
+            info[i]["id"]=self.objets[i].id
+        await self.broadcast("update_gameItems",info) 
+
+
+        
+
 
     async def update(self):
         #p = self.joueurs[1].position;
         #self.joueurs[1].position = [p[0],p[1]+1]
 
         await self.move_objects()
-        
-        x=self.joueurs[0].body.x
-        y=self.joueurs[0].body.y
-        h = self.joueurs[0].body.h
-        w = self.joueurs[0].body.w
+
 
 
         if debug:
@@ -295,8 +306,17 @@ class Partie:
                 for event in pygame.event.get():
                     #if event.type == pygame.QUIT:
                     pass
-                
+                x=self.joueurs[0].body.x 
+                y=self.joueurs[0].body.y 
+                w=self.joueurs[0].body.w 
+                h=self.joueurs[0].body.h 
                 pygame.draw.rect(self.screen, self.BLACK, [x, y, w, h], 2)
+                for i in range(len(self.objets)):
+                    x = self.objets[i].x
+                    y = self.objets[i].y
+                    w = self.objets[i].w
+                    h = self.objets[i].h
+                    pygame.draw.rect(self.screen, self.GREEN, [x, y, w, h], 2)
                 co = self.map.collisionObjects
                 for i in range(len(co)):
                     x = co[i].x
@@ -313,8 +333,9 @@ class Partie:
         for joueur in self.joueurs:
             fc =await self.future_collisions(joueur.body) #on recupere les collisions du joueur avec son environnement
             await self.resolve_collisions(joueur.body,fc) #on ajuste sa position pour la frame suivante
-
-
+        for objet in self.objets :
+            fc=await self.future_collisions(objet)
+            await self.resolve_collisions(objet,fc)
     def updateBodies(self):
         for j in self.joueurs:
             j.body.newFrame()

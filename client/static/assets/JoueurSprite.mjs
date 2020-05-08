@@ -242,10 +242,7 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
             this.setVelocityY(0);
         }
         */
-        if (scene.arrowKey.SPACE.isDown===true){         
-            this.fleche=new Arrow(scene,this.x,this.y,0);
-            this.fleche.setOrigin(0,0)
-        }
+        
         if (scene.foodKey.F.isDown===true){
             this.eatin=true
             this.quantite_nourriture=5
@@ -269,8 +266,15 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
             
         }
     }
+    attack(){
+        if (this.scene.arrowKey.SPACE.isDown===true){
+            window.gh.sendData("arrow",1)   
+            //this.fleche=new Arrow(scene,this.x,this.y,0);
+            //this.fleche.setOrigin(0,0)
+        } 
 
 
+    }
 
     setAnimation(){
         var vx = this.body.velocity.x;
@@ -371,6 +375,7 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
         this.healthbar.bar.y=this.y - this.height 
         if (this.playable){
             this.controlPlayer(scene);
+            this.attack();
         }
         if(this.fleche != null){
             this.fleche.update();

@@ -1,4 +1,6 @@
-class fleche(objet):
-    def __init__(self,id_,x,y,w,h,vx=0,vy=0):
-        super(id_,x,y,w,h,vx,vy)
-        #attributs des fleches
+from rect2 import Rect2
+class Fleche(Rect2):
+    def __init__(self,id,x,y,h,w,vx=0,vy=0):
+        super().__init__(x,y,h,w,vx,vy)
+        self.id=id
+        self.direction=1

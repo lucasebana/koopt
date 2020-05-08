@@ -9,3 +9,4 @@ export class Arrow extends Phaser.Physics.Arcade.Sprite{
         this.visible = true;
     }
 }
+

@@ -10,4 +10,6 @@ server/__pycache__/server.cpython-37.pyc
 .vscode/launch.json
 .vscode/settings.json
 server/__pycache__/
-server/__pycache__/*
+server/__pycache__/.
+server/handler/__pycache__/__init__.cpython-37.pyc
+server/handler/__pycache__/ServerHandler.cpython-37.pyc
