@@ -224,13 +224,13 @@ class Partie:
 
                 if joueur.energie+(self.food/self.ratio<joueur.energie_init):
                     self.delta_food(-self.food)
-                    self.delta_vie(self.food/self.ratio)
+                    joueur.delta_vie(self.food/self.ratio)
 
             else:
 
                 if joueur.energie+(self.quantite_nourriture/self.ratio)<joueur.energie_init:
                     self.delta_food(-self.quantite_nourriture)
-                    self.delta_vie(self.quantite_nourriture/self.ratio)
+                    joueur.delta_vie(self.quantite_nourriture/self.ratio)
                     
             
 
