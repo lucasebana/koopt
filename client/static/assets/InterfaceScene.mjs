@@ -52,6 +52,7 @@ create(){
 update(){
     this.woodlevel.update();
     this.updateText();
+    this.updateFood();
     
     
 }
@@ -61,6 +62,11 @@ updateText(){
     var min= this.temps_partie-(Math.floor(this.temps/60));
     var sec= 60-(this.temps % 60);
     this.textname.text="Temps restant:  "+min+":"+parseInt(sec);
+}
+
+updateFood(){
+    this.foodbar.value=game.scene.getScene("GAME").miam
+    this.foodbar.draw()
 }
 
 }

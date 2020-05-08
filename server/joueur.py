@@ -29,6 +29,7 @@ class Joueur:
         self.req_vel = [0,0]
         self.velocity = [0,0]
         self.energie= 100
+        self.energie_init=100
         self.alive=True
 
         
