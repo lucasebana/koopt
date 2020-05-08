@@ -277,6 +277,7 @@ class Partie:
         pass
     
     async def sendData(self):
+        t = time.time()
         info = dict()
         njoueurs= len(self.joueurs)
         #On n'envoie que s'il y a changement depuis la derniere frame
@@ -301,7 +302,7 @@ class Partie:
             info[i]["direction"]=self.objets[i].direction
             info[i]["id"]=self.objets[i].id
         await self.broadcast("update_gameItems",info) 
-
+        #print(time.time()-t)
 
         
 
@@ -310,7 +311,9 @@ class Partie:
         #p = self.joueurs[1].position;
         #self.joueurs[1].position = [p[0],p[1]+1]
 
-        await self.move_objects()
+        t = time.time()
+        self.move_objects()
+        #print(time.time()-t)
 
 
 
@@ -347,19 +350,20 @@ class Partie:
                 pygame.display.flip()
                 self.screen.fill(self.WHITE)     
 
-    async def move_objects(self):
+    def move_objects(self):
         #deplacement des joueurs avant tout
         for joueur in self.joueurs:
-            fc =await self.future_collisions(joueur.body) #on recupere les collisions du joueur avec son environnement
-            await self.resolve_collisions(joueur.body,fc) #on ajuste sa position pour la frame suivante
+            if not joueur.body.vx == joueur.body.vy == joueur.body.vxr == joueur.body.vyr == 0:
+                fc = self.future_collisions(joueur.body) #on recupere les collisions du joueur avec son environnement
+                self.resolve_collisions(joueur.body,fc) #on ajuste sa position pour la frame suivante
         for objet in self.objets :
-            fc=await self.future_collisions(objet)
-            await self.resolve_collisions(objet,fc)
+            fc= self.future_collisions(objet)
+            self.resolve_collisions(objet,fc)
     def updateBodies(self):
         for j in self.joueurs:
             j.body.newFrame()
     
-    async def collisionAABB(self,objet1,objet2):
+    def collisionAABB(self,objet1,objet2):
         if any(
             [objet2.x >= objet1.x + objet1.w,
             objet2.x + objet2.w <= objet1.x,
@@ -388,8 +392,10 @@ class Partie:
         return ret
         """
         
+    def dist2(self,objet1,objet2):
+        return (objet1.x-objet2.x)**2 + (objet1.y-objet2.y)**2
     
-    async def future_position(self,objet):
+    def future_position(self,objet):
         velocity = 200 #pixel / seconde 
         velocityFrame = velocity/self.goal_fps #en pixel par frame
 
@@ -397,8 +403,8 @@ class Partie:
         fpy = objet.y + objet.vyr*velocityFrame
         return fpx,fpy
 
-    async def future_collisions(self,objet):
-        fpx,fpy =await self.future_position(objet)
+    def future_collisions(self,objet):
+        fpx,fpy = self.future_position(objet)
         deplacementY = Rect2(objet.x,fpy,objet.h,objet.w) #position frame suivante projetee sur Y
         deplacementX = Rect2(fpx,objet.y,objet.h,objet.w) # idem sur X
 
@@ -408,17 +414,21 @@ class Partie:
         collisionX = None
 
         i = 0
+        calc = 0
         while i < len(co) and (collisionY == None or collisionX == None):
-            if await self.collisionAABB(deplacementY,co[i]):
-                collisionY = i
-            if await self.collisionAABB(deplacementX,co[i]):
-                collisionX = i
-
+            if self.dist2(co[i],objet) <= (objet.x-fpx)**2 + (objet.y-fpy)**2 + objet.w **2 + objet.h**2 : # check collision ssi la distance est assez faible
+                if self.collisionAABB(deplacementY,co[i]):
+                    collisionY = i
+                if self.collisionAABB(deplacementX,co[i]):
+                    collisionX = i
+                calc+=1
+            else:
+                pass
             i+=1
+        #print(calc)
+        return (collisionX, collisionY)
         
-        return [collisionX, collisionY]
-        
-    async def resolve_collisions(self,objet,fc):
+    def resolve_collisions(self,objet,fc):
         velocity = 200 #pixel / seconde 
         velocityFrame = velocity/self.goal_fps #en pixel par frame
 
