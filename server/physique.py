@@ -1,2 +1,2 @@
-class physique:
+class Physique:
     pass

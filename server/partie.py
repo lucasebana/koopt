@@ -2,12 +2,13 @@ import time
 from map import Map
 from fleche import Fleche
 
+from gameplay import Gameplay
 from rect2 import Rect2
 
 debug = False
 if debug:
     import pygame
-class Partie:
+class Partie(Gameplay):
 
     def __init__(self,nom,id,sio,fps,joueur=None):
         self.ready = False;
@@ -202,42 +203,6 @@ class Partie:
         fleche.vxr=1
         self.objets.append(fleche)
     
-    def calcul_vie(self):#on ajoutera ici tous les types de dommages
-        t=time.time()
-        diff=t-self.t0
-        if diff>=1:
-            for i in range(len(self.joueurs)):
-                self.joueurs[i].energie=self.joueurs[i].delta_vie(-diff*0.1)
-            self.t0=t   
-
-    def delta_food(self,amount):
-        self.food+=amount
-        if self.food>100*5:
-            self.food=100*5
-        elif self.food<0:
-            self.food=0
-        return(self.food)
-    
-    def eatin(self,joueur,data):
-        if data==True:
-            if self.food<self.quantite_nourriture:#si plus assez de nourriture
-
-                if joueur.energie+(self.food/self.ratio<joueur.energie_init):
-                    self.delta_food(-self.food)
-                    self.delta_vie(self.food/self.ratio)
-
-            else:
-
-                if joueur.energie+(self.quantite_nourriture/self.ratio)<joueur.energie_init:
-                    self.delta_food(-self.quantite_nourriture)
-                    self.delta_vie(self.quantite_nourriture/self.ratio)
-                    
-            
-
-        
-            
-
-        #besoin de gérer les inputs (touche f pour manger) + lier à la vie
 
     async def load_sync(self):
         '''methode envoyant aux clients tt les données du jeu à l'initialisation du client'''
