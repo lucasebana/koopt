@@ -38,6 +38,9 @@ class Partie(Gameplay):
         self.food=100*5
         self.quantite_nourriture=5#quantité de nourriture consommé à chaque pression de F
         self.ratio=10#ratio de vie ajoutée en fction de la nourriture mangée
+
+        self.hasAmmo=False
+        self.simpleHit=False
         
         self.Tst = 0
 
@@ -198,10 +201,14 @@ class Partie(Gameplay):
             joueur.body.vyrB = 0
         elif data == 7 :
             joueur.body.vxrB = 0
-    def shootArrow(self,joueur,data):
-        fleche=Fleche(len(self.objets),joueur.body.x,joueur.body.y,40,139,300,0)
-        fleche.vxr=1
-        self.objets.append(fleche)
+
+    def hit(self,joueur,data):
+        if self.hasAmmo & data:
+            fleche=Fleche(len(self.objets),joueur.body.x,joueur.body.y,40,139,300,0)
+            fleche.vxr=1
+            self.objets.append(fleche)
+        else:
+            self.simpleHit=data
     
 
     async def load_sync(self):
@@ -258,6 +265,7 @@ class Partie(Gameplay):
         info=dict()
         info["nrj"] = [self.joueurs[i].energie for i in range(njoueurs)]
         info["food"] = [self.food]
+        info["simpleHit"] = self.simpleHit
         await self.broadcast("update_gameData",info)
         info=[]
         for i in range(len(self.objets)):
@@ -266,7 +274,8 @@ class Partie(Gameplay):
             info[i]["y"]=self.objets[i].y
             info[i]["direction"]=self.objets[i].direction
             info[i]["id"]=self.objets[i].id
-        await self.broadcast("update_gameItems",info) 
+        await self.broadcast("update_gameItems",info)
+
         #print(time.time()-t)
 
         
