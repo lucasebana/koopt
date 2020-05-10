@@ -37,6 +37,7 @@ class Partie:
         self.food=100*5
         self.quantite_nourriture=5#quantité de nourriture consommé à chaque pression de F
         self.ratio=10#ratio de vie ajoutée en fction de la nourriture mangée
+        self.wood=0
         
         self.Tst = 0
 
@@ -131,6 +132,7 @@ class Partie:
         info["velx"] = [self.joueurs[i].body.vx for i in range(njoueurs)]
         info["vely"] = [self.joueurs[i].body.vy for i in range(njoueurs)]
         info["nrj"] = [self.joueurs[i].energie for i in range(njoueurs)]
+        info["wood"]=[self.wood]
         #url de la map ?
         await self.broadcast("load_game",info)
         #await self.broadcast("load_game",{"data1":["jean","jacques","pierre"]})
@@ -210,6 +212,8 @@ class Partie:
                 self.joueurs[i].energie=self.joueurs[i].delta_vie(-diff*0.1)
             self.t0=t   
 
+
+
     def delta_food(self,amount):
         self.food+=amount
         if self.food>100*5:
@@ -217,6 +221,15 @@ class Partie:
         elif self.food<0:
             self.food=0
         return(self.food)
+
+    def delta_wood(self,amount):
+        self.wood+=amount
+        if self.wood<0:
+            self.wood=0
+        return(self.food)
+
+    ##def calcul_wood(self):à compléter
+        
     
     def eatin(self,joueur,data):
         if data==True:
@@ -255,6 +268,7 @@ class Partie:
 
         self.calcul_vie()
         #self.eatin(data)
+        #self.calcul_wood()
 
         if self.etat == 3:
             #logique de jeu
@@ -293,6 +307,7 @@ class Partie:
         info=dict()
         info["nrj"] = [self.joueurs[i].energie for i in range(njoueurs)]
         info["food"] = [self.food]
+        info["wood"]=[self.wood]
         await self.broadcast("update_gameData",info)
         info=[]
         for i in range(len(self.objets)):
