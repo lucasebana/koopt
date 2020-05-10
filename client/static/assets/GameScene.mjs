@@ -28,8 +28,9 @@ export class GameScene extends Phaser.Scene{
         this.load.spritesheet("armel", "static/assets/armel.png", {frameHeight: 64, frameWidth: 64});
         this.load.spritesheet("fleche", "static/assets/fleche.png", {frameHeight: 40, frameWidth: 139});
         this.load.spritesheet("food", "static/assets/burger.png", {frameHeight: 64, frameWidth: 64});
-        this.load.image('pkm', 'static/assets/tilesetpkmnX.png');
-        this.load.tilemapTiledJSON('map', 'static/assets/map4.json');
+        this.load.image('set', 'static/assets/map/set.png');
+        this.load.image('atlas', 'static/assets/map/atlas.png');
+        this.load.tilemapTiledJSON('map', 'static/assets/map/map_finale.json');
     }
     create(){
 
@@ -51,13 +52,15 @@ export class GameScene extends Phaser.Scene{
 
         /* Chargement de la map */
         var map = this.make.tilemap({ key: 'map' });
-        var tiles = map.addTilesetImage('pkm', 'pkm');
+        var tiles = map.addTilesetImage('set', 'set');
+        var tiles_atlas= map.addTilesetImage('terrain_atlas','atlas');
         this.layer = map.createStaticLayer(0, tiles, 0, 0).setDepth(-1);
-        this.layer2 = map.createStaticLayer(1, tiles, 0, 0).setDepth(1);
+        this.layer2 = map.createStaticLayer(1, tiles_atlas, 0, 0).setDepth(1);
 
         //this.objets_image = map.createStaticLayer(2, tiles, 0, 0).setDepth(2);
 
         this.collision = map.createStaticLayer(2, tiles, 0, 0).setDepth(5);
+        this.collision2= map.createStaticLayer(3, tiles_atlas, 0, 0).setDepth(5);
         //this.physics.add.collider(this.joueurs[this.numero], this.collision);
         //this.physics.add.collider(this.mainplayer,this.collision)
         map.setCollision([601])
