@@ -5,7 +5,7 @@ from fleche import Fleche
 from gameplay import Gameplay
 from rect2 import Rect2
 
-debug = True
+debug = False
 if debug:
     import pygame
 class Partie(Gameplay):
@@ -211,7 +211,6 @@ class Partie(Gameplay):
             for i in range(len(self.joueurs)):
                 if self.joueurs[i] == joueur:
                     self.simpleHit=i#l'info qu'on renvoie au client pour l'animation  
-                    print(i)
                 else:
                     if self.dist2(joueur.body,self.joueurs[i].body)<4:#arbitraire
                         self.joueurs[i].energie=self.joueurs[i].delta_vie(-5)

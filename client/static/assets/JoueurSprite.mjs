@@ -34,7 +34,8 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
 
         this.playable = playable;
         this.orientation = 0;
-        this.realVelocity = {
+
+        this.velocity = {
             x:0,
             y:0
         }
@@ -315,8 +316,8 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
     }
 
     setAnimation(){
-        var vx = this.body.velocity.x;
-        var vy = this.body.velocity.y;
+        var vx = this.velocity.x;
+        var vy = this.velocity.y;
         if(vy < 0){
             this.orientation = 0;
             
@@ -355,7 +356,7 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
             }
         }
 
-        if(this.body.velocity.x > 0){
+        /*if(this.body.velocity.x > 0){
             if(this.body.blocked.right){
                 this.realVelocity.x = 0;
             }else{
@@ -388,7 +389,7 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
         }
         else{
             this.realVelocity.y = 0
-        }
+        }*/
 
 
     }
@@ -409,7 +410,6 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
             for (var i=0; i<this.tab_joueurs.length; i++){
                 if (this.tab_joueurs[i] === this){
                     this.indice=i
-                    console.log(this.indice)
                 }
             }
         }
@@ -426,17 +426,17 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
         */
 
         this.setAnimation()
-
+        
         if (this.serverAttack === this.indice ){
             switch(this.orientation){
                 case 0:
-                    this.play("hitU",false)
+                    this.play("hitU",true)
                 case 1:
-                    this.play("hitR",false)
+                    this.play("hitR",true)
                 case 2:
-                    this.play("hitD",false)
+                    this.play("hitD",true)
                 case 3:
-                    this.play("hitL",false)
+                    this.play("hitL",true)
             }//ne fonctionne pas à régler
             
         }

@@ -17,7 +17,7 @@ export class GameScene extends Phaser.Scene{
         this.numero = null;
         this.usernames = []
         this.pos = []
-        this.vel = []
+        this.vel = [[]]
         this.objets=new Map();
         this.energies= []
         this.miam=100*5
@@ -134,7 +134,9 @@ export class GameScene extends Phaser.Scene{
                 //console.log(t.posx[i],t.posy[i])
             }
             this.pos = p;
-            this.vel = v;   
+            this.vel = v;
+            
+             
         }
         if("update_gameData" in d[n_data]){
             var e = []
@@ -217,6 +219,8 @@ export class GameScene extends Phaser.Scene{
                 //this.joueurs[nj].setVelocity(this.vel[nj][0],this.vel[nj][1])
             }
             
+            this.joueurs[nj].velocity.x=this.vel[nj][0];
+            this.joueurs[nj].velocity.y=this.vel[nj][1];
             //this.joueurs[nj].setPosition(this.pos[nj][0],this.pos[nj][1])//this.pos[nj][1]
             //console.log(this.pos[nj][1])
             if(this.vel[nj] != undefined){ // si on a recu des donnees
