@@ -27,7 +27,10 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
 
         this.hitting=false;
         this.hitting_old=false;
-    
+        
+        
+        this.indice=-1
+        
 
         this.playable = playable;
         this.orientation = 0;
@@ -400,6 +403,16 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
         }
         this.eatin=game.scene.getScene("GAME").manger
         this.serverAttack=game.scene.getScene("GAME").simpleAttack
+        if (this.indice === -1){
+            this.tab_joueurs=game.scene.getScene("GAME").joueurs
+            //console.log(this.tab_joueurs)
+            for (var i=0; i<this.tab_joueurs.length; i++){
+                if (this.tab_joueurs[i] === this){
+                    this.indice=i
+                    console.log(this.indice)
+                }
+            }
+        }
         //le serveur permet de savoir si on fait une simple attaque ou si on utilise une flèche
         
 
@@ -414,7 +427,7 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
 
         this.setAnimation()
 
-        if (this.serverAttack ===true ){
+        if (this.serverAttack === this.indice ){
             switch(this.orientation){
                 case 0:
                     this.play("hitU",false)

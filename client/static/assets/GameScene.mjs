@@ -63,7 +63,7 @@ export class GameScene extends Phaser.Scene{
         this.collision2= map.createStaticLayer(3, tiles_atlas, 0, 0).setDepth(5);
         //this.physics.add.collider(this.joueurs[this.numero], this.collision);
         //this.physics.add.collider(this.mainplayer,this.collision)
-        map.setCollision([601])
+        //map.setCollision([601])
 
         
         /* Gestion de la caméra */

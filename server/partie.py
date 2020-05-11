@@ -5,7 +5,7 @@ from fleche import Fleche
 from gameplay import Gameplay
 from rect2 import Rect2
 
-debug = False
+debug = True
 if debug:
     import pygame
 class Partie(Gameplay):
@@ -40,7 +40,7 @@ class Partie(Gameplay):
         self.ratio=10#ratio de vie ajoutée en fction de la nourriture mangée
 
         self.hasAmmo=False
-        self.simpleHit=False
+        self.simpleHit=-1 # vaut -1 si personne ne frappe, sinon vaut la position du joueur qui frappe dans le tableau joueurs
         
         self.Tst = 0
 
@@ -207,8 +207,15 @@ class Partie(Gameplay):
             fleche=Fleche(len(self.objets),joueur.body.x,joueur.body.y,40,139,300,0)
             fleche.vxr=1
             self.objets.append(fleche)
-        else:
-            self.simpleHit=data
+        elif data:     
+            for i in range(len(self.joueurs)):
+                if self.joueurs[i] == joueur:
+                    self.simpleHit=i#l'info qu'on renvoie au client pour l'animation  
+                    print(i)
+                else:
+                    if self.dist2(joueur.body,self.joueurs[i].body)<4:#arbitraire
+                        self.joueurs[i].energie=self.joueurs[i].delta_vie(-5)
+            #ajouter pour les arbres (ajout de nourriture/de bois)
     
 
     async def load_sync(self):
