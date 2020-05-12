@@ -212,7 +212,8 @@ class Partie(Gameplay):
                 if self.joueurs[i] == joueur:
                     self.simpleHit=i#l'info qu'on renvoie au client pour l'animation  
                 else:
-                    if self.dist2(joueur.body,self.joueurs[i].body)<4:#arbitraire
+                    print(self.dist2(joueur.body,self.joueurs[i].body))
+                    if self.dist2(joueur.body,self.joueurs[i].body)<2500:#arbitraire
                         self.joueurs[i].energie=self.joueurs[i].delta_vie(-5)
             #ajouter pour les arbres (ajout de nourriture/de bois)
         else:

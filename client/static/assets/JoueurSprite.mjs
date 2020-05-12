@@ -397,6 +397,7 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
 
     context(scene){
         //this.play("stretchD",true)
+        //console.log(this.alive)
         if (this.alive===false && this.alr===false){
             this.play("death",true);
             this.alr=true;
@@ -460,13 +461,13 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
         this.update();
     }
 
-    damage (amount)
+    /*damage (amount)
     {
         if (this.healthbar.delta(amount))
         {
             this.alive = false;        
         }
-    }
+    }*/
 
 
 
