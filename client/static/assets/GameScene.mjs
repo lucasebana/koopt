@@ -17,18 +17,20 @@ export class GameScene extends Phaser.Scene{
         this.numero = null;
         this.usernames = []
         this.pos = []
-        this.vel = []
+        this.vel = [[]]
         this.objets=new Map();
         this.energies= []
         this.miam=100*5
+        this.simpleAttack=false
         this.updateData();
     }
     preload(){
         this.load.spritesheet("armel", "static/assets/armel.png", {frameHeight: 64, frameWidth: 64});
         this.load.spritesheet("fleche", "static/assets/fleche.png", {frameHeight: 40, frameWidth: 139});
         this.load.spritesheet("food", "static/assets/burger.png", {frameHeight: 64, frameWidth: 64});
-        this.load.image('pkm', 'static/assets/tilesetpkmnX.png');
-        this.load.tilemapTiledJSON('map', 'static/assets/map4.json');
+        this.load.image('set', 'static/assets/map/set.png');
+        this.load.image('atlas', 'static/assets/map/atlas.png');
+        this.load.tilemapTiledJSON('map', 'static/assets/map/map_finale.json');
     }
     create(){
 
@@ -50,22 +52,25 @@ export class GameScene extends Phaser.Scene{
 
         /* Chargement de la map */
         var map = this.make.tilemap({ key: 'map' });
-        var tiles = map.addTilesetImage('pkm', 'pkm');
+        var tiles = map.addTilesetImage('set', 'set');
+        var tiles_atlas= map.addTilesetImage('terrain_atlas','atlas');
         this.layer = map.createStaticLayer(0, tiles, 0, 0).setDepth(-1);
-        this.layer2 = map.createStaticLayer(1, tiles, 0, 0).setDepth(1);
+        this.layer2 = map.createStaticLayer(1, tiles_atlas, 0, 0).setDepth(1);
 
         //this.objets_image = map.createStaticLayer(2, tiles, 0, 0).setDepth(2);
 
         this.collision = map.createStaticLayer(2, tiles, 0, 0).setDepth(5);
+        this.collision2= map.createStaticLayer(3, tiles_atlas, 0, 0).setDepth(5);
         //this.physics.add.collider(this.joueurs[this.numero], this.collision);
         //this.physics.add.collider(this.mainplayer,this.collision)
-        map.setCollision([601])
+        //map.setCollision([601])
 
         
         /* Gestion de la caméra */
         this.keyboard = this.input.keyboard.addKeys("Z, Q, S, D");
         this.arrowKey = this.input.keyboard.addKeys("SPACE");
         this.foodKey = this.input.keyboard.addKeys("F");
+        this.hitKey = this.input.keyboard.addKeys("SPACE");
         this.cameras.main.startFollow(this.mainplayer,false, 0.2, 0.2);
         this.physics.world.setBounds(0,0, map.widthInPixels, map.heightInPixels);
         this.scale.on("resize",this.resize,this)
@@ -129,7 +134,9 @@ export class GameScene extends Phaser.Scene{
                 //console.log(t.posx[i],t.posy[i])
             }
             this.pos = p;
-            this.vel = v;   
+            this.vel = v;
+            
+             
         }
         if("update_gameData" in d[n_data]){
             var e = []
@@ -140,7 +147,8 @@ export class GameScene extends Phaser.Scene{
             
             this.energies= e;
             this.miam=t.food
-            //TO DO : mettre à jour la valeur de foodbar coté client à partir de miam (draw) et s'occuper de l'input f
+            this.simpleAttack=t.simpleHit
+            
         
         }
         if("update_gameItems" in d[n_data]){
@@ -164,7 +172,7 @@ export class GameScene extends Phaser.Scene{
                 });
 
             }
-            console.log(this.miam)
+            
             
 
         }
@@ -211,6 +219,13 @@ export class GameScene extends Phaser.Scene{
                 //this.joueurs[nj].setVelocity(this.vel[nj][0],this.vel[nj][1])
             }
             
+            if (this.vel[nj] != undefined){
+            this.joueurs[nj].velocity.x=this.vel[nj][0];//PROBLEME ICI LORSQU'IL Y A PLUSIEURS JOUEURS
+            this.joueurs[nj].velocity.y=this.vel[nj][1];
+            }
+            else {
+                this.vel[nj]=[0,0]
+            }
             //this.joueurs[nj].setPosition(this.pos[nj][0],this.pos[nj][1])//this.pos[nj][1]
             //console.log(this.pos[nj][1])
             if(this.vel[nj] != undefined){ // si on a recu des donnees
@@ -236,6 +251,9 @@ export class GameScene extends Phaser.Scene{
     updateHealth(){
         for(var i =0; i< this.joueurs.length; i++){
             this.joueurs[i].healthbar.value=this.energies[i];
+            if (this.joueurs[i].healthbar.value ===0){
+                this.joueurs[i].alive= false
+            }
             this.joueurs[i].healthbar.draw();
         }
         /*const e= new Date();
