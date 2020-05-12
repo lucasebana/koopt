@@ -24,18 +24,11 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
         
         this.eatin=false;
         this.eatin_old=false;
-
-        this.hitting=false;
-        this.hitting_old=false;
-        
-        
-        this.indice=-1
-        
+    
 
         this.playable = playable;
         this.orientation = 0;
-
-        this.velocity = {
+        this.realVelocity = {
             x:0,
             y:0
         }
@@ -106,42 +99,7 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
                 end: 265
             })
         }) 
-
-        scene.anims.create({//voir pour faire selon l'orientation
-            key: "hitU",
-            frameRate: 10,
-            frames: scene.anims.generateFrameNumbers("armel",{
-                start: 159,
-                end: 160
-            })
-        })
-
-        scene.anims.create({//voir pour faire selon l'orientation
-            key: "hitL",
-            frameRate: 10,
-            frames: scene.anims.generateFrameNumbers("armel",{
-                start: 172,
-                end: 173
-            })
-        })
         
-        scene.anims.create({//voir pour faire selon l'orientation
-            key: "hitD",
-            frameRate: 10,
-            frames: scene.anims.generateFrameNumbers("armel",{
-                start: 185,
-                end: 186
-            })
-        })
-
-        scene.anims.create({//voir pour faire selon l'orientation
-            key: "hitR",
-            frameRate: 10,
-            frames: scene.anims.generateFrameNumbers("armel",{
-                start: 197,
-                end: 199
-            })
-        })
 
         
     
@@ -257,16 +215,12 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
         }
 
         if (scene.foodKey.F.isUp === true){
-            
             this.eatin=false
         }
 
         if (this.eatin != this.eatin_old){
             window.gh.sendData("eatin",this.eatin)
-            this.eatin_old=this.eatin
         }
-
-        
         
         this.deplacement_serveur.xold = this.deplacement_serveur.x
         this.deplacement_serveur.yold = this.deplacement_serveur.y
@@ -295,29 +249,18 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
         }*/
     }
     attack(){
-        if (this.scene.hitKey.SPACE.isDown===true){
-            
-            this.hitting=true
-        }
-        if (this.scene.hitKey.SPACE.isUp===true){
-            
-            this.hitting=false
-        }
-        if(this.hitting != this.hitting_old){
-            
-            window.gh.sendData("attack",this.hitting)
-            //window.gh.sendData("arrow",1)   
+        if (this.scene.arrowKey.SPACE.isDown===true){
+            window.gh.sendData("arrow",1)   
             //this.fleche=new Arrow(scene,this.x,this.y,0);
             //this.fleche.setOrigin(0,0)
-            this.hitting_old=this.hitting
         } 
 
 
     }
 
     setAnimation(){
-        var vx = this.velocity.x;
-        var vy = this.velocity.y;
+        var vx = this.body.velocity.x;
+        var vy = this.body.velocity.y;
         if(vy < 0){
             this.orientation = 0;
             
@@ -356,7 +299,7 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
             }
         }
 
-        /*if(this.body.velocity.x > 0){
+        if(this.body.velocity.x > 0){
             if(this.body.blocked.right){
                 this.realVelocity.x = 0;
             }else{
@@ -389,7 +332,7 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
         }
         else{
             this.realVelocity.y = 0
-        }*/
+        }
 
 
     }
@@ -397,57 +340,18 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
 
     context(scene){
         //this.play("stretchD",true)
-        //console.log(this.alive)
         if (this.alive===false && this.alr===false){
             this.play("death",true);
             this.alr=true;
             this.playable=false;
         }
         this.eatin=game.scene.getScene("GAME").manger
-        this.serverAttack=game.scene.getScene("GAME").simpleAttack
-        if (this.indice === -1){
-            this.tab_joueurs=game.scene.getScene("GAME").joueurs
-            //console.log(this.tab_joueurs)
-            for (var i=0; i<this.tab_joueurs.length; i++){
-                if (this.tab_joueurs[i] === this){
-                    this.indice=i
-                }
-            }
-        }
-        //le serveur permet de savoir si on fait une simple attaque ou si on utilise une flèche
-        
 
         
 
-        /* orientation :
-            0 : haut
-            1 : droite
-            2 : bas
-            3 : gauche        
-        */
+        
 
         this.setAnimation()
-        
-        if (this.serverAttack === this.indice ){
-            this.flipX=false
-            
-            switch(this.orientation){
-                case 0:
-                    this.play("hitU",true)
-                    break
-                case 1:
-                    this.play("hitL",true)
-                    this.flipX=true
-                    break
-                case 2:
-                    this.play("hitD",true)
-                    break
-                case 3:
-                    this.play("hitL",true)
-                    break
-            }//ne fonctionne pas à régler
-            
-        }
         this.textname.setPosition(this.x - this.textname.width/2, this.y + this.height + 5)
         this.healthbar.bar.x=this.x - this.width/2 -2
         this.healthbar.bar.y=this.y - this.height 
@@ -460,14 +364,13 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
         }
         this.update();
     }
-
-    /*damage (amount)
+    damage (amount)
     {
         if (this.healthbar.delta(amount))
         {
             this.alive = false;        
         }
-    }*/
+    }
 
 
 

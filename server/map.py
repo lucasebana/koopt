@@ -42,7 +42,7 @@ class Map:
     
     def setCollisions(self):
         for i in range(len(self.collisionLayer)):
-            if  (self.collisionLayer[i] == 8250):
+            if  (self.collisionLayer[i] == 601):
                 y = (i // self.width)*self.tilew
                 x = (i % self.width)*self.tileh
                 h = self.tileh

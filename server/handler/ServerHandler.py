@@ -49,11 +49,11 @@ class ServerHandler(socketio.AsyncNamespace):
         p = self.s.getPartie(sid)
         if p != -1:
             p.move(self.s.Joueurs[j],data);
-    async def on_attack(self,sid,data):
+    async def on_arrow(self,sid,data):
         j = self.s.getJoueur(sid)
         p = self.s.getPartie(sid)
         if p != -1:
-            p.hit(self.s.Joueurs[j],data);
+            p.shootArrow(self.s.Joueurs[j],data);
     
     async def on_eatin(self,sid,data):
         j=self.s.getJoueur(sid)
