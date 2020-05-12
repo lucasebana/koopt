@@ -60,6 +60,7 @@ export class GameScene extends Phaser.Scene{
         //this.objets_image = map.createStaticLayer(2, tiles, 0, 0).setDepth(2);
 
         this.collision = map.createStaticLayer(2, tiles, 0, 0).setDepth(5);
+        this.collision.visible = false
         this.collision2= map.createStaticLayer(3, tiles_atlas, 0, 0).setDepth(5);
         //this.physics.add.collider(this.joueurs[this.numero], this.collision);
         //this.physics.add.collider(this.mainplayer,this.collision)
