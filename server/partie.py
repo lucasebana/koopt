@@ -215,6 +215,8 @@ class Partie(Gameplay):
                     if self.dist2(joueur.body,self.joueurs[i].body)<4:#arbitraire
                         self.joueurs[i].energie=self.joueurs[i].delta_vie(-5)
             #ajouter pour les arbres (ajout de nourriture/de bois)
+        else:
+            self.simpleHit=-1
     
 
     async def load_sync(self):

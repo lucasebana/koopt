@@ -111,8 +111,8 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
             key: "hitU",
             frameRate: 10,
             frames: scene.anims.generateFrameNumbers("armel",{
-                start: 167,
-                end: 170
+                start: 159,
+                end: 160
             })
         })
 
@@ -120,7 +120,7 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
             key: "hitL",
             frameRate: 10,
             frames: scene.anims.generateFrameNumbers("armel",{
-                start: 170,
+                start: 172,
                 end: 173
             })
         })
@@ -129,7 +129,7 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
             key: "hitD",
             frameRate: 10,
             frames: scene.anims.generateFrameNumbers("armel",{
-                start: 183,
+                start: 185,
                 end: 186
             })
         })
@@ -138,7 +138,7 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
             key: "hitR",
             frameRate: 10,
             frames: scene.anims.generateFrameNumbers("armel",{
-                start: 196,
+                start: 197,
                 end: 199
             })
         })
@@ -428,15 +428,22 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
         this.setAnimation()
         
         if (this.serverAttack === this.indice ){
+            this.flipX=false
+            
             switch(this.orientation){
                 case 0:
                     this.play("hitU",true)
+                    break
                 case 1:
-                    this.play("hitR",true)
+                    this.play("hitL",true)
+                    this.flipX=true
+                    break
                 case 2:
                     this.play("hitD",true)
+                    break
                 case 3:
                     this.play("hitL",true)
+                    break
             }//ne fonctionne pas à régler
             
         }
