@@ -211,6 +211,13 @@ export class GameScene extends Phaser.Scene{
                 //this.joueurs[nj].setVelocity(this.vel[nj][0],this.vel[nj][1])
             }
             
+            if (this.vel[nj] != undefined){
+            this.joueurs[nj].velocity.x=this.vel[nj][0];//PROBLEME ICI LORSQU'IL Y A PLUSIEURS JOUEURS
+            this.joueurs[nj].velocity.y=this.vel[nj][1];
+            }
+            /*else {
+                this.vel[nj]=[0,0]
+            }*/
             //this.joueurs[nj].setPosition(this.pos[nj][0],this.pos[nj][1])//this.pos[nj][1]
             //console.log(this.pos[nj][1])
             if(this.vel[nj] != undefined){ // si on a recu des donnees
