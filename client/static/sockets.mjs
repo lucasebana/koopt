@@ -12,4 +12,4 @@ window.gh = new game_handler(client,socket,client.game)
 gh.callbacks()
 
 /* Appel a la fonction de rafraichissement de l'accueil toutes les 100ms */
-window.setInterval((()=>client.affichage(socket)),60);
+window.interval = window.setInterval((()=>client.affichage(socket)),60);

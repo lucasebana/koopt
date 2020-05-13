@@ -44,9 +44,6 @@ export class FoodBar {
         this.bar.fillRect(this.x + 2, this.y + 2, 76*5, 12);
         this.bar.fillStyle(0xff7f00);
         
-
-        
-
         var d = Math.floor(this.p * this.value);
 
         this.bar.fillRect(this.x + 2, this.y + 2, d, 12);

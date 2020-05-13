@@ -74,7 +74,7 @@ export class GameScene extends Phaser.Scene{
         this.cameras.main.startFollow(this.mainplayer,false, 0.2, 0.2);
         this.physics.world.setBounds(0,0, map.widthInPixels, map.heightInPixels);
         this.scale.on("resize",this.resize,this)
-        this.positionClock = this.time.addEvent({loop:true,delay:20,callback:this.on_position_clock,callbackScope:this})
+        //this.positionClock = this.time.addEvent({loop:true,delay:20,callback:this.on_position_clock,callbackScope:this})
         this.actualiserPosition=true;
 
         /*Temps pour décroissance barre de vie, initialisation*/
@@ -92,20 +92,23 @@ export class GameScene extends Phaser.Scene{
             //console.log(this.joueurs[i].healthbar.value)
         }
 
-      
+      window.clearInterval(window.interval)
 
     }
     update(){
         /* Fonction appelée chaque frame */
         this.updateData();//à bien faire en premier
         this.sendData();
+        
         this.updateObjects();
+        
         this.updateHealth();       
     }
 
     updateData(){
         /* Fonction mettant à jour les données issues du serveur */
         /* a benchmarquer ? */
+        
        var d = window.gh.getData()
        for (var n_data = 0; n_data < d.length; n_data++){
         if("load_i" in d[n_data]){
@@ -124,6 +127,7 @@ export class GameScene extends Phaser.Scene{
             //this.pos = p;
             //this.vel = v;            
         }
+        
         if("update_pos" in d[n_data]){
             var p = []
             var v = []
@@ -138,6 +142,7 @@ export class GameScene extends Phaser.Scene{
             
              
         }
+        
         if("update_gameData" in d[n_data]){
             var e = []
             var t=d[n_data].update_gameData
@@ -174,6 +179,8 @@ export class GameScene extends Phaser.Scene{
             
 
         }
+
+        
         }
     }
 
@@ -183,16 +190,17 @@ export class GameScene extends Phaser.Scene{
         //window.gh.sendData("send_vel",[this.mainplayer.realVelocity.x,this.mainplayer.realVelocity.y])
     }
 
+    /*
     on_position_clock(){
-        /* Fonction callback horloge de position */
+        // Fonction callback horloge de position 
         this.actualiserPosition = true;
         
     }
     updateObjects(){
         /* Fonction mettant à jour les joueurs et objets du jeu */
         for(var nj = 0; nj < this.joueurs.length;nj++){
-            if(this.numero != nj || 1==1){
-                if(this.actualiserPosition == true){
+            
+                if(this.actualiserPosition == true || 1 == 1){
                     this.actualiserPosition = false;
                     if(this.pos[nj] != undefined){
                         //this.joueurs[nj].setPosition(this.pos[nj][0],this.pos[nj][1])
@@ -214,7 +222,7 @@ export class GameScene extends Phaser.Scene{
                 }
                 //this.joueurs[nj].setPosition(this.pos[nj][0],this.pos[nj][1])
                 //this.joueurs[nj].setVelocity(this.vel[nj][0],this.vel[nj][1])
-            }
+            
             
             if (this.vel[nj] != undefined){
             this.joueurs[nj].velocity.x=this.vel[nj][0];//PROBLEME ICI LORSQU'IL Y A PLUSIEURS JOUEURS
