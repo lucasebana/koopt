@@ -19,7 +19,7 @@ class Partie(Gameplay):
         self.etat = 2
         self.joueurs= []
         self.objets=[]
-        self.map = Map("../client/static/assets/Map/map_finale.json")
+        self.map = Map("../client/static/assets/map/map_finale.json")
 
 
         self.start_frametime = 0;
@@ -266,6 +266,10 @@ class Partie(Gameplay):
         info = dict()
         njoueurs= len(self.joueurs)
         #On n'envoie que s'il y a changement depuis la derniere frame
+        envoi = True
+        for i in range(len(self.joueurs)):
+            if not self.joueurs[i].body.changeLast():
+                envoi = False
         if(self.joueurs[0].body.changeLast()):#A faire: un programme type changeLast mais général
             
             info["posx"] = [self.joueurs[i].body.x for i in range(njoueurs)]
