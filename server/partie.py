@@ -19,7 +19,7 @@ class Partie(Gameplay):
         self.etat = 2
         self.joueurs= []
         self.objets=[]
-        self.map = Map("../client/static/assets/map/map_finale.json")
+        self.map = Map("../client/static/assets/Map/map_finale.json")
 
 
         self.start_frametime = 0;
