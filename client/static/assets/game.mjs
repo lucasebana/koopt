@@ -7,6 +7,7 @@ var config = {
     width: 800,
     height: 600,
     parent:"b",
+    backgroundColor:"0093c1",
     //roundPixels: true,
     scene:[
         LoadScene

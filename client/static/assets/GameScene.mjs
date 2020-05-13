@@ -28,9 +28,9 @@ export class GameScene extends Phaser.Scene{
         this.load.spritesheet("armel", "static/assets/armel.png", {frameHeight: 64, frameWidth: 64});
         this.load.spritesheet("fleche", "static/assets/fleche.png", {frameHeight: 40, frameWidth: 139});
         this.load.spritesheet("food", "static/assets/burger.png", {frameHeight: 64, frameWidth: 64});
-        this.load.image('set', 'static/assets/Map/set.png');
-        this.load.image('atlas', 'static/assets/Map/atlas.png');
-        this.load.tilemapTiledJSON('map', 'static/assets/Map/map_finale.json');
+        this.load.image('set', 'static/assets/map/set.png');
+        this.load.image('atlas', 'static/assets/map/atlas.png');
+        this.load.tilemapTiledJSON('map', 'static/assets/map/map_finale.json');
     }
     create(){
 
@@ -54,8 +54,8 @@ export class GameScene extends Phaser.Scene{
         var map = this.make.tilemap({ key: 'map' });
         var tiles = map.addTilesetImage('set', 'set');
         var tiles_atlas= map.addTilesetImage('terrain_atlas','atlas');
-        this.layer = map.createStaticLayer(0, tiles, 0, 0).setDepth(-3);
-        this.layer2 = map.createStaticLayer(1, [tiles_atlas,tiles], 0, 0).setDepth(1);
+        this.layer = map.createStaticLayer(0, tiles, 0, 0).setDepth(-1);
+        this.layer2 = map.createStaticLayer(1, [tiles,tiles_atlas], 0, 0).setDepth(1);
 
         //this.objets_image = map.createStaticLayer(2, tiles, 0, 0).setDepth(2);
 
@@ -98,12 +98,15 @@ export class GameScene extends Phaser.Scene{
     }
     update(){
         /* Fonction appelée chaque frame */
+        
         this.updateData();//à bien faire en premier
+        
         this.sendData();
         
         this.updateObjects();
         
-        this.updateHealth();       
+        //this.updateHealth();       
+        
     }
 
     updateData(){

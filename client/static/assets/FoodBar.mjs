@@ -2,7 +2,7 @@ export class FoodBar {
     
     constructor ( scene, varx , vary , pdf ) {
 
-        this.bar = new Phaser.GameObjects.Graphics(scene);
+        //this.bar = new Phaser.GameObjects.Graphics(scene);
         this.x = varx;
         this.y = vary;
 
@@ -15,7 +15,7 @@ export class FoodBar {
         this.textname.setPosition(this.x +10 , this.y+20)
         this.textname.setDepth(20)
 
-        scene.add.existing(this.bar);
+        //scene.add.existing(this.bar);
 
     }
 
@@ -28,7 +28,7 @@ export class FoodBar {
             this.value = 0;
         }
 
-        this.draw();
+        //this.draw();
 
         return (this.value === 0);
     }
@@ -36,17 +36,17 @@ export class FoodBar {
     draw()
     {
         //Frame
-        this.bar.fillStyle(0x000000);
-        this.bar.fillRect(this.x, this.y, 384, 16);
+        //this.bar.fillStyle(0x000000);
+        //this.bar.fillRect(this.x, this.y, 384, 16);
 
         //Value
-        this.bar.fillStyle(0xffffff);
-        this.bar.fillRect(this.x + 2, this.y + 2, 76*5, 12);
-        this.bar.fillStyle(0xff7f00);
+        //this.bar.fillStyle(0xffffff);
+        //this.bar.fillRect(this.x + 2, this.y + 2, 76*5, 12);
+        //this.bar.fillStyle(0xff7f00);
         
         var d = Math.floor(this.p * this.value);
 
-        this.bar.fillRect(this.x + 2, this.y + 2, d, 12);
+        //this.bar.fillRect(this.x + 2, this.y + 2, d, 12);
 
     }
     

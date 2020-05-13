@@ -2,7 +2,9 @@ export class HealthBar {
 
     constructor (scene, x, y, pdv)
     {
-        this.bar = new Phaser.GameObjects.Graphics(scene);
+        //this.bar = new Phaser.GameObjects.Graphics(scene);
+
+        this.rectangle = new Phaser.GameObjects.Rectangle(scene,x,y,200,50);
 
         this.x = x;
         this.y = y;
@@ -12,7 +14,8 @@ export class HealthBar {
 
         this.draw();
 
-        scene.add.existing(this.bar);
+        //scene.add.existing(this.bar);
+        scene.add.existing(this.rectangle)
     }
 
     delta (amount)//peut être positif ou négatif
@@ -35,29 +38,34 @@ export class HealthBar {
 
     draw ()
     {
+        
         //this.bar.clear();
 
         //Frame
-        this.bar.fillStyle(0x000000);
-        this.bar.fillRect(this.x, this.y, 80, 16);
+        //this.bar.fillStyle(0x000000);
+        //this.bar.fillRect(this.x, this.y, 80, 16);
+        
 
         //Health
 
-        this.bar.fillStyle(0xffffff);
-        this.bar.fillRect(this.x + 2, this.y + 2, 76, 12);
+        //this.bar.fillStyle(0xffffff);
+        //this.bar.fillRect(this.x + 2, this.y + 2, 76, 12);
 
         if (this.value < 30)
         {
-            this.bar.fillStyle(0xff0000);
+            //this.bar.fillStyle(0xff0000);
         }
         else
         {
-            this.bar.fillStyle(0x00ff00);
+            //this.bar.fillStyle(0x00ff00);
         }
 
         var d = Math.floor(this.p * this.value);
 
-        this.bar.fillRect(this.x + 2, this.y + 2, d, 12);
+        //this.bar.fillRect(this.x + 2, this.y + 2, d, 12);
+        this.rectangle.setFillStyle(0x00ff00);
+        this.rectangle.setPosition(this.x + 2, this.y + 2)
+        this.rectangle.setSize(d,12)
     }
 
 }
