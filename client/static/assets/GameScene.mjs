@@ -104,7 +104,7 @@ export class GameScene extends Phaser.Scene{
         
         this.updateObjects();
         
-        //this.updateHealth();       
+        this.updateHealth();       
         
     }
 
