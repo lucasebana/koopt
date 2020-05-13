@@ -50,8 +50,11 @@ create(){
 }
 
 update(){
+    /*
     this.woodlevel.update();
+    
     this.updateText();
+    */
     this.updateFood();
     
     
@@ -66,7 +69,7 @@ updateText(){
 
 updateFood(){
     this.foodbar.value=game.scene.getScene("GAME").miam
-    this.foodbar.draw()
+    //this.foodbar.draw()
 }
 
 }
