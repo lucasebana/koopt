@@ -26,7 +26,7 @@ create(){
 
 /* Food Bar */
     this.foodbar=new FoodBar(this,5,5,100*5);
-
+    this.last_food=100*5
 
 
 
@@ -65,8 +65,11 @@ updateText(){
 }
 
 updateFood(){
+    this.last_food=this.foodbar.value
     this.foodbar.value=game.scene.getScene("GAME").miam
+    if (this.last_food!=this.foodbar.value){
     this.foodbar.draw()
+    }
 }
 
 }

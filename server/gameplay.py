@@ -21,6 +21,7 @@ class Gameplay:
     
     def eatin(self,joueur,data):
         if data==True:
+            self.food_a=self.food
             if self.food<self.quantite_nourriture:#si plus assez de nourriture
 
                 if joueur.energie+(self.food/self.ratio<joueur.energie_init):
