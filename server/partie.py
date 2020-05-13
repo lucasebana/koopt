@@ -270,7 +270,7 @@ class Partie(Gameplay):
         for i in range(len(self.joueurs)):
             if not self.joueurs[i].body.changeLast():
                 envoi = False
-        if(self.joueurs[0].body.changeLast()):#A faire: un programme type changeLast mais général
+        if(envoi):#A faire: un programme type changeLast mais général
             
             info["posx"] = [self.joueurs[i].body.x for i in range(njoueurs)]
             info["posy"] = [self.joueurs[i].body.y for i in range(njoueurs)]
