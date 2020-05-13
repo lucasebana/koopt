@@ -50,11 +50,11 @@ create(){
 }
 
 update(){
-    /*
+    
     this.woodlevel.update();
     
     this.updateText();
-    */
+    
     this.updateFood();
     
     
