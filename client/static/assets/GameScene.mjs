@@ -199,6 +199,7 @@ export class GameScene extends Phaser.Scene{
         this.actualiserPosition = true;
         
     }
+    */
     updateObjects(){
         /* Fonction mettant à jour les joueurs et objets du jeu */
         for(var nj = 0; nj < this.joueurs.length;nj++){
