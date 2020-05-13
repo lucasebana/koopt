@@ -61,7 +61,7 @@
         {
          "draworder":"topdown",
          "id":15,
-         "name":"Objets",
+         "name":"objets",
          "objects":[
                 {
                  "height":0,
