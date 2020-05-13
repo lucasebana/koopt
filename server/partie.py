@@ -36,11 +36,13 @@ class Partie(Gameplay):
         self.timestamp_ini=time.time();
         self.t0=time.time()
         self.food=100*5
+        self.food_a=100*5#à mettre en place
         self.quantite_nourriture=5#quantité de nourriture consommé à chaque pression de F
         self.ratio=10#ratio de vie ajoutée en fction de la nourriture mangée
 
         self.hasAmmo=False
         self.simpleHit=-1 # vaut -1 si personne ne frappe, sinon vaut la position du joueur qui frappe dans le tableau joueurs
+        self.simpleHit_A=-1#à mettre en place
         
         self.Tst = 0
 
@@ -210,7 +212,9 @@ class Partie(Gameplay):
         elif data:     
             for i in range(len(self.joueurs)):
                 if self.joueurs[i] == joueur:
-                    self.simpleHit=i#l'info qu'on renvoie au client pour l'animation  
+                    self.simpleHit_A=self.simpleHit
+                    self.simpleHit=i
+                    #l'info qu'on renvoie au client pour l'animation  
                 else:
                     print(self.dist2(joueur.body,self.joueurs[i].body))
                     if self.dist2(joueur.body,self.joueurs[i].body)<2500:#arbitraire
@@ -258,7 +262,7 @@ class Partie(Gameplay):
         pass
     
     async def sendData(self):
-        t = time.time()
+    
         info = dict()
         njoueurs= len(self.joueurs)
         #On n'envoie que s'il y a changement depuis la derniere frame
@@ -270,13 +274,15 @@ class Partie(Gameplay):
             info["vely"] = [self.joueurs[i].body.vy for i in range(njoueurs)]
             #url de la map ?
             await self.broadcast("update_pos",info)
-        
+            info=[]
+
         info=dict()
-        info["nrj"] = [self.joueurs[i].energie for i in range(njoueurs)]
+        info["nrj"] = [self.joueurs[i].energie for i in range(njoueurs)]       
         info["food"] = [self.food]
         info["simpleHit"] = self.simpleHit
         await self.broadcast("update_gameData",info)
-        info=[]
+    
+
         for i in range(len(self.objets)):
             info.append(dict())
             info[i]["x"]=self.objets[i].x

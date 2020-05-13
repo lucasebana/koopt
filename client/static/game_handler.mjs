@@ -32,10 +32,11 @@ export class game_handler {
         this.socket.on('update_pos', function(data){
             self.data.push({"update_pos":data})
         })
-        
+
         this.socket.on('update_gameData', function(data){
             self.data.push({"update_gameData":data})
         })
+        
         this.socket.on('update_gameItems', function(data){
             self.data.push({"update_gameItems":data})
         })

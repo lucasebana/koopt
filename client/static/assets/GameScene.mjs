@@ -13,7 +13,6 @@ export class GameScene extends Phaser.Scene{
     }
 
     init(data){
-        console.log(data)
         this.numero = null;
         this.usernames = []
         this.pos = []
@@ -153,13 +152,11 @@ export class GameScene extends Phaser.Scene{
             for(var i = 0; i< d[n_data].update_gameData.nrj.length; i++){
                 e.push(t.nrj[i]);
             }
-            
             this.energies= e;
             this.miam=t.food
             this.simpleAttack=t.simpleHit
-            
-        
         }
+
         if("update_gameItems" in d[n_data]){
             for (var i=0;i<d[n_data].update_gameItems.length;i++){
                 var obj=d[n_data].update_gameItems[i];
@@ -202,8 +199,6 @@ export class GameScene extends Phaser.Scene{
         this.actualiserPosition = true;
         
     }
-    */
-
     updateObjects(){
         /* Fonction mettant à jour les joueurs et objets du jeu */
         for(var nj = 0; nj < this.joueurs.length;nj++){
@@ -260,6 +255,7 @@ export class GameScene extends Phaser.Scene{
 
         //this.fleche.update()
     }
+    
 
     updateHealth(){
         for(var i =0; i< this.joueurs.length; i++){
