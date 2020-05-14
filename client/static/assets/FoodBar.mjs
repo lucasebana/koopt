@@ -5,7 +5,7 @@ export class FoodBar {
         //this.bar = new Phaser.GameObjects.Graphics(scene);
         this.x = varx;
         this.y = vary;
-        this.rectangle = new Phaser.GameObjects.Rectangle(scene,x,y,800,50);
+        this.rectangle = new Phaser.GameObjects.Rectangle(scene,this.x,this.y,800,50);
         this.value=pdf
         this.p=(76 * 5) / (100*5);
         this.draw()
@@ -43,10 +43,10 @@ export class FoodBar {
         //this.bar.fillStyle(0xffffff);
         //this.bar.fillRect(this.x + 2, this.y + 2, 76*5, 12);
         //this.bar.fillStyle(0xff7f00);
-        this.rectangle.fillStyle(0xff7f00)
+        this.rectangle.setfillStyle(0xff7f00)
         var d = Math.floor(this.p * this.value);
         this.rectangle.setPosition(this.x+2, this.y+2)
-        this.rectangle.setSize(d,12)
+        this.rectangle.setSize(d,12)    
         //this.bar.fillRect(this.x + 2, this.y + 2, d, 12);
     }
     

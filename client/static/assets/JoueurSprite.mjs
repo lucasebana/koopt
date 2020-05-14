@@ -9,16 +9,16 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
         scene.sys.updateList.add(this);
         scene.sys.displayList.add(this);
         
-        scene.physics.world.enableBody(this);
-        this.setImmovable(true);
+        //scene.physics.world.enableBody(this);
+        //this.setImmovable(true);
 
 
         /*this.displayHeight = 60*2
         this.displayWidth = 120
         */
-        this.setOffset(0,0)
-        this.body.width = 60
-        this.body.height = 60
+        //this.setOffset(0,0)
+        //this.body.width = 60
+        //this.body.height = 60
         this.setOrigin(0,0)
         
         
@@ -356,42 +356,6 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
             }
         }
 
-        /*if(this.body.velocity.x > 0){
-            if(this.body.blocked.right){
-                this.realVelocity.x = 0;
-            }else{
-                this.realVelocity.x = this.body.velocity.x;
-            }
-        }
-        else if(this.body.velocity.x < 0){
-            if(this.body.blocked.left){
-                this.realVelocity.x = 0;
-            }else{
-                this.realVelocity.x = this.body.velocity.x;
-            }
-        }
-        else{
-            this.realVelocity.x = 0
-        }
-        if(this.body.velocity.y > 0){
-            if(this.body.blocked.top){
-                this.realVelocity.y = 0;
-            }else{
-                this.realVelocity.y = this.body.velocity.y;
-            }
-        }
-        else if(this.body.velocity.y < 0){
-            if(this.body.blocked.bottom){
-                this.realVelocity.y = 0;
-            }else{
-                this.realVelocity.y = this.body.velocity.y;
-            }
-        }
-        else{
-            this.realVelocity.y = 0
-        }*/
-
-
     }
      
 
@@ -450,7 +414,7 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
         }
         this.textname.setPosition(this.x - this.textname.width/2, this.y + this.height + 5)
         this.healthbar.rectangle.x=this.x - this.width/2 -2
-        this.healthbar.rectangle.y=this.y - this.height 
+        this.healthbar.rectangle.y=this.y - this.height
         if (this.playable){
             this.controlPlayer(scene);
             this.attack();

@@ -266,10 +266,10 @@ class Partie(Gameplay):
         info = dict()
         njoueurs= len(self.joueurs)
         #On n'envoie que s'il y a changement depuis la derniere frame
-        envoi = True
+        envoi = False
         for i in range(len(self.joueurs)):
-            if not self.joueurs[i].body.changeLast():
-                envoi = False
+            if self.joueurs[i].body.changeLast():
+                envoi = True
         if(envoi):#A faire: un programme type changeLast mais général
             
             info["posx"] = [self.joueurs[i].body.x for i in range(njoueurs)]

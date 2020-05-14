@@ -13,7 +13,7 @@
   <image source="voda_pesok_trava_revision_2.png" trans="43adec" width="160" height="144"/>
  </tileset>
  <tileset firstgid="8193" name="set" tilewidth="16" tileheight="16" tilecount="324" columns="18">
-  <image source="set.gif" trans="43adec" width="288" height="288"/>
+  <image source="set.png  " trans="43adec" width="288" height="288"/>
  </tileset>
  <tileset firstgid="8517" name="Overworld" tilewidth="16" tileheight="16" tilecount="0" columns="40">
   <image source="Overworld.png" trans="43adec" width="640" height="576"/>
