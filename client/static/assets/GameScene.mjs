@@ -65,7 +65,8 @@ export class GameScene extends Phaser.Scene{
         //this.physics.add.collider(this.mainplayer,this.collision)
         //map.setCollision([601])
 
-        
+        this.arbre=map.createFromObjects("objets","arbre1",{key:'armel'})
+        window.map=map
         /* Gestion de la caméra */
         this.keyboard = this.input.keyboard.addKeys("Z, Q, S, D");
         this.arrowKey = this.input.keyboard.addKeys("SPACE");
