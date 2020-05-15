@@ -27,9 +27,9 @@ export class GameScene extends Phaser.Scene{
         this.load.spritesheet("armel", "static/assets/armel.png", {frameHeight: 64, frameWidth: 64});
         this.load.spritesheet("fleche", "static/assets/fleche.png", {frameHeight: 40, frameWidth: 139});
         this.load.spritesheet("food", "static/assets/burger.png", {frameHeight: 64, frameWidth: 64});
-        this.load.image('set', 'static/assets/map/set.png');
-        this.load.image('atlas', 'static/assets/map/atlas.png');
-        this.load.tilemapTiledJSON('map', 'static/assets/map/map_finale.json');
+        this.load.image('set', 'static/assets/maps/set.png');
+        this.load.image('atlas', 'static/assets/maps/atlas.png');
+        this.load.tilemapTiledJSON('map', 'static/assets/maps/map_finale.json');
     }
     create(){
 
