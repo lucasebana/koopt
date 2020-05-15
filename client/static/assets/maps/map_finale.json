@@ -4,7 +4,7 @@
      "export":
         {
          "format":"json",
-         "target":"map_finale.json"
+         "target":"map_finale2.json"
         }
     },
  "height":200,
@@ -646,6 +646,28 @@
                  "width":0,
                  "x":256,
                  "y":848
+                }, 
+                {
+                 "height":0,
+                 "id":1,
+                 "name":"arbre1",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1744,
+                 "y":192
+                }, 
+                {
+                 "height":16,
+                 "id":2,
+                 "name":"arbre1",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":1760,
+                 "y":240
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -654,7 +676,7 @@
          "y":0
         }],
  "nextlayerid":15,
- "nextobjectid":1,
+ "nextobjectid":3,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.3.3",
@@ -663,7 +685,7 @@
         {
          "columns":64,
          "firstgid":1,
-         "image":"atlas.png",
+         "image":"..\/map\/atlas.png",
          "imageheight":1024,
          "imagewidth":1024,
          "margin":0,
@@ -677,7 +699,7 @@
         {
          "columns":64,
          "firstgid":4097,
-         "image":"base_out_atlas.png",
+         "image":"..\/map\/base_out_atlas.png",
          "imageheight":1024,
          "imagewidth":1024,
          "margin":0,
@@ -691,7 +713,7 @@
         {
          "columns":10,
          "firstgid":8193,
-         "image":"voda_pesok_trava_revision_2.png",
+         "image":"..\/map\/voda_pesok_trava_revision_2.png",
          "imageheight":144,
          "imagewidth":160,
          "margin":0,
@@ -705,7 +727,7 @@
         {
          "columns":18,
          "firstgid":8193,
-         "image":"set.png",
+         "image":"..\/map\/set.png",
          "imageheight":288,
          "imagewidth":288,
          "margin":0,
@@ -719,7 +741,7 @@
         {
          "columns":40,
          "firstgid":8517,
-         "image":"Overworld.png",
+         "image":"..\/map\/Overworld.png",
          "imageheight":576,
          "imagewidth":640,
          "margin":0,
@@ -733,7 +755,7 @@
         {
          "columns":4,
          "firstgid":8517,
-         "image":"palmtree.png",
+         "image":"..\/map\/palmtree.png",
          "imageheight":96,
          "imagewidth":64,
          "margin":0,
@@ -747,7 +769,7 @@
         {
          "columns":22,
          "firstgid":8517,
-         "image":"tf_jungle_tileset.png",
+         "image":"..\/map\/tf_jungle_tileset.png",
          "imageheight":336,
          "imagewidth":352,
          "margin":0,
@@ -761,7 +783,7 @@
         {
          "columns":64,
          "firstgid":8517,
-         "image":"atlas.png",
+         "image":"..\/map\/atlas.png",
          "imageheight":1024,
          "imagewidth":1024,
          "margin":0,
