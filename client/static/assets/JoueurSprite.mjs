@@ -186,7 +186,7 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
         
         //if (scene.keyboard.D.isUp === true) {
         if (scene.keyboard.Z.isUp === true) {
-            //this.setVelocityX(200);
+            
                 this.deplacement_serveur.y = 0
         }
 
@@ -208,11 +208,9 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
         //if (scene.keyboard.D.isUp === true) {
         
         if (scene.keyboard.Z.isDown === true) {
-            //this.setVelocityX(200);
                 this.deplacement_serveur.y = -1
         }
         if (scene.keyboard.D.isDown === true) {
-            //this.setVelocityX(200);
                 this.deplacement_serveur.x = 1
         }
         if (scene.keyboard.S.isDown === true) {
@@ -360,8 +358,7 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
      
 
     context(scene){
-        //this.play("stretchD",true)
-        //console.log(this.alive)
+
         if (this.alive===false && this.alr===false){
             this.play("death",true);
             this.alr=true;
@@ -378,17 +375,6 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
                 }
             }
         }
-        //le serveur permet de savoir si on fait une simple attaque ou si on utilise une flèche
-        
-
-        
-
-        /* orientation :
-            0 : haut
-            1 : droite
-            2 : bas
-            3 : gauche        
-        */
 
         this.setAnimation()
         
