@@ -1,7 +1,7 @@
 import time
 from map import Map
 from fleche import Fleche
-
+from unitTest import TestUnit
 from gameplay import Gameplay
 from rect2 import Rect2
 
@@ -45,7 +45,7 @@ class Partie(Gameplay):
         self.simpleHit_A=-1#à mettre en place
         
         self.Tst = 0
-
+        self.unit=TestUnit()
         if joueur != None:
             self.rejoindrePartie(joueur)
             pass
@@ -53,9 +53,10 @@ class Partie(Gameplay):
         #ETAT 0 : INITIALISATION; 1 : LOBBY; 2 : EN JEU; 3 : EN PAUSE; 4 : TERMINE
     
     def rejoindrePartie(self,joueur):
-        self.joueurs.append(joueur)
-        self.sio.enter_room(joueur.socketid,self.socketroom)
-        joueur.partie = self;
+        if len(self.joueurs)<4:
+            self.joueurs.append(joueur)
+            self.sio.enter_room(joueur.socketid,self.socketroom)
+            joueur.partie = self;
     
     async def checkReconnexions(self):
         ''' Fonction qui renseigne les nouveaux sid 
@@ -69,6 +70,7 @@ class Partie(Gameplay):
         await self.load_sync()
 
     async def start(self,j):
+        #if len(self.joueurs)>1:
         if j == self.joueurs[0]: #seul le joueur ayant créé la partie peut la démarrer
             self.etat = 3
             for j in self.joueurs:
@@ -82,7 +84,7 @@ class Partie(Gameplay):
         ''' 
         Initialisation de la partie (position des joueurs, choix de la map etc.)
         '''
-        
+        self.unit.setUp(self)
         self.BLACK = (0, 0, 0)
         self.WHITE = (255, 255, 255)
         self.BLUE = (0, 0, 255)
@@ -169,25 +171,30 @@ class Partie(Gameplay):
         #type de donnée: int
         #axe x : positif vers la droite
         #axe y : positif vers le bas
-
-        if data == 0:
-            joueur.body.vyrB = -1
-        elif data == 1:
-            joueur.body.vxrB = 1
-        elif data == 2:
-            joueur.body.vyrB = 1
-        elif data == 3:
-            joueur.body.vxrB = -1
-
-
-        elif data == 4:
-            joueur.body.vyrB = 0
-        elif data == 5:
-            joueur.body.vxrB = 0
-        elif data == 6:
-            joueur.body.vyrB = 0
-        elif data == 7 :
-            joueur.body.vxrB = 0
+        if data<4:
+            if data == 0:
+                joueur.body.vyrB = -1
+            elif data == 1:
+                joueur.body.vxrB = 1
+            elif data == 2:
+                joueur.body.vyrB = 1
+            elif data == 3:
+                joueur.body.vxrB = -1
+            joueur.body.newFrame()
+            #self.unit.test_deplacements(joueur)
+        
+        else:
+            if data == 4:
+                joueur.body.vyrB = 0
+            elif data == 5:
+                joueur.body.vxrB = 0
+            elif data == 6:
+                joueur.body.vyrB = 0
+            elif data == 7 :
+                joueur.body.vxrB = 0
+            joueur.body.newFrame()
+            
+        
 
     def hit(self,joueur,data):
         if self.hasAmmo & data:
@@ -230,7 +237,6 @@ class Partie(Gameplay):
             #logique de jeu
             await self.update() # mise à jour de la logique du jeu  
             await self.sendData()
-            self.updateBodies()
 
         await self.getFps()
         pass

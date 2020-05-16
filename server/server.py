@@ -16,6 +16,7 @@ Payload.max_decode_packets = 300
 
 
 from handler.ServerHandler import ServerHandler
+from unitTest import TestUnit
 from partie import Partie
 from joueur import Joueur
 import ressource
@@ -46,6 +47,7 @@ class Server:
         self.app = Sanic(name="koopt")
         self.sio.attach(self.app)
         self.ip = ip
+        self.test=TestUnit()
 
 
     def start(self): 
@@ -73,6 +75,7 @@ class Server:
             with open('../client/index.html') as f:
                 return html(f.read())
         self.sio.register_namespace(ServerHandler('/',self.sio,self))
+        self.test.setUp(self)
         self.app.static('/static', '../client/static')
         if self.ip is None:
             self.app.run(access_log=False)
@@ -130,6 +133,7 @@ class Server:
         j.etape=2
         pass
         partie.ready = True
+        partie.unit=self.test
 
     async def rejoindrePartie(self,sid,data):
         idJoueur = self.getJoueur(sid)
