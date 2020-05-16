@@ -20,7 +20,7 @@ class Partie(Gameplay):
         self.joueurs= []
         self.objets=[]
         self.map = Map("../client/static/assets/maps/map_finale.json")
-
+        co = self.map.collisionObjects + self.map.mapObjects
 
         self.start_frametime = 0;
         self.finish_frametime = 0;
@@ -49,12 +49,7 @@ class Partie(Gameplay):
         if joueur != None:
             self.rejoindrePartie(joueur)
             pass
-            
-        #TODO :
-        #https://github.com/bitcraft/PyTMX#loading-from-xml
-        #Split partie.py en plusieur fichiers
-        #Deplacer code client de assets.
-        
+                   
         #ETAT 0 : INITIALISATION; 1 : LOBBY; 2 : EN JEU; 3 : EN PAUSE; 4 : TERMINE
     
     def rejoindrePartie(self,joueur):
@@ -84,8 +79,8 @@ class Partie(Gameplay):
             await self.load_sync(); #le client devra attendre d'avoir recus ces infos pour init le jeu
 
     def init(self):
-        ''' Initialisation de la partie (position des joueurs, choix de la map etc.)            
-        
+        ''' 
+        Initialisation de la partie (position des joueurs, choix de la map etc.)
         '''
         
         self.BLACK = (0, 0, 0)
@@ -100,10 +95,6 @@ class Partie(Gameplay):
             self.Tst = 1
             self.screenpygame.display.set_caption("debug")
         
-
-        
-        #self.joueurs[0].position = [50,50]
-        #self.joueurs[0].x = 243 # 236
 
     async def lobby(self):
         if self.etat == 2:
@@ -139,8 +130,6 @@ class Partie(Gameplay):
         info["nrj"] = [self.joueurs[i].energie for i in range(njoueurs)]
         #url de la map ?
         await self.broadcast("load_game",info)
-        #await self.broadcast("load_game",{"data1":["jean","jacques","pierre"]})
-        #await self.broadcast("load_game",info)
 
     async def getFps(self):
         self.framecount+=1
@@ -160,25 +149,21 @@ class Partie(Gameplay):
                 #print(self.joueurs[0].body.x,self.joueurs[0].body.y)
                 pass
 
-            
-            #print("waittime : ",self.waittime)
-                #print("waittime : ")
-
-        """if (self.fps_last+self.fps_current) != 0 :
-            self.waittime = (1/(self.goal_fps) - (self.realcurrent))*0.7;
-        """
 
         if self.waittime>0:
             #time.sleep(0.008)
             #await self.sio.sleep(0.015)
             pass
-
+    
+    '''
     def setPosition(self,joueur,data):
         if joueur in self.joueurs:#Nécessaire ????
             joueur.position = data
+
     def setVelocity(self,joueur,data):
         if joueur in self.joueurs:#Nécessaire ????
             joueur.velocity = data
+    '''
     
     def move(self,joueur,data):
         #type de donnée: int
@@ -257,7 +242,6 @@ class Partie(Gameplay):
             les evenements recus du client sont ajoutés au buffer des objets concernés à tout instant (via on_move par ex.)
             1 fois par frame, les buffers sont appliqués aux vraies variables des objets
             """
-
             j.body.getInputs()
         pass
     
@@ -332,12 +316,12 @@ class Partie(Gameplay):
                     w = self.objets[i].w
                     h = self.objets[i].h
                     pygame.draw.rect(self.screen, self.GREEN, [x, y, w, h], 2)
-                co = self.map.collisionObjects
-                for i in range(len(co)):
-                    x = co[i].x
-                    y = co[i].y
-                    w = co[i].w
-                    h = co[i].h
+                #self.co = self.map.collisionObjects
+                for i in range(len(self.co)):
+                    x = self.co[i].x
+                    y = self.co[i].y
+                    w = self.co[i].w
+                    h = self.co[i].h
                     pygame.draw.rect(self.screen, self.RED, [x, y, w, h], 2)
                 
                 pygame.display.flip()
@@ -345,6 +329,7 @@ class Partie(Gameplay):
 
     def move_objects(self):
         #deplacement des joueurs avant tout
+        self.co = self.map.collisionObjects + self.map.mapObjects #liste des hitboxes
         for joueur in self.joueurs:
             if not joueur.body.vx == joueur.body.vy == joueur.body.vxr == joueur.body.vyr == 0:
                 fc = self.future_collisions(joueur.body) #on recupere les collisions du joueur avec son environnement
@@ -352,6 +337,7 @@ class Partie(Gameplay):
         for objet in self.objets :
             fc= self.future_collisions(objet)
             self.resolve_collisions(objet,fc)
+
     def updateBodies(self):
         for j in self.joueurs:
             j.body.newFrame()
@@ -367,24 +353,7 @@ class Partie(Gameplay):
         if objet1.x==objet1.y==192:
             pass
         return True
-        
-        """
-        ret = False
-        if objet2.x >= objet1.x + objet1.w:
-            ret = True
-            print("GAUCHE")
-        if objet2.x + objet2.w <= objet1.x:
-            ret = True
-            print("DROITE")  
-        if objet2.y >= objet1.y + objet1.h:
-            ret = True
-            print("HAUT")
-        if objet2.y + objet2.h <= objet1.y:
-            ret = True
-            print("BAS")
-        return ret
-        """
-        
+                
     def dist2(self,objet1,objet2):
         return (objet1.x-objet2.x)**2 + (objet1.y-objet2.y)**2
     
@@ -396,23 +365,28 @@ class Partie(Gameplay):
         fpy = objet.y + objet.vyr*velocityFrame
         return fpx,fpy
 
+    
     def future_collisions(self,objet):
         fpx,fpy = self.future_position(objet)
         deplacementY = Rect2(objet.x,fpy,objet.h,objet.w) #position frame suivante projetee sur Y
         deplacementX = Rect2(fpx,objet.y,objet.h,objet.w) # idem sur X
 
-        co = self.map.collisionObjects #liste des collisions fixes de la map 
-        
+        #co = self.map.collisionObjects + self.map.mapObjects #liste des collisions fixes de la map 
+        #co+=self.map.mapObjects
+
         collisionY = None
-        collisionX = None
+        collisionX = None   
 
         i = 0
         calc = 0
-        while i < len(co) and (collisionY == None or collisionX == None):
-            if self.dist2(co[i],objet) <= (objet.x-fpx)**2 + (objet.y-fpy)**2 + objet.w **2 + objet.h**2 : # check collision ssi la distance est assez faible
-                if self.collisionAABB(deplacementY,co[i]):
+        L1 = []
+        L2 = []
+        while i < len(self.co) and (collisionY == None or collisionX == None):
+            if self.dist2(self.co[i],objet) <= (objet.x-fpx)**2 + (objet.y-fpy)**2 + (self.co[i].w **2 + self.co[i].h**2) + objet.h**2 + objet.w**2: # check collision ssi la distance est assez faible
+                
+                if self.collisionAABB(deplacementY,self.co[i]):
                     collisionY = i
-                if self.collisionAABB(deplacementX,co[i]):
+                if self.collisionAABB(deplacementX,self.co[i]):
                     collisionX = i
                 calc+=1
             else:
@@ -425,7 +399,7 @@ class Partie(Gameplay):
         velocity = 200 #pixel / seconde 
         velocityFrame = velocity/self.goal_fps #en pixel par frame
 
-        co = self.map.collisionObjects
+        #co = self.map.collisionObjects
 
         fcx = fc[0] #indice de l'objet collided ou False
         fcy = fc[1]
@@ -441,9 +415,9 @@ class Partie(Gameplay):
             objet.x = fpx
         else:
             if objet.vxr == 1:
-                objet.x = co[fcx].x - objet.w
+                objet.x = self.co[fcx].x - objet.w
             elif objet.vxr == -1:
-                objet.x = co[fcx].x + co[fcx].w
+                objet.x = self.co[fcx].x + self.co[fcx].w
             objet.vx = 0
         
         if fcy== None:
@@ -451,8 +425,8 @@ class Partie(Gameplay):
             objet.y = fpy
         else:
             if objet.vyr == -1: # /!\ vers le haut
-                objet.y = co[fcy].y + co[fcy].h
+                objet.y = self.co[fcy].y + self.co[fcy].h
             elif objet.vyr == +1:
-                objet.y = co[fcy].y - objet.h
+                objet.y = self.co[fcy].y - objet.h
             objet.vy = 0
         

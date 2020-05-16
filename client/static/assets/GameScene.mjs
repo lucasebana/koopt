@@ -2,6 +2,7 @@ import { cst } from '/static/assets/cst.mjs'
 import {JoueurSprite} from '/static/assets/JoueurSprite.mjs'
 import {Arrow} from '/static/assets/Arrow.mjs'
 import { HealthBar } from './HealthBar.mjs'
+import {Object} from '/static/assets/object.mjs'
 import {Food} from '/static/assets/food.mjs'
 
 
@@ -27,6 +28,7 @@ export class GameScene extends Phaser.Scene{
         this.load.spritesheet("armel", "static/assets/armel.png", {frameHeight: 64, frameWidth: 64});
         this.load.spritesheet("fleche", "static/assets/fleche.png", {frameHeight: 40, frameWidth: 139});
         this.load.spritesheet("food", "static/assets/burger.png", {frameHeight: 64, frameWidth: 64});
+        this.load.atlas("vegetation","static/assets/maps/sprite_objets.png","static/assets/maps/atlas_sprites.json")
         this.load.image('set', 'static/assets/maps/set.png');
         this.load.image('atlas', 'static/assets/maps/atlas.png');
         this.load.tilemapTiledJSON('map', 'static/assets/maps/map_finale.json');
@@ -65,8 +67,20 @@ export class GameScene extends Phaser.Scene{
         //this.physics.add.collider(this.mainplayer,this.collision)
         //map.setCollision([601])
 
-        this.arbre=map.createFromObjects("objets","arbre1",{key:'armel'})
+        //this.arbre=map.createFromObjects("objets","arbre1",{key:'armel'})
         window.map=map
+        this.objets = Array()
+        
+        map.filterObjects("objets",(param)=>{
+                this.objets.push(param)
+        })
+        
+        this.objets.filter((obj)=>obj.name=="arbre1").forEach((obj)=>{
+            //this.add.sprite(obj.x,obj.y,'armel')
+            window.object = new Object(this,obj.x,obj.y,"vegetation",obj.id,"arbre1")
+            this.add.existing(object)
+        })
+        
         /* Gestion de la caméra */
         this.keyboard = this.input.keyboard.addKeys("Z, Q, S, D");
         this.arrowKey = this.input.keyboard.addKeys("SPACE");
@@ -179,7 +193,6 @@ export class GameScene extends Phaser.Scene{
                 });
 
             }
-            
             
 
         }
