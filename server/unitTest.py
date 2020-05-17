@@ -6,9 +6,12 @@ class TestUnit(unittest.TestCase):
     def setUp(self,partie):
         self.p=partie
 
-    def test_deplacements(self,joueur):#ajouter cas où il y a des collisions
+    def test_deplacements(self,joueur,fc):#ajouter cas où il y a des collisions
         if joueur.alive==True:
-            self.assertNotEqual((joueur.body.x, joueur.body.y),(joueur.body.xA,joueur.body.yA))
+            if fc==(None,None):
+                self.assertNotEqual((joueur.body.x, joueur.body.y),(joueur.body.xA,joueur.body.yA))
+            else:
+                self.assertEqual((joueur.body.x, joueur.body.y),(joueur.body.xA,joueur.body.yA))
         if joueur.alive==False:
             self.assertEqual((joueur.body.x, joueur.body.y),(joueur.body.xA,joueur.body.yA))
 

@@ -46,6 +46,7 @@ class Partie(Gameplay):
         
         self.Tst = 0
         self.unit=TestUnit()
+        self.count=0
         if joueur != None:
             self.rejoindrePartie(joueur)
             pass
@@ -180,8 +181,8 @@ class Partie(Gameplay):
                 joueur.body.vyrB = 1
             elif data == 3:
                 joueur.body.vxrB = -1
-            joueur.body.newFrame()
-            #self.unit.test_deplacements(joueur)
+            
+            
         
         else:
             if data == 4:
@@ -192,7 +193,6 @@ class Partie(Gameplay):
                 joueur.body.vyrB = 0
             elif data == 7 :
                 joueur.body.vxrB = 0
-            joueur.body.newFrame()
             
         
 
@@ -296,6 +296,7 @@ class Partie(Gameplay):
 
         t = time.time()
         self.move_objects()
+        #self.updateBodies()
         #print(time.time()-t)
 
 
@@ -334,16 +335,22 @@ class Partie(Gameplay):
                 self.screen.fill(self.WHITE)     
 
     def move_objects(self):
+        
         #deplacement des joueurs avant tout
         self.co = self.map.collisionObjects + self.map.mapObjects #liste des hitboxes
         for joueur in self.joueurs:
             if not joueur.body.vx == joueur.body.vy == joueur.body.vxr == joueur.body.vyr == 0:
                 fc = self.future_collisions(joueur.body) #on recupere les collisions du joueur avec son environnement
                 self.resolve_collisions(joueur.body,fc) #on ajuste sa position pour la frame suivante
+                #if self.count<=10:
+                    #self.count+=1
+                #else:
+                #self.unit.test_deplacements(joueur,fc)
+
         for objet in self.objets :
             fc= self.future_collisions(objet)
             self.resolve_collisions(objet,fc)
-
+        
     def updateBodies(self):
         for j in self.joueurs:
             j.body.newFrame()
