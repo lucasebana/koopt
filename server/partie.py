@@ -71,15 +71,15 @@ class Partie(Gameplay):
         await self.load_sync()
 
     async def start(self,j):
-        #if len(self.joueurs)>1:
-        if j == self.joueurs[0]: #seul le joueur ayant créé la partie peut la démarrer
-            self.etat = 3
-            for j in self.joueurs:
-                j.etape = 3
+        #if len(self.joueurs)>1: #pour le test joueur unique
+            if j == self.joueurs[0]: #seul le joueur ayant créé la partie peut la démarrer
+                self.etat = 3
+                for j in self.joueurs:
+                    j.etape = 3
             
-            await self.broadcast("game_start",None)
-            self.init();
-            await self.load_sync(); #le client devra attendre d'avoir recus ces infos pour init le jeu
+                await self.broadcast("game_start",None)
+                self.init();
+                await self.load_sync(); #le client devra attendre d'avoir recus ces infos pour init le jeu
 
     def init(self):
         ''' 

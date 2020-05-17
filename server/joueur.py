@@ -30,6 +30,7 @@ class Joueur:
         self.velocity = [0,0]
         self.energie= 100
         self.energie_init=100
+        self.last_energie=100
         self.alive=True
 
         

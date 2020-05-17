@@ -1,4 +1,5 @@
 import time
+
 class Gameplay:
     
 
@@ -8,7 +9,12 @@ class Gameplay:
         diff=t-self.t0
         if diff>=1:
             for i in range(len(self.joueurs)):
+                #self.joueurs[i].last_energie=self.joueurs[i].energie    test energie classique
+                #self.joueurs[i].energie=0     test energie vide
                 self.joueurs[i].energie=self.joueurs[i].delta_vie(-diff*0.1)
+                #self.unit.test_energie_vide(self,self.joueurs[i])
+                #self.unit.test_energie(self,self.joueurs[i])
+
             self.t0=t   
     
     def delta_food(self,amount):
@@ -21,6 +27,8 @@ class Gameplay:
     
     def eatin(self,joueur,data):
         if data==True:
+            #self.food=0   #test nourriture vide
+            #joueur.energie=100    #unit test energie pleine
             self.food_a=self.food
             if self.food<self.quantite_nourriture:#si plus assez de nourriture
 
@@ -33,4 +41,7 @@ class Gameplay:
                 if joueur.energie+(self.quantite_nourriture/self.ratio)<joueur.energie_init:
                     self.delta_food(-self.quantite_nourriture)
                     joueur.delta_vie(self.quantite_nourriture/self.ratio)
+            #self.unit.test_energie_pleine(self,joueur)
+            #self.unit.test_nourriture_vide(self)
+            #self.unit.test_nourriture(self)
                     
