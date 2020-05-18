@@ -25,14 +25,14 @@ create(){
     window.interface=this
 
 /* Food Bar */
-    this.foodbar=new FoodBar(this,5,5,100*5);
+    this.foodbar=new FoodBar(this,400,30,100*5);
     this.foodbar.rectangle.setDepth(20)
     this.last_food=100*5
 
 
 
 /*Wood Level*/
-    this.woodlevel=new WoodLevel(this,35,70,'wood',40)
+    this.woodlevel=new WoodLevel(this,35,60,'wood',40)
 
 /*Gestion du temps*/
     const d= new Date()
@@ -45,8 +45,15 @@ create(){
     this.textname = this.add.text(this.foodbar.x+750,this.foodbar.y+10,"Temps restant:  "+min+":"+ parseInt(sec), 
     { font: '16px Courier', fill: '#FFFFFF', backgroundColor:"#000000", align:'center'}
     );
-    this.textname.setPosition(this.foodbar.x +750 , this.foodbar.y+10)
+    this.textname.setPosition(this.foodbar.x +675 , this.foodbar.y-10)
     this.textname.setDepth(20)
+
+
+    this.textname2 = this.add.text(this.foodbar.x,this.foodbar.y+20, "Food", 
+        { font: '16px Courier', fill: '#FFFFFF', backgroundColor:"#000000", align:'center'}
+        );
+        this.textname2.setPosition(this.foodbar.x -390 , this.foodbar.y-5)
+        this.textname2.setDepth(20)
 
 }
 
@@ -102,11 +109,8 @@ woodAnimation(x,y){
     });
 }
 
-}
 
-function onWoodCompleteHandler(tween,targets,sprite){
-    sprite.setActive(false).setVisible(false)
-}
+
 
 updateEnd(){
     this.cas=game.scene.getScene("GAME").end
@@ -119,4 +123,9 @@ updateEnd(){
     if (this.cas==2){
         console.log("victoire")
     }
+}
+}
+function onWoodCompleteHandler(tween,targets,sprite){
+    sprite.setActive(false).setVisible(false)
+
 }
