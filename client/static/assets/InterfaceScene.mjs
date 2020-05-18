@@ -57,6 +57,8 @@ update(){
     this.updateText();
     
     this.updateFood();
+
+    this.updateEnd();
     
     
 }
@@ -106,3 +108,15 @@ function onWoodCompleteHandler(tween,targets,sprite){
     sprite.setActive(false).setVisible(false)
 }
 
+updateEnd(){
+    this.cas=game.scene.getScene("GAME").end
+    if (this.cas===0){//en cours
+        return
+    }
+    if (this.cas===1){//défaite
+        console.log("défaite")
+    }
+    if (this.cas==2){
+        console.log("victoire")
+    }
+}

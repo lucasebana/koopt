@@ -45,6 +45,9 @@ class Partie(Gameplay):
         self.simpleHit=-1 # vaut -1 si personne ne frappe, sinon vaut la position du joueur qui frappe dans le tableau joueurs
         self.simpleHit_A=-1#à mettre en place
         
+        self.end=False
+        self.cas=0#cas de fin: 1=défaite, 2=victoire
+
         self.Tst = 0
         self.unit=TestUnit()
         self.count=0
@@ -249,6 +252,7 @@ class Partie(Gameplay):
             #logique de jeu
             await self.update() # mise à jour de la logique du jeu  
             await self.sendData()
+            self.end_partie
 
         await self.getFps()
         pass
@@ -287,6 +291,7 @@ class Partie(Gameplay):
         info["food"] = [self.food]
         info["simpleHit"] = self.simpleHit
         info["bois"] = self.wood
+        info["fin"] = self.cas
         await self.broadcast("update_gameData",info)
         
         info = []
@@ -473,4 +478,41 @@ class Partie(Gameplay):
             elif objet.vyr == +1:
                 objet.y = self.co[fcy].y - objet.h
             objet.vy = 0
+    
+    def end_partie(self):
+        if not self.end:
+            #cas 1: tout le monde est mort avant la fin du temps
+            i=0
+            bl=True
+            while i<len(self.joueurs) and bl:
+                if self.joueurs[i].alive:
+                    bl=False
+            if i==len(self.joueurs)-1:
+                self.end=True
+                self.cas=1
+
+        if not self.end:    
+            #cas 2: victoire!
+            alives=0
+            for j in range(len(self.joueurs)):
+                if self.joueurs[j].alive:
+                    alives+=1
+            if self.wood==100*alives and self.food>250:
+                self.end=True
+                self.cas=2
+
+        if not self.end:
+            #cas 3: temps écoulé!
+            temps=time.time()
+            if temps-self.timestamp_ini>900:
+                self.end=True
+                self.cas=1
+
+
+            
+        
+
+
+
+
         

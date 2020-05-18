@@ -1,5 +1,5 @@
 import time
-
+import random
 class Gameplay:
     
 
@@ -46,6 +46,6 @@ class Gameplay:
             #self.unit.test_nourriture(self)
         
     def addWood(self):
-        self.wood+=10
+        self.wood+=random.randint(5,15)
 
                     

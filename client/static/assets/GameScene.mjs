@@ -24,6 +24,7 @@ export class GameScene extends Phaser.Scene{
         this.simpleAttack=false
         this.mapObjects = []
         this.wood=0
+        this.end=0
         this.updateData();
     }
     preload(){
@@ -173,6 +174,7 @@ export class GameScene extends Phaser.Scene{
             this.miam=t.food
             this.simpleAttack=t.simpleHit
             this.wood=t.bois
+            this.end=t.fin
             
         }
 
