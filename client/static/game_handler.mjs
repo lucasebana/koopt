@@ -37,6 +37,10 @@ export class game_handler {
             self.data.push({"update_gameData":data})
         })
         
+        this.socket.on('update_mapobjects', function(data){
+            self.data.push({"update_mapobjects":data})
+        })
+
         this.socket.on('update_gameItems', function(data){
             self.data.push({"update_gameItems":data})
         })

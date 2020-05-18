@@ -24,7 +24,7 @@ class Joueur:
         self.w = 60;
         self.h = 60;
         '''
-        self.body = Rect2(1000,1300,60,60,0,0)
+        self.body = Rect2(300,400,60,60,0,0)#1000,1300
         self.req_vel_buffer = [0,0] # le joueur n'a d'impact que sur la frame suivante
         self.req_vel = [0,0]
         self.velocity = [0,0]

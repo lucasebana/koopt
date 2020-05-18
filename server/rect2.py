@@ -1,5 +1,5 @@
 class Rect2:
-    def __init__(self,x,y,h,w,vx=0,vy=0):
+    def __init__(self,x,y,h,w,vx=0,vy=0,offx=0,offy=0):
 
         #positions actuelles
         self.x = x
@@ -8,6 +8,9 @@ class Rect2:
         self.w = w
         self.vx = vx
         self.vy = vy
+
+        self.offx = offx
+        self.offy = offy
 
         #Anciennes positions
         self.xA = None

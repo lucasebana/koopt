@@ -75,5 +75,28 @@ updateFood(){
     }
 }
 
+woodAnimation(x,y){
+    var spr = new Phaser.GameObjects.Sprite(this,x,y,"wood")
+    spr.setScale(0.5)
+    this.add.existing(spr)
+
+    var tween = this.tweens.add({
+        targets: spr,
+        props: {
+            x: { value: function () { return 35; }, ease: 'Power1' },
+            y: { value: function () { return 70; }, ease: 'Power3' }
+        },
+        duration: 500,
+        yoyo: false,
+        repeat: 0,
+        onComplete:onWoodCompleteHandler,
+        onCompleteParams:[spr]
+    });
+}
+
+}
+
+function onWoodCompleteHandler(tween,targets,sprite){
+    sprite.setActive(false).setVisible(false)
 }
 

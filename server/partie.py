@@ -201,7 +201,7 @@ class Partie(Gameplay):
             fleche=Fleche(len(self.objets),joueur.body.x,joueur.body.y,40,139,300,0)
             fleche.vxr=1
             self.objets.append(fleche)
-        elif data:     
+        elif data:
             for i in range(len(self.joueurs)):
                 if self.joueurs[i] == joueur:
                     self.simpleHit_A=self.simpleHit
@@ -212,11 +212,22 @@ class Partie(Gameplay):
                     if self.dist2(joueur.body,self.joueurs[i].body)<2500:#arbitraire
                         self.joueurs[i].energie=self.joueurs[i].delta_vie(-5)
             #ajouter pour les arbres (ajout de nourriture/de bois)
+            b = joueur.body
+            f = 10
+            bigHitbox = Rect2(b.x-f,b.y-f, b.h+2*f,b.w+2*f)
+            toremove = -1
+            for i in range(len(self.map.mapObjects)):
+                #if self.dist2(joueur.body,self.map.mapObjects[i])< 2500:
+                if self.collisionAABB(bigHitbox,self.map.mapObjects[i]): 
+                    toremove = i
+            if toremove != -1:
+                #self.map.mapObjects.pop(toremove)
+                self.map.changeObjectTo(self.map.mapObjects[toremove],"arbre1_souche")
         else:
             self.simpleHit=-1
     
 
-    async def load_sync(self):
+    async def load_sync(self):  
         '''methode envoyant aux clients tt les données du jeu à l'initialisation du client'''
         for i in range(len(self.joueurs)):
             await self.load_sync_i(i)
@@ -275,8 +286,18 @@ class Partie(Gameplay):
         info["food"] = [self.food]
         info["simpleHit"] = self.simpleHit
         await self.broadcast("update_gameData",info)
-    
+        
+        info = []
+        for i in range (len(self.map.changedObjects)):
+            info.append(dict())
+            info[i]["id"] = self.map.changedObjects[i].id
+            info[i]["name"] = self.map.changedObjects[i].name
+        if self.map.changedObjects != []:
+            await self.broadcast("update_mapobjects",info)
+            self.map.changedObjects = []
 
+
+        info = []
         for i in range(len(self.objets)):
             info.append(dict())
             info[i]["x"]=self.objets[i].x
@@ -312,21 +333,28 @@ class Partie(Gameplay):
                 for event in pygame.event.get():
                     #if event.type == pygame.QUIT:
                     pass
-                x=self.joueurs[0].body.x 
-                y=self.joueurs[0].body.y 
+                x=self.joueurs[0].body.x
+                y=self.joueurs[0].body.y
                 w=self.joueurs[0].body.w 
                 h=self.joueurs[0].body.h 
-                pygame.draw.rect(self.screen, self.BLACK, [x, y, w, h], 2)
+                pygame.draw.rect(self.screen, self.BLACK, [x-300, y-300, w, h], 2)
+
+                b = self.joueurs[0].body
+                f = 10
+                bigHitbox = Rect2(b.x-f,b.y-f, b.h+2*f,b.w+2*f)
+                pygame.draw.rect(self.screen, self.GREEN, [bigHitbox.x-300, bigHitbox.y-300, bigHitbox.w, bigHitbox.h], 2)
+
+
                 for i in range(len(self.objets)):
-                    x = self.objets[i].x
-                    y = self.objets[i].y
+                    x = self.objets[i].x -300
+                    y = self.objets[i].y-300
                     w = self.objets[i].w
                     h = self.objets[i].h
                     pygame.draw.rect(self.screen, self.GREEN, [x, y, w, h], 2)
                 #self.co = self.map.collisionObjects
                 for i in range(len(self.co)):
-                    x = self.co[i].x
-                    y = self.co[i].y
+                    x = self.co[i].x-300 
+                    y = self.co[i].y-300 
                     w = self.co[i].w
                     h = self.co[i].h
                     pygame.draw.rect(self.screen, self.RED, [x, y, w, h], 2)
@@ -358,7 +386,7 @@ class Partie(Gameplay):
     def collisionAABB(self,objet1,objet2):
         if any(
             [objet2.x >= objet1.x + objet1.w,
-            objet2.x + objet2.w <= objet1.x,
+            objet2.x + objet2.w <= objet1.x ,
             objet2.y >= objet1.y + objet1.h,
             objet2.y + objet2.h <= objet1.y]
             ):

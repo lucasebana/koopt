@@ -22,6 +22,7 @@ export class GameScene extends Phaser.Scene{
         this.energies= []
         this.miam=100*5
         this.simpleAttack=false
+        this.mapObjects = []
         this.updateData();
     }
     preload(){
@@ -62,7 +63,7 @@ export class GameScene extends Phaser.Scene{
 
         this.collision = map.createStaticLayer(2, tiles, 0, 0).setDepth(5);
         this.collision.visible = false
-        this.collision2= map.createStaticLayer(3, tiles_atlas, 0, 0).setDepth(5);
+        //this.collision2= map.createStaticLayer(3, tiles_atlas, 0, 0).setDepth(5);
         //this.physics.add.collider(this.joueurs[this.numero], this.collision);
         //this.physics.add.collider(this.mainplayer,this.collision)
         //map.setCollision([601])
@@ -76,8 +77,8 @@ export class GameScene extends Phaser.Scene{
         })
         
         this.objets.filter((obj)=>obj.name=="arbre1").forEach((obj)=>{
-            //this.add.sprite(obj.x,obj.y,'armel')
-            window.object = new Object(this,obj.x,obj.y,"vegetation",obj.id,"arbre1")
+            var object = new Object(this,obj.x,obj.y,"vegetation",obj.id,"arbre1")
+            this.mapObjects.push(object)
             this.add.existing(object)
         })
         
@@ -179,8 +180,8 @@ export class GameScene extends Phaser.Scene{
                 if (this.objets.get(obj.id)==undefined){
                     var fleche=new Arrow(this,this.x,this.y,0);
                     fleche.setOrigin(0,0);
+                    fleche.setPosition(obj.x,obj.y)
                     this.objets.set(obj.id,fleche);
-
                 }
                 var tween = this.tweens.add({
                     targets: this.objets.get(obj.id),
@@ -195,6 +196,18 @@ export class GameScene extends Phaser.Scene{
             }
             
 
+        }
+        if("update_mapobjects" in d[n_data]){
+            for (var i=0;i<d[n_data].update_mapobjects.length;i++){
+                var datai = d[n_data].update_mapobjects[i]
+                this.mapObjects.find(element=>element.id == datai.id).setFrame(datai.name)
+                if(datai.name == "" || 1==1){
+                    var cx = this.cameras.main.scrollX
+                    var cy = this.cameras.main.scrollY
+                    var obj = this.mapObjects.find(element=>element.id == datai.id)
+                    game.scene.getScene("INTERFACE").woodAnimation(obj.x - cx,obj.y - cy)
+                }
+            }
         }
 
         

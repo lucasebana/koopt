@@ -17,6 +17,7 @@ class Map:
     tileh = None
     tilew = None
 
+    changedObjects = []
 
     def __init__(self,src):
         self.src = src
@@ -57,7 +58,7 @@ class Map:
         #pour l'instant les seuls objets sont des arbres...
         import json
         with open("../client/static/assets/maps/atlas_sprites.json","r") as f:
-            data = json.load(f)
+            self.dataObjects = json.load(f)
         
         self.objectype["arbre1"] = []
         self.objectype["arbre2"] = []
@@ -66,9 +67,13 @@ class Map:
                 if t == self.objetstiled[i]["name"]:
                     self.objectype[t].append(i)
                     obj = self.objetstiled[i]
-                    datasprite = ds = data["frames"][t]["spriteSourceSize"]
-                    self.mapObjects.append(Object(obj["name"],obj["id"],obj["x"],obj["y"],ds["h"],ds["w"]))
-
+                    datasprite = ds = self.dataObjects["frames"][t]["spriteSourceSize"] #infos relatives à la hitbox
+                    self.mapObjects.append(Object(obj["name"],obj["id"],obj["x"],obj["y"],ds["h"],ds["w"],ds["x"],+ds["y"]))
+    
+    def changeObjectTo(self,object,str):
+        datasprite = ds = self.dataObjects["frames"][str]["spriteSourceSize"] #infos relatives à la hitbox
+        object.__init__(str,object.id,object.x-object.offx,object.y-object.offy,ds["h"],ds["w"],ds["x"],ds["y"])
+        self.changedObjects.append(object)
                 
                 
     def statut_objets(self):
