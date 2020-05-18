@@ -65,7 +65,7 @@ update(){
     
     this.updateFood();
 
-    this.updateEnd();
+    //this.updateEnd();
     
     
 }
@@ -107,10 +107,18 @@ woodAnimation(x,y){
         onComplete:onWoodCompleteHandler,
         onCompleteParams:[spr]
     });
+
+<<<<<<< HEAD
+
+
+=======
+
+
+function onWoodCompleteHandler(tween,targets,sprite){
+    sprite.setActive(false).setVisible(false)
 }
-
-
-
+}
+>>>>>>> 1632a3122ce09d05be7557dccf22a33b87057b1e
 
 updateEnd(){
     this.cas=game.scene.getScene("GAME").end
@@ -124,8 +132,12 @@ updateEnd(){
         console.log("victoire")
     }
 }
+<<<<<<< HEAD
 }
 function onWoodCompleteHandler(tween,targets,sprite){
     sprite.setActive(false).setVisible(false)
 
 }
+=======
+}
+>>>>>>> 1632a3122ce09d05be7557dccf22a33b87057b1e

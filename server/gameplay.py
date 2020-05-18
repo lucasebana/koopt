@@ -47,5 +47,6 @@ class Gameplay:
         
     def addWood(self):
         self.wood+=random.randint(5,15)
+        
 
                     

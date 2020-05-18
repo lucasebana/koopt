@@ -250,10 +250,12 @@ class Partie(Gameplay):
 
         if self.etat == 3:
             #logique de jeu
+            self.end_partie()
             await self.update() # mise à jour de la logique du jeu  
             await self.sendData()
-            self.end_partie
-
+            
+        if self.end:
+            self.etat=5
         await self.getFps()
         pass
 
@@ -487,7 +489,8 @@ class Partie(Gameplay):
             while i<len(self.joueurs) and bl:
                 if self.joueurs[i].alive:
                     bl=False
-            if i==len(self.joueurs)-1:
+                i+=1
+            if i==len(self.joueurs)-1 and bl:
                 self.end=True
                 self.cas=1
 
