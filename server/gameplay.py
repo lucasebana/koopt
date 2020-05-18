@@ -44,4 +44,8 @@ class Gameplay:
             #self.unit.test_energie_pleine(self,joueur)
             #self.unit.test_nourriture_vide(self)
             #self.unit.test_nourriture(self)
+        
+    def addWood(self):
+        self.wood+=10
+
                     

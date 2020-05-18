@@ -26,6 +26,7 @@ create(){
 
 /* Food Bar */
     this.foodbar=new FoodBar(this,5,5,100*5);
+    this.foodbar.rectangle.setDepth(20)
     this.last_food=100*5
 
 
@@ -51,7 +52,7 @@ create(){
 
 update(){
     
-    this.woodlevel.update();
+    this.updateWood();
     
     this.updateText();
     
@@ -71,10 +72,15 @@ updateFood(){
     this.last_food=this.foodbar.value
     this.foodbar.value=game.scene.getScene("GAME").miam
     if (this.last_food!=this.foodbar.value){
-    //this.foodbar.draw()
+        this.foodbar.draw()
     }
 }
 
+updateWood(){
+    this.bois=game.scene.getScene("GAME").wood
+    this.woodlevel.value=this.bois
+    this.woodlevel.draw()
+}
 woodAnimation(x,y){
     var spr = new Phaser.GameObjects.Sprite(this,x,y,"wood")
     spr.setScale(0.5)

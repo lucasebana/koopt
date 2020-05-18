@@ -39,6 +39,7 @@ class Partie(Gameplay):
         self.food_a=100*5#à mettre en place
         self.quantite_nourriture=5#quantité de nourriture consommé à chaque pression de F
         self.ratio=10#ratio de vie ajoutée en fction de la nourriture mangée
+        self.wood=0
 
         self.hasAmmo=False
         self.simpleHit=-1 # vaut -1 si personne ne frappe, sinon vaut la position du joueur qui frappe dans le tableau joueurs
@@ -285,6 +286,7 @@ class Partie(Gameplay):
         info["nrj"] = [self.joueurs[i].energie for i in range(njoueurs)]       
         info["food"] = [self.food]
         info["simpleHit"] = self.simpleHit
+        info["bois"] = self.wood
         await self.broadcast("update_gameData",info)
         
         info = []
@@ -293,6 +295,7 @@ class Partie(Gameplay):
             info[i]["id"] = self.map.changedObjects[i].id
             info[i]["name"] = self.map.changedObjects[i].name
         if self.map.changedObjects != []:
+            self.addWood()
             await self.broadcast("update_mapobjects",info)
             self.map.changedObjects = []
 

@@ -60,4 +60,9 @@ class ServerHandler(socketio.AsyncNamespace):
         p = self.s.getPartie(sid)
         if p != -1:
             p.eatin(self.s.Joueurs[j],data)
+    
+    async def on_wood(self,sid,data):
+        p = self.s.getPartie(sid)
+        if p != -1:
+            p.addWood(data)
 

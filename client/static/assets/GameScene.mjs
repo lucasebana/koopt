@@ -23,6 +23,7 @@ export class GameScene extends Phaser.Scene{
         this.miam=100*5
         this.simpleAttack=false
         this.mapObjects = []
+        this.wood=0
         this.updateData();
     }
     preload(){
@@ -171,6 +172,8 @@ export class GameScene extends Phaser.Scene{
             this.energies= e;
             this.miam=t.food
             this.simpleAttack=t.simpleHit
+            this.wood=t.bois
+            
         }
 
         if("update_gameItems" in d[n_data]){
@@ -198,8 +201,9 @@ export class GameScene extends Phaser.Scene{
 
         }
         if("update_mapobjects" in d[n_data]){
-            for (var i=0;i<d[n_data].update_mapobjects.length;i++){
-                var datai = d[n_data].update_mapobjects[i]
+            t=d[n_data].update_mapobjects
+            for (var i=0;i<t.length;i++){
+                var datai = t[i]
                 this.mapObjects.find(element=>element.id == datai.id).setFrame(datai.name)
                 if(datai.name == "" || 1==1){
                     var cx = this.cameras.main.scrollX

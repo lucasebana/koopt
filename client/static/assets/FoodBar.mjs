@@ -16,7 +16,6 @@ export class FoodBar {
         this.textname.setDepth(20)
         scene.add.existing(this.rectangle)
         //scene.add.existing(this.bar);
-
     }
 
     delta (amount)//peut être positif ou négatif
@@ -28,7 +27,7 @@ export class FoodBar {
             this.value = 0;
         }
 
-        //this.draw();
+        this.draw();
 
         return (this.value === 0);
     }
@@ -45,7 +44,7 @@ export class FoodBar {
         //this.bar.fillStyle(0xff7f00);
         this.rectangle.setFillStyle(0xff7f00)
         var d = Math.floor(this.p * this.value);
-        this.rectangle.setPosition(this.x+2, this.y+2)
+        this.rectangle.setPosition(this.x+10, this.y+10)
         this.rectangle.setSize(d,12)    
         //this.bar.fillRect(this.x + 2, this.y + 2, d, 12);
     }
