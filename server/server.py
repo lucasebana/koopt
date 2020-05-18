@@ -135,7 +135,7 @@ class Server:
         partie.ready = True
         partie.unit=self.test
         #self.test.test_unique_joueur(partie)
-        self.test.test_lancer_partie
+        #self.test.test_lancer_partie
 
     async def rejoindrePartie(self,sid,data):
         idJoueur = self.getJoueur(sid)
