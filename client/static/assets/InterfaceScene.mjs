@@ -58,7 +58,7 @@ update(){
     
     this.updateFood();
 
-    this.updateEnd();
+    //this.updateEnd();
     
     
 }
@@ -100,12 +100,12 @@ woodAnimation(x,y){
         onComplete:onWoodCompleteHandler,
         onCompleteParams:[spr]
     });
-}
 
-}
+
 
 function onWoodCompleteHandler(tween,targets,sprite){
     sprite.setActive(false).setVisible(false)
+}
 }
 
 updateEnd(){
@@ -119,4 +119,5 @@ updateEnd(){
     if (this.cas==2){
         console.log("victoire")
     }
+}
 }

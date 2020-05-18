@@ -175,6 +175,9 @@ export class GameScene extends Phaser.Scene{
             this.simpleAttack=t.simpleHit
             this.wood=t.bois
             this.end=t.fin
+            if (this.end != 0){
+                this.scene.stop()
+            }
             
         }
 
