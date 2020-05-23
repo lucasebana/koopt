@@ -27,7 +27,7 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
 
         this.hitting=false;
         this.hitting_old=false;
-        
+        //this.setDepth(20)
         
         this.indice=-1
         
@@ -154,11 +154,11 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
 
         this.textname.setPosition(this.x - this.textname.width /2 , this.y + this.height+5)
 
-        this.textname.setDepth(20)
+        this.textname.setDepth(2)
         
         
         this.healthbar = new HealthBar(scene,this.x - this.width/2 - 2, this.y-this.height,100)
-        this.healthbar.rectangle.setDepth(20)
+        this.healthbar.rectangle.setDepth(2)
         this.alive=true
         this.alr= false
 

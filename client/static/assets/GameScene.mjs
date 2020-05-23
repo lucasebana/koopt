@@ -45,7 +45,7 @@ export class GameScene extends Phaser.Scene{
 
         for(var i = 0; i<this.usernames.length;i++){
             if (i === this.numero){
-                this.joueurs.push(new JoueurSprite(this,0,0,"armel",true,this.usernames[i]).setDepth(0))
+                this.joueurs.push(new JoueurSprite(this,0,0,"armel",true,this.usernames[i]).setDepth(2))
             }
             else{
                 this.joueurs.push(new JoueurSprite(this,0,0,"armel",false,this.usernames[i]).setDepth(0))
