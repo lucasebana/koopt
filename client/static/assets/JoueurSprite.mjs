@@ -27,7 +27,7 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
 
         this.hitting=false;
         this.hitting_old=false;
-        //this.setDepth(20)
+        
         
         this.indice=-1
         
@@ -395,7 +395,7 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
                 case 3:
                     this.play("hitL",true)
                     break
-            }//ne fonctionne pas à régler
+            }
             
         }
         this.textname.setPosition(this.x - this.textname.width/2, this.y + this.height + 5)

@@ -253,7 +253,7 @@ class Partie(Gameplay):
             self.end_partie()
             await self.update() # mise à jour de la logique du jeu  
             await self.sendData()
-            
+
         if self.end:
             self.etat=5
         await self.getFps()
@@ -500,9 +500,10 @@ class Partie(Gameplay):
             for j in range(len(self.joueurs)):
                 if self.joueurs[j].alive:
                     alives+=1
-            if self.wood==100*alives and self.food>250:
+            if self.wood>=100*alives and self.food>250:
                 self.end=True
                 self.cas=2
+                
 
         if not self.end:
             #cas 3: temps écoulé!

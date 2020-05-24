@@ -17,6 +17,7 @@ init(data){
 
 preload(){
     this.load.image('wood', 'static/assets/Wood.png');
+    //this.load.bitmapFont('myfont', 'static/assets/font/font.png', 'static/assets/font/font.fnt');
     
 }
 
@@ -42,18 +43,17 @@ create(){
     this.temps=d.getTime()/1000-this.timestamp_start;
     var min= this.temps_partie-Math.floor(this.temps/60);
     var sec= 60-(this.temps % 60);
-    this.textname = this.add.text(this.foodbar.x+750,this.foodbar.y+10,"Temps restant:  "+min+":"+ parseInt(sec), 
-    { font: '16px Courier', fill: '#FFFFFF', backgroundColor:"#000000", align:'center'}
-    );
+    this.textname = this.add.text(this.foodbar.x+750,this.foodbar.y+10,"Temps restant:  "+min+":"+ parseInt(sec),
+    { font: '16px Courier', fill: '#FFFFFF', backgroundColor:"#000000", align:'center'});
     this.textname.setPosition(this.foodbar.x +675 , this.foodbar.y-10)
     this.textname.setDepth(20)
 
 
-    this.textname2 = this.add.text(this.foodbar.x,this.foodbar.y+20, "Food", 
-        { font: '16px Courier', fill: '#FFFFFF', backgroundColor:"#000000", align:'center'}
-        );
-        this.textname2.setPosition(this.foodbar.x -390 , this.foodbar.y-5)
-        this.textname2.setDepth(20)
+    this.textname2 = this.add.text(this.foodbar.x,this.foodbar.y+20, "Food",
+    { font: '16px Courier', fill: '#FFFFFF', backgroundColor:"#000000", align:'center'}
+);
+    this.textname2.setPosition(this.foodbar.x -390 , this.foodbar.y-5)
+    this.textname2.setDepth(20)
 
 }
 
@@ -113,14 +113,15 @@ woodAnimation(x,y){
 
 updateEnd(){
     this.cas=game.scene.getScene("GAME").end
+    console.log(this.cas)
     if (this.cas===0){//en cours
         return
     }
     if (this.cas===1){//défaite
-        console.log("défaite")
+        this.add.text(game.config.width / 2, game.config.height / 2, 'GAME OVER', { fontSize: '32px', fill: '#fff' });
     }
     if (this.cas==2){
-        console.log("victoire")
+        this.add.text(game.config.width / 2, game.config.height / 2, 'CONGRATULATIONS', { fontSize: '32px', fill: '#fff' });
     }
 }
 }
