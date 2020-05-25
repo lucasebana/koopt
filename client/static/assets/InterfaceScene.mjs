@@ -113,7 +113,7 @@ woodAnimation(x,y){
 
 updateEnd(){
     this.cas=game.scene.getScene("GAME").end
-    console.log(this.cas)
+    this.joueur=game.scene.getScene("GAME").mainplayer
     if (this.cas===0){//en cours
         return
     }
@@ -121,7 +121,12 @@ updateEnd(){
         this.add.text(game.config.width / 2, game.config.height / 2, 'GAME OVER', { fontSize: '32px', fill: '#fff' });
     }
     if (this.cas==2){
+        if (this.joueur.alive===true){
         this.add.text(game.config.width / 2, game.config.height / 2, 'CONGRATULATIONS', { fontSize: '32px', fill: '#fff' });
+        }
+        else{
+            this.add.text(game.config.width / 2, game.config.height / 2, 'TOO BAD...', { fontSize: '32px', fill: '#fff' });
+        }
     }
 }
 }
