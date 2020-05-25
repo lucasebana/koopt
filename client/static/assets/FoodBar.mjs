@@ -7,7 +7,7 @@ export class FoodBar {
         this.rectangle = new Phaser.GameObjects.Rectangle(scene,this.x,this.y,800,50);
         this.value=pdf
         this.p=(76 * 5) / (100*5);
-        this.draw()
+        //this.draw()
         scene.add.existing(this.rectangle)
     }
 
@@ -20,7 +20,7 @@ export class FoodBar {
             this.value = 0;
         }
 
-        this.draw();
+        //this.draw();
 
         return (this.value === 0);
     }

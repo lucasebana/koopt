@@ -300,7 +300,7 @@ export class GameScene extends Phaser.Scene{
             if (this.joueurs[i].healthbar.value ===0){
                 this.joueurs[i].alive= false
             }
-            this.joueurs[i].healthbar.draw();
+            //this.joueurs[i].healthbar.draw();
         }
         /*const e= new Date();
         this.secondes_passe=e.getTime()/1000-this.timestamp_ini;
