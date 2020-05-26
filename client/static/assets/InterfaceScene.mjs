@@ -1,5 +1,6 @@
 import { FoodBar } from './FoodBar.mjs'
 import {WoodLevel} from './WoodLevel.mjs'
+import { HealthBar} from './HealthBar.mjs'
 import { game_handler } from '../game_handler.mjs'
 import { GameScene } from './GameScene.mjs'
 export class InterfaceScene extends Phaser.Scene{
@@ -26,14 +27,14 @@ create(){
     window.interface=this
 
 /* Food Bar */
-    this.foodbar=new FoodBar(this,400,30,100*5);
+    this.foodbar=new FoodBar(this,400,60,100*5);
     this.foodbar.rectangle.setDepth(20)
     this.last_food=100*5
 
 
 
 /*Wood Level*/
-    this.woodlevel=new WoodLevel(this,35,60,'wood',40)
+    this.woodlevel=new WoodLevel(this,35,90,'wood',40)
 
 /*Gestion du temps*/
     const d= new Date()
@@ -55,6 +56,16 @@ create(){
     this.textname2.setPosition(this.foodbar.x -390 , this.foodbar.y-5)
     this.textname2.setDepth(20)
 
+    /*Health*/
+    this.healthbar = new HealthBar(this,105,35,1000)
+    this.textname3 = this.add.text(this.healthbar.x-100,this.healthbar.y-16, "Health",
+    { font: '16px Courier', fill: '#FFFFFF', backgroundColor:"#000000", align:'center'}
+);
+    this.textname3.setDepth(20)
+    this.healthbar.rectangle.setDepth(2)
+
+    
+
 }
 
 update(){
@@ -65,7 +76,11 @@ update(){
     
     this.updateFood();
 
+    this.updateHealth();
+
     this.updateEnd();
+    
+    
     
     
 }
@@ -81,15 +96,33 @@ updateFood(){
     this.last_food=this.foodbar.value
     this.foodbar.value=game.scene.getScene("GAME").miam
     if (this.last_food!=this.foodbar.value){
-        //this.foodbar.draw()
+        this.foodbar.draw()
     }
 }
 
 updateWood(){
     this.bois=game.scene.getScene("GAME").wood
-    this.woodlevel.value=this.bois
-    //this.woodlevel.draw()
+    if (this.woodlevel.value != this.bois){
+        this.woodlevel.value=this.bois
+        this.woodlevel.draw()
+    }
 }
+//petit problème d'affichage quand la valeur du bois est en dessous de 10
+
+updateHealth(){
+    this.j=game.scene.getScene("GAME").numero
+    this.vie=game.scene.getScene("GAME").energies
+    if (this.vie[this.j]!=this.healthbar.value){
+        this.healthbar.value=this.vie[this.j]
+        /*if (this.health ===0){
+            this.player.alive=false
+        }*/
+        this.healthbar.draw();
+        
+    }
+}
+
+
 woodAnimation(x,y){
     var spr = new Phaser.GameObjects.Sprite(this,x,y,"wood")
     spr.setScale(0.5)
@@ -121,7 +154,7 @@ updateEnd(){
         this.add.text(game.config.width / 2, game.config.height / 2, 'GAME OVER', { fontSize: '32px', fill: '#fff' });
     }
     if (this.cas==2){
-        if (this.joueur.alive===true){
+        if (this.joueur.alive===true){//ne fonctionne surement pas (pb d'exportation de variable je pense)
         this.add.text(game.config.width / 2, game.config.height / 2, 'CONGRATULATIONS', { fontSize: '32px', fill: '#fff' });
         }
         else{

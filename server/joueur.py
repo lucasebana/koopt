@@ -28,9 +28,9 @@ class Joueur:
         self.req_vel_buffer = [0,0] # le joueur n'a d'impact que sur la frame suivante
         self.req_vel = [0,0]
         self.velocity = [0,0]
-        self.energie= 100
-        self.energie_init=100
-        self.last_energie=100
+        self.energie= 1000
+        self.energie_init=1000
+        self.last_energie=1000
         self.alive=True
 
         
@@ -57,8 +57,8 @@ class Joueur:
         if self.energie<0:
             self.energie=0
             self.alive=False
-        if self.energie>100:
-            self.energie=100
+        if self.energie>1000:
+            self.energie=1000
         return(self.energie)
     
     

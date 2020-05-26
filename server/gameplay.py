@@ -11,7 +11,7 @@ class Gameplay:
             for i in range(len(self.joueurs)):
                 #self.joueurs[i].last_energie=self.joueurs[i].energie    test energie classique
                 #self.joueurs[i].energie=0     test energie vide
-                self.joueurs[i].energie=self.joueurs[i].delta_vie(-diff*0.1)
+                self.joueurs[i].energie=self.joueurs[i].delta_vie(-diff)
                 #self.unit.test_energie_vide(self,self.joueurs[i])
                 #self.unit.test_energie(self,self.joueurs[i])
 

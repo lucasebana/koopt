@@ -38,7 +38,7 @@ class Partie(Gameplay):
         self.food=100*5
         self.food_a=100*5#à mettre en place
         self.quantite_nourriture=5#quantité de nourriture consommé à chaque pression de F
-        self.ratio=10#ratio de vie ajoutée en fction de la nourriture mangée
+        self.ratio=1#ratio de vie ajoutée en fction de la nourriture mangée
         self.wood=0
 
         self.hasAmmo=False
