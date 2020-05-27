@@ -41,11 +41,11 @@ export class GameScene extends Phaser.Scene{
         window.GameScene = this;
 
         /* Création de la scène */
-        this.joueurs = [] // stocke 3 joueurs de numero diff de numero
+        this.joueurs = []// stocke 3 joueurs de numero diff de numero
 
         for(var i = 0; i<this.usernames.length;i++){
             if (i === this.numero){
-                this.joueurs.push(new JoueurSprite(this,0,0,"armel",true,this.usernames[i]).setDepth(0))
+                this.joueurs.push(new JoueurSprite(this,0,0,"armel",true,this.usernames[i]).setDepth(2))
             }
             else{
                 this.joueurs.push(new JoueurSprite(this,0,0,"armel",false,this.usernames[i]).setDepth(0))
@@ -105,7 +105,7 @@ export class GameScene extends Phaser.Scene{
 
         /*Barres de vie*/
         for (var i=0; i<this.joueurs.length; i++){
-            this.energies.push(this.joueurs[i].healthbar.value)
+            this.energies[i]=100
             //console.log(this.joueurs[i].healthbar.value)
         }
 
@@ -293,13 +293,15 @@ export class GameScene extends Phaser.Scene{
     
 
     updateHealth(){
+        this.bar=game.scene.getScene("INTERFACE").healthbar
         for(var i =0; i< this.joueurs.length; i++){
-            this.joueurs[i].healthbar.value=this.energies[i];
-            if (this.joueurs[i].healthbar.value ===0){
-                this.joueurs[i].alive= false
+            if (this.bar.value != this.energies[i]){
+                if (this.bar.value ===0){
+                    this.joueurs[i].alive= false
+                }
             }
-            this.joueurs[i].healthbar.draw();
         }
+
         /*const e= new Date();
         this.secondes_passe=e.getTime()/1000-this.timestamp_ini;
 

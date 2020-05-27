@@ -38,7 +38,7 @@ class Partie(Gameplay):
         self.food=100*5
         self.food_a=100*5#à mettre en place
         self.quantite_nourriture=5#quantité de nourriture consommé à chaque pression de F
-        self.ratio=10#ratio de vie ajoutée en fction de la nourriture mangée
+        self.ratio=1#ratio de vie ajoutée en fction de la nourriture mangée
         self.wood=0
 
         self.hasAmmo=False
@@ -253,7 +253,7 @@ class Partie(Gameplay):
             self.end_partie()
             await self.update() # mise à jour de la logique du jeu  
             await self.sendData()
-            
+
         if self.end:
             self.etat=5
         await self.getFps()
@@ -500,9 +500,10 @@ class Partie(Gameplay):
             for j in range(len(self.joueurs)):
                 if self.joueurs[j].alive:
                     alives+=1
-            if self.wood==100*alives and self.food>250:
+            if self.wood>=100*alives and self.food>250:
                 self.end=True
                 self.cas=2
+                
 
         if not self.end:
             #cas 3: temps écoulé!
