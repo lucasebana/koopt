@@ -141,7 +141,7 @@ class Partie(Gameplay):
         info["nrj"] = [self.joueurs[i].energie for i in range(njoueurs)]
         #url de la map ?
         await self.broadcast("load_game",info)
-        
+
         info = []
         for i in range (len(self.map.changedObjects)):
             info.append(dict())
@@ -240,6 +240,7 @@ class Partie(Gameplay):
                         toremove = i
             if toremove != -1:
                 #self.map.mapObjects.pop(toremove)
+                joueur.delta_vie(-(joueur.energie*10/100))
                 if self.map.mapObjects[toremove].name in ["arbre1","arbre2"]:
                     self.map.changeObjectTo(self.map.mapObjects[toremove],self.map.mapObjects[toremove].name + "_souche")
         else:
@@ -317,6 +318,15 @@ class Partie(Gameplay):
             info[i]["id"] = self.map.changedObjects[i].id
             info[i]["name"] = self.map.changedObjects[i].name
         if self.map.changedObjects != []:
+            """
+            mauvais endroit ^^^ a mettre dans hit
+              for j in range(len(self.map.changedObjects)):
+                if self.map.changedObjects[i].name=="arbre1_souche":
+                    self.addFood()
+                elif self.map.changedObjects[i].name=="arbre2_souche":
+                    self.addWood()
+            #baisser la vie du joueur concerné
+            """
             await self.broadcast("update_mapobjects",info)
             self.map.changedObjects = []
 
