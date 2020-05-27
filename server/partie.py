@@ -197,7 +197,7 @@ class Partie(Gameplay):
                 joueur.body.vyrB = 0
             elif data == 7 :
                 joueur.body.vxrB = 0
-            
+
         
 
     def hit(self,joueur,data):

@@ -52,8 +52,7 @@ export class GameScene extends Phaser.Scene{
             }
         }
         this.mainplayer  = this.joueurs[this.numero];
-        //this.fleche=new Arrow(this,20,20,0);
-
+    
         /* Chargement de la map */
         var map = this.make.tilemap({ key: 'map' });
         var tiles = map.addTilesetImage('set', 'set');
@@ -187,7 +186,6 @@ export class GameScene extends Phaser.Scene{
                 //debugger
                 if (this.objets.get(obj.id)==undefined){
                     var fleche=new Arrow(this,this.x,this.y,0);
-                    fleche.setOrigin(0,0);
                     fleche.setPosition(obj.x,obj.y)
                     this.objets.set(obj.id,fleche);
                 }

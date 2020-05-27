@@ -1,4 +1,3 @@
-
 from rect2 import Rect2
 class Joueur:
     ''' Classe spécifique au jeu '''
