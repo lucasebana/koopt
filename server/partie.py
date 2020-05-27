@@ -226,6 +226,7 @@ class Partie(Gameplay):
                     toremove = i
             if toremove != -1:
                 #self.map.mapObjects.pop(toremove)
+                joueur.delta_vie(-(joueur.energie*10/100))
                 if self.map.mapObjects[toremove].name=="arbre1":
                     self.map.changeObjectTo(self.map.mapObjects[toremove],"arbre1_souche")
                 elif self.map.mapObjects[toremove].name=="arbre2":
