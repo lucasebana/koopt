@@ -47,6 +47,11 @@ class Gameplay:
         
     def addWood(self):
         self.wood+=random.randint(5,15)
+
+    def addFood(self):
+        self.food+=random.randint(20,40)
+        if self.food>100*5:
+            self.food=100*5
         
 
                     

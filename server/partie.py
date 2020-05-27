@@ -226,7 +226,10 @@ class Partie(Gameplay):
                     toremove = i
             if toremove != -1:
                 #self.map.mapObjects.pop(toremove)
-                self.map.changeObjectTo(self.map.mapObjects[toremove],"arbre1_souche")
+                if self.map.mapObjects[toremove].name=="arbre1":
+                    self.map.changeObjectTo(self.map.mapObjects[toremove],"arbre1_souche")
+                elif self.map.mapObjects[toremove].name=="arbre2":
+                    self.map.changeObjectTo(self.map.mapObjects[toremove],"arbre2_souche")
         else:
             self.simpleHit=-1
     
@@ -302,7 +305,12 @@ class Partie(Gameplay):
             info[i]["id"] = self.map.changedObjects[i].id
             info[i]["name"] = self.map.changedObjects[i].name
         if self.map.changedObjects != []:
-            self.addWood()
+            for j in range(len(self.map.changedObjects)):
+                if self.map.changedObjects[i].name=="arbre1_souche":
+                    self.addFood()
+                elif self.map.changedObjects[i].name=="arbre2_souche":
+                    self.addWood()
+            #baisser la vie du joueur concerné
             await self.broadcast("update_mapobjects",info)
             self.map.changedObjects = []
 

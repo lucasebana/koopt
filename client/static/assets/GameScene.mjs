@@ -83,6 +83,12 @@ export class GameScene extends Phaser.Scene{
             this.mapObjects.push(object)
             this.add.existing(object)
         })
+
+        this.objets.filter((obj)=>obj.name=="arbre2").forEach((obj)=>{
+            var object = new Object(this,obj.x,obj.y,"vegetation",obj.id,"arbre2")
+            this.mapObjects.push(object)
+            this.add.existing(object)
+        })
         
         /* Gestion de la caméra */
         this.keyboard = this.input.keyboard.addKeys("Z, Q, S, D");
