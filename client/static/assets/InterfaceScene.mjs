@@ -18,6 +18,7 @@ init(data){
 
 preload(){
     this.load.image('wood', 'static/assets/Wood.png');
+    
     //this.load.bitmapFont('myfont', 'static/assets/font/font.png', 'static/assets/font/font.fnt');
     
 }
@@ -143,7 +144,9 @@ woodAnimation(x,y){
 
 }
 
-
+foodAnimation(x,y){
+    var spr = new Phaser
+}
 updateEnd(){
     this.cas=game.scene.getScene("GAME").end
     this.joueur=game.scene.getScene("GAME").mainplayer

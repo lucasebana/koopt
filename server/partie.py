@@ -72,6 +72,7 @@ class Partie(Gameplay):
             if newSid != False:
                 self.sio.enter_room(newSid,self.socketroom)
                 self.sio.leave_room(j.oldSid,self.socketroom)#on libere l'ancien sid (nécessaire ?)
+                #await self.load_reconnect()
             
         await self.load_sync()
 
@@ -119,6 +120,9 @@ class Partie(Gameplay):
     def pause(self):
         self.etat = 4
 
+
+
+
     async def load_sync_i(self,i):
         ''' methode renvoyant les données du joueur i à l'init* client'''
         info_perso = dict()
@@ -138,6 +142,14 @@ class Partie(Gameplay):
         info["nrj"] = [self.joueurs[i].energie for i in range(njoueurs)]
         #url de la map ?
         await self.broadcast("load_game",info)
+
+        info = []
+        for i in range (len(self.map.changedObjects)):
+            info.append(dict())
+            info[i]["id"] = self.map.changedObjects[i].id
+            info[i]["name"] = self.map.changedObjects[i].name
+        await self.broadcast("update_mapobjects",info)
+        
 
     async def getFps(self):
         self.framecount+=1
@@ -223,11 +235,15 @@ class Partie(Gameplay):
             toremove = -1
             for i in range(len(self.map.mapObjects)):
                 #if self.dist2(joueur.body,self.map.mapObjects[i])< 2500:
-                if self.collisionAABB(bigHitbox,self.map.mapObjects[i]): 
-                    toremove = i
+                if self.map.mapObjects[i].name in ["arbre1","arbre2"]:
+                    if self.collisionAABB(bigHitbox,self.map.mapObjects[i]): 
+                        self.addWood()
+                        toremove = i
             if toremove != -1:
                 #self.map.mapObjects.pop(toremove)
-                self.map.changeObjectTo(self.map.mapObjects[toremove],"arbre1_souche")
+                joueur.delta_vie(-(joueur.energie*10/100))
+                if self.map.mapObjects[toremove].name in ["arbre1","arbre2"]:
+                    self.map.changeObjectTo(self.map.mapObjects[toremove],self.map.mapObjects[toremove].name + "_souche")
         else:
             self.simpleHit=-1
 
@@ -311,7 +327,15 @@ class Partie(Gameplay):
             info[i]["id"] = self.map.changedObjects[i].id
             info[i]["name"] = self.map.changedObjects[i].name
         if self.map.changedObjects != []:
-            self.addWood()
+            """
+            mauvais endroit ^^^ a mettre dans hit
+              for j in range(len(self.map.changedObjects)):
+                if self.map.changedObjects[i].name=="arbre1_souche":
+                    self.addFood()
+                elif self.map.changedObjects[i].name=="arbre2_souche":
+                    self.addWood()
+            #baisser la vie du joueur concerné
+            """
             await self.broadcast("update_mapobjects",info)
             self.map.changedObjects = []
 
@@ -403,12 +427,10 @@ class Partie(Gameplay):
             j.body.newFrame()
     
     def collisionAABB(self,objet1,objet2):
-        if any(
-            [objet2.x >= objet1.x + objet1.w,
-            objet2.x + objet2.w <= objet1.x ,
-            objet2.y >= objet1.y + objet1.h,
-            objet2.y + objet2.h <= objet1.y]
-            ):
+        if (objet2.x >= objet1.x + objet1.w or 
+            objet2.x + objet2.w <= objet1.x or
+            objet2.y >= objet1.y + objet1.h or
+            objet2.y + objet2.h <= objet1.y) :
             return False
         if objet1.x==objet1.y==192:
             pass
@@ -509,9 +531,10 @@ class Partie(Gameplay):
             for j in range(len(self.joueurs)):
                 if self.joueurs[j].alive:
                     alives+=1
-            if self.wood>=100*alives and self.food>250:
-                self.end=True
-                self.cas=2
+            if alives!=0:
+                if self.wood>=100*alives and self.food>250:
+                    self.end=True
+                    self.cas=2
                 
 
         if not self.end:
