@@ -651,6 +651,17 @@
                  "width":0,
                  "x":560,
                  "y":400
+                }, 
+                {
+                 "height":0,
+                 "id":55,
+                 "name":"arbre2",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":688,
+                 "y":448
                 }],
          "opacity":1,
          "type":"objectgroup",
