@@ -509,9 +509,10 @@ class Partie(Gameplay):
             for j in range(len(self.joueurs)):
                 if self.joueurs[j].alive:
                     alives+=1
-            if self.wood>=100*alives and self.food>250:
-                self.end=True
-                self.cas=2
+            if alives!=0:
+                if self.wood>=100*alives and self.food>250:
+                    self.end=True
+                    self.cas=2
                 
 
         if not self.end:
