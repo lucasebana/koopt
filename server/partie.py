@@ -1,4 +1,6 @@
 import time
+from random import random , randint
+from joueur import Joueur
 from map import Map
 from fleche import Fleche
 from unitTest import TestUnit
@@ -35,13 +37,12 @@ class Partie(Gameplay):
         self.realprevious = 0
         self.timestamp_ini=time.time();
         self.t0=time.time()
+        self.frame_fleche=randint(10*60*self.goal_fps,14*60*self.goal_fps)
         self.food=100*5
         self.food_a=100*5#à mettre en place
         self.quantite_nourriture=5#quantité de nourriture consommé à chaque pression de F
         self.ratio=1#ratio de vie ajoutée en fction de la nourriture mangée
         self.wood=0
-
-        self.hasAmmo=False
         self.simpleHit=-1 # vaut -1 si personne ne frappe, sinon vaut la position du joueur qui frappe dans le tableau joueurs
         self.simpleHit_A=-1#à mettre en place
         
@@ -201,7 +202,7 @@ class Partie(Gameplay):
         
 
     def hit(self,joueur,data):
-        if self.hasAmmo & data:
+        if joueur.hasAmmo & data:
             fleche=Fleche(len(self.objets),joueur.body.x,joueur.body.y,40,139,300,0)
             fleche.vxr=1
             self.objets.append(fleche)
@@ -229,7 +230,15 @@ class Partie(Gameplay):
                 self.map.changeObjectTo(self.map.mapObjects[toremove],"arbre1_souche")
         else:
             self.simpleHit=-1
-    
+
+
+    def assignation_fleche(self):
+        if self.framecount==self.frame_fleche:
+            self.joueurs[randint(0,len(self.joueurs)-1)].hasAmmo=True
+
+            
+
+
 
     async def load_sync(self):  
         '''methode envoyant aux clients tt les données du jeu à l'initialisation du client'''
@@ -330,7 +339,7 @@ class Partie(Gameplay):
         #self.updateBodies()
         #print(time.time()-t)
 
-
+        self.assignation_fleche()
 
         if debug:
             self.debug_draw()

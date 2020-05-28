@@ -31,6 +31,7 @@ class Joueur:
         self.energie_init=1000
         self.last_energie=1000
         self.alive=True
+        self.hasAmmo=False
 
         
         #liste des sids ?
