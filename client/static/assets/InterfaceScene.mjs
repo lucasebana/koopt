@@ -35,7 +35,7 @@ create(){
 
 
 /*Wood Level*/
-    this.woodlevel=new WoodLevel(this,35,90,'wood',40)
+    this.woodlevel=new WoodLevel(this,35,90,'wood',0)
 
 /*Gestion du temps*/
     const d= new Date()
