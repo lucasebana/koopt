@@ -71,19 +71,19 @@ export class GameScene extends Phaser.Scene{
 
         //this.arbre=map.createFromObjects("objets","arbre1",{key:'armel'})
         window.map=map
-        this.objets = Array()
+        this.mapobjets = Array()
         
         map.filterObjects("objets",(param)=>{
-                this.objets.push(param)
+                this.mapobjets.push(param)
         })
         
-        this.objets.filter((obj)=>obj.name=="arbre1").forEach((obj)=>{
+        this.mapobjets.filter((obj)=>obj.name=="arbre1").forEach((obj)=>{
             var object = new Object(this,obj.x,obj.y,"vegetation",obj.id,"arbre1")
             this.mapObjects.push(object)
             this.add.existing(object)
         })
 
-        this.objets.filter((obj)=>obj.name=="arbre2").forEach((obj)=>{
+        this.mapobjets.filter((obj)=>obj.name=="arbre2").forEach((obj)=>{
             var object = new Object(this,obj.x,obj.y,"vegetation",obj.id,"arbre2")
             this.mapObjects.push(object)
             this.add.existing(object)

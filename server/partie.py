@@ -37,7 +37,7 @@ class Partie(Gameplay):
         self.realprevious = 0
         self.timestamp_ini=time.time();
         self.t0=time.time()
-        self.frame_fleche=randint(10*60*self.goal_fps,14*60*self.goal_fps)
+        self.frame_fleche=randint(16*60*self.goal_fps,17*60*self.goal_fps)
         self.food=100*5
         self.food_a=100*5#à mettre en place
         self.quantite_nourriture=5#quantité de nourriture consommé à chaque pression de F
@@ -215,9 +215,10 @@ class Partie(Gameplay):
 
     def hit(self,joueur,data):
         if joueur.hasAmmo & data:
-            fleche=Fleche(len(self.objets),joueur.body.x,joueur.body.y,40,139,300,0)
-            fleche.vxr=1
-            self.objets.append(fleche)
+            if len(self.objets) < 10:
+                fleche=Fleche(len(self.objets),joueur.body.x,joueur.body.y,40,139,300,0)
+                fleche.vxr=1
+                self.objets.append(fleche)
         elif data:
             for i in range(len(self.joueurs)):
                 if self.joueurs[i] == joueur:
@@ -420,8 +421,17 @@ class Partie(Gameplay):
 
         for objet in self.objets :
             fc= self.future_collisions(objet)
-            self.resolve_collisions(objet,fc)
-        
+            self.resolve_collisions(objet,fc,self.on_collision_fleche)
+    
+    def on_collision_fleche(self,obj,indexX=None,indexY=None,joueur=None):
+        #Envoyer un evenement au client pour l'informer de la 
+        #destruction de la fleche
+        i = self.objets.index(obj)
+        self.objets.pop(i)
+        if joueur != None:
+            pass
+            #baisse de points de vie
+
     def updateBodies(self):
         for j in self.joueurs:
             j.body.newFrame()
@@ -475,9 +485,11 @@ class Partie(Gameplay):
                 pass
             i+=1
         #print(calc)
+
+
         return (collisionX, collisionY)
         
-    def resolve_collisions(self,objet,fc):
+    def resolve_collisions(self,objet,fc,callback = None):
         velocity = 200 #pixel / seconde 
         velocityFrame = velocity/self.goal_fps #en pixel par frame
 
@@ -511,6 +523,15 @@ class Partie(Gameplay):
             elif objet.vyr == +1:
                 objet.y = self.co[fcy].y - objet.h
             objet.vy = 0
+
+        joueurCollision = None
+        if objet in self.objets:
+            for i in range(len(self.joueurs)):
+                if self.joueur[i].hasAmmo==False and self.collisionAABB(objet,self.joueurs[i].body):
+                    joueurCollision = self.joueurs[i]
+
+        if (fcx != None or fcy != None or joueurCollision != None) and callable(callback):
+            callback(objet,fcx,fcy,joueurCollision);
     
     def end_partie(self):
         if not self.end:
