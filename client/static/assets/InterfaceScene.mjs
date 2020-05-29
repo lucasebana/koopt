@@ -133,7 +133,7 @@ woodAnimation(x,y){
         targets: spr,
         props: {
             x: { value: function () { return 35; }, ease: 'Power1' },
-            y: { value: function () { return 70; }, ease: 'Power3' }
+            y: { value: function () { return 90; }, ease: 'Power3' }
         },
         duration: 500,
         yoyo: false,
