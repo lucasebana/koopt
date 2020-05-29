@@ -19,8 +19,8 @@ class Gameplay:
     
     def delta_food(self,amount):
         self.food+=amount
-        if self.food>100*5:
-            self.food=100*5
+        if self.food>self.food_init:
+            self.food=self.food_init
         elif self.food<0:
             self.food=0
         return(self.food)
@@ -50,8 +50,8 @@ class Gameplay:
 
     def addFood(self):
         self.food+=random.randint(20,40)
-        if self.food>100*5:
-            self.food=100*5
+        if self.food>self.food_init:
+            self.food=self.food_init
         
 
                     

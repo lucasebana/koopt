@@ -24,6 +24,7 @@ class Partie(Gameplay):
         self.map = Map("../client/static/assets/maps/map_finale.json")
         co = self.map.collisionObjects + self.map.mapObjects
 
+        self.duree=900#durée de la partie en secondes
         self.start_frametime = 0;
         self.finish_frametime = 0;
         self.goal_fps = fps;
@@ -38,16 +39,32 @@ class Partie(Gameplay):
         self.timestamp_ini=time.time();
         self.t0=time.time()
         self.frame_fleche=randint(16*60*self.goal_fps,17*60*self.goal_fps)
-        self.food=100*5
+        
+        
         self.food_a=100*5#à mettre en place
-        self.quantite_nourriture=5#quantité de nourriture consommé à chaque pression de F
-        self.ratio=1#ratio de vie ajoutée en fction de la nourriture mangée
+        
         self.wood=0
         self.simpleHit=-1 # vaut -1 si personne ne frappe, sinon vaut la position du joueur qui frappe dans le tableau joueurs
         self.simpleHit_A=-1#à mettre en place
         
+        
+        
+
         self.end=False
         self.cas=0#cas de fin: 1=défaite, 2=victoire
+
+        #variables de GAMEPLAY
+        self.damage=-100#dommage pour les coups
+        self.tree_damage=-50#dommage pour les arbres
+        self.distance_coups=2500
+        self.food_init=500
+        self.food=100*5
+        self.quantite_nourriture=5#quantité de nourriture consommé à chaque pression de F
+        self.ratio=1#ratio de vie ajoutée en fction de la nourriture mangée
+        self.addwood_min=5#quantité min de bois ajouté lors de la coupe d'un arbre
+        self.addwood_max=15#quantité max de bois ajouté lors de la coupe d'un arbre
+        self.addfood_min=20#pareil avec la nouriture
+        self.addfood_max=40
 
         self.Tst = 0
         self.unit=TestUnit()
@@ -226,9 +243,9 @@ class Partie(Gameplay):
                     self.simpleHit=i
                     #l'info qu'on renvoie au client pour l'animation  
                 else:
-                    print(self.dist2(joueur.body,self.joueurs[i].body))
-                    if self.dist2(joueur.body,self.joueurs[i].body)<2500:#arbitraire
-                        self.joueurs[i].energie=self.joueurs[i].delta_vie(-5)
+                    #print(self.dist2(joueur.body,self.joueurs[i].body))
+                    if self.dist2(joueur.body,self.joueurs[i].body)<self.distance_coups:#arbitraire
+                        self.joueurs[i].energie=self.joueurs[i].delta_vie(self.damage)
             #ajouter pour les arbres (ajout de nourriture/de bois)
             b = joueur.body
             f = 10
@@ -242,7 +259,7 @@ class Partie(Gameplay):
                         toremove = i
             if toremove != -1:
                 #self.map.mapObjects.pop(toremove)
-                joueur.delta_vie(-(joueur.energie*10/100))
+                joueur.delta_vie(self.tree_damage)
                 if self.map.mapObjects[toremove].name in ["arbre1","arbre2"]:
                     self.map.changeObjectTo(self.map.mapObjects[toremove],self.map.mapObjects[toremove].name + "_souche")
         else:
@@ -553,7 +570,7 @@ class Partie(Gameplay):
                 if self.joueurs[j].alive:
                     alives+=1
             if alives!=0:
-                if self.wood>=100*alives and self.food>250:
+                if self.wood>=100*alives and self.food>self.food_init/2:
                     self.end=True
                     self.cas=2
                 
@@ -561,7 +578,7 @@ class Partie(Gameplay):
         if not self.end:
             #cas 3: temps écoulé!
             temps=time.time()
-            if temps-self.timestamp_ini>900:
+            if temps-self.timestamp_ini>self.duree:
                 self.end=True
                 self.cas=1
 

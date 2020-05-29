@@ -54,11 +54,11 @@ class Joueur:
         '''
     def delta_vie(self,amount):
         self.energie+=amount
-        if self.energie<0:
+        if self.energie<=0:
             self.energie=0
             self.alive=False
-        if self.energie>1000:
-            self.energie=1000
+        if self.energie>self.energie_init:
+            self.energie=self.energie_init
         return(self.energie)
     
     
