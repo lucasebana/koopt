@@ -304,9 +304,8 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
         if(this.hitting != this.hitting_old){
             
             window.gh.sendData("attack",this.hitting)
-            //window.gh.sendData("arrow",1)   
-            //this.fleche=new Arrow(scene,this.x,this.y,0);
-            //this.fleche.setOrigin(0,0)
+            window.gh.sendData("arrow",1)   
+            //this.fleche.setOrigin(this.x,this.y)
             this.hitting_old=this.hitting
         } 
 

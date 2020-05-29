@@ -52,8 +52,7 @@ export class GameScene extends Phaser.Scene{
             }
         }
         this.mainplayer  = this.joueurs[this.numero];
-        //this.fleche=new Arrow(this,20,20,0);
-
+    
         /* Chargement de la map */
         var map = this.make.tilemap({ key: 'map' });
         var tiles = map.addTilesetImage('set', 'set');
@@ -72,19 +71,19 @@ export class GameScene extends Phaser.Scene{
 
         //this.arbre=map.createFromObjects("objets","arbre1",{key:'armel'})
         window.map=map
-        this.objets = Array()
+        this.mapobjets = Array()
         
         map.filterObjects("objets",(param)=>{
-                this.objets.push(param)
+                this.mapobjets.push(param)
         })
         
-        this.objets.filter((obj)=>obj.name=="arbre1").forEach((obj)=>{
+        this.mapobjets.filter((obj)=>obj.name=="arbre1").forEach((obj)=>{
             var object = new Object(this,obj.x,obj.y,"vegetation",obj.id,"arbre1")
             this.mapObjects.push(object)
             this.add.existing(object)
         })
 
-        this.objets.filter((obj)=>obj.name=="arbre2").forEach((obj)=>{
+        this.mapobjets.filter((obj)=>obj.name=="arbre2").forEach((obj)=>{
             var object = new Object(this,obj.x,obj.y,"vegetation",obj.id,"arbre2")
             this.mapObjects.push(object)
             this.add.existing(object)
@@ -193,7 +192,6 @@ export class GameScene extends Phaser.Scene{
                 //debugger
                 if (this.objets.get(obj.id)==undefined){
                     var fleche=new Arrow(this,this.x,this.y,0);
-                    fleche.setOrigin(0,0);
                     fleche.setPosition(obj.x,obj.y)
                     this.objets.set(obj.id,fleche);
                 }
