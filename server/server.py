@@ -31,7 +31,7 @@ class Server:
     #Clients = [] # = [{id="",joueurid, cookieID, sid, autres...}]
     Joueurs = []
     
-    def __init__(self,ip = None):
+    def __init__(self,ip = None,port=None):
         self.running = True
         self.fps = 100 # Valeur de production plus proche de 60
         self.mavariable=0 # Variable test
@@ -47,6 +47,7 @@ class Server:
         self.app = Sanic(name="koopt")
         self.sio.attach(self.app)
         self.ip = ip
+        self.port = port
         self.test=TestUnit()
 
 
@@ -80,7 +81,10 @@ class Server:
         if self.ip is None:
             self.app.run(access_log=False)
         else:
-            self.app.run(host=self.ip,port='8000',access_log=False)
+            if self.port is None:
+                self.app.run(host=self.ip,port='8000',access_log=False)
+            else:
+                self.app.run(host=self.ip,port=self.port,access_log=False)
 
     def backtask_callback(self,arg):
         if self.back_task.exception() != None:

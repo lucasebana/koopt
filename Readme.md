@@ -15,11 +15,21 @@ Installation
 Utilisation
 -----------
 
-> Executer le serveur : 
-se déplacer vers le dossier server et lancer l'application:
+### Executer le serveur localement: 
+> Se déplacer vers le dossier server et lancer l'application:
 
 `$ cd server; python3 ./main.py`
 
 > Lancer le client dans le navigateur : 
-
 entrer l'URL http://localhost:8000
+
+### Executer à une ip et un port précis
+> Executer la commande suivante(le port par défaut est 8000) : 
+
+`$ cd server; python3 ./main.py --ip addresseip`
+ou
+`$ cd server; python3 ./main.py --ip addresseip:port`
+
+> Lancer le client dans le navigateur : 
+entrer l'URL http://addresseip:port
+
