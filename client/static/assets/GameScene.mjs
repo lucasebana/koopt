@@ -286,7 +286,7 @@ export class GameScene extends Phaser.Scene{
                 }
             }
         }    
-    }
+    
 
     resize(gameSize,baseSize,displaySize,resolution){
         console.log("GAMESCENE RESIZE ! ")
