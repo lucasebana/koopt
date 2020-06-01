@@ -509,9 +509,9 @@ class Partie(Gameplay):
         
 
         gridStartX = max(0,indexGridX-1)
-        gridEndX = min(self.map.gridSize,indexGridX+1)
+        gridEndX = min(self.map.gridSize-1,indexGridX+1)
         gridStartY = max(0,indexGridY-1)
-        gridEndY = min(self.map.gridSize,indexGridY+1)
+        gridEndY = min(self.map.gridSize-1,indexGridY+1)
 
         for y in range(gridStartY,gridEndY + 1):
             for x in range(gridStartX,gridEndX + 1):
