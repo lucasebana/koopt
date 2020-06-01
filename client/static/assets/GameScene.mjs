@@ -127,9 +127,9 @@ export class GameScene extends Phaser.Scene{
         
         this.sendData();
         
-        this.updateObjects();
+        this.updateHealth();
         
-        this.updateHealth();       
+        this.updateObjects();
         
     }
 
@@ -279,9 +279,8 @@ export class GameScene extends Phaser.Scene{
     }    
 
     updateHealth(){
-        //console.log(this.energies[this.numero])
         for(var i=0; i< this.joueurs.length; i++){
-            if (this.energies[i] === 0){
+            if (this.energies[i] <= 0){
                     this.joueurs[i].alive = false
                 }
             }

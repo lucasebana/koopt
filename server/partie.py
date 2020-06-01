@@ -55,14 +55,14 @@ class Partie(Gameplay):
 
         #variables de GAMEPLAY
         self.damage=-100#dommage pour les coups
-        self.tree_damage=-50#dommage pour les arbres
+        self.tree_damage=-100#dommage pour les arbres
         self.distance_coups=2500
         self.food_init=500
         self.food=100*5
         self.quantite_nourriture=5#quantité de nourriture consommé à chaque pression de F
         self.ratio=1#ratio de vie ajoutée en fction de la nourriture mangée
-        self.addwood_min=5#quantité min de bois ajouté lors de la coupe d'un arbre
-        self.addwood_max=15#quantité max de bois ajouté lors de la coupe d'un arbre
+        self.addwood_min=10#quantité min de bois ajouté lors de la coupe d'un arbre
+        self.addwood_max=20#quantité max de bois ajouté lors de la coupe d'un arbre
         self.addfood_min=20#pareil avec la nouriture
         self.addfood_max=40
 
@@ -599,7 +599,7 @@ class Partie(Gameplay):
                 if self.joueurs[j].alive:
                     alives+=1
             if alives!=0:
-                if self.wood>=100*alives and self.food>self.food_init/2:
+                if self.wood>=100*alives and self.food>75*alives:
                     self.end=True
                     self.cas=2
                 

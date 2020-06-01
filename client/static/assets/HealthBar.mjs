@@ -40,7 +40,7 @@ export class HealthBar {
     {
         
 
-        if (this.value < 30)
+        if (this.value < 250)
         {
             this.rectangle.setFillStyle(0xff0000);
             //this.bar.fillStyle(0xff0000);

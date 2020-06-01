@@ -154,7 +154,7 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
 
         this.textname.setPosition(this.x - this.textname.width /2 , this.y + this.height+5)
 
-        this.textname.setDepth(2)
+        this.textname.setDepth(0)
         
         
         //this.healthbar = new HealthBar(scene,this.x, this.y,1000)
