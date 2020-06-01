@@ -163,7 +163,7 @@ updateEnd(){
         }
     }
 }
-}
+
 function onWoodCompleteHandler(tween,targets,sprite){
     sprite.setActive(false).setVisible(false)
 
