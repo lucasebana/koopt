@@ -462,8 +462,6 @@ class Partie(Gameplay):
             objet2.y >= objet1.y + objet1.h or
             objet2.y + objet2.h <= objet1.y) :
             return False
-        if objet1.x==objet1.y==192:
-            pass
         return True
                 
     def dist2(self,objet1,objet2):
@@ -493,7 +491,7 @@ class Partie(Gameplay):
         calc = 0
         L1 = []
         L2 = []
-        while i < len(self.co) and (collisionY == None or collisionX == None):
+        while i < len(self.co) and (collisionY == None or collisionX == None) and 0 == 1:
             if self.dist2(self.co[i],objet) <= (objet.x-fpx)**2 + (objet.y-fpy)**2 + (self.co[i].w **2 + self.co[i].h**2) + objet.h**2 + objet.w**2: # check collision ssi la distance est assez faible
                 
                 if self.collisionAABB(deplacementY,self.co[i]):
@@ -504,7 +502,25 @@ class Partie(Gameplay):
             else:
                 pass
             i+=1
-        #print(calc)
+
+        # on recupere les grilles concernées
+        indexGridY = int(deplacementY.y//(self.map.width//self.map.gridSize*self.map.tileh))
+        indexGridX = int(deplacementY.x//(self.map.height//self.map.gridSize*self.map.tilew))
+        
+
+        gridStartX = max(0,indexGridX-1)
+        gridEndX = min(self.map.gridSize,indexGridX+1)
+        gridStartY = max(0,indexGridY-1)
+        gridEndY = min(self.map.gridSize,indexGridY+1)
+
+        for y in range(gridStartY,gridEndY + 1):
+            for x in range(gridStartX,gridEndX + 1):
+                for i in range(len(self.map.grid[y][x])):
+                    hitbox = self.map.grid[y][x][i]
+                    if self.collisionAABB(deplacementY,hitbox):
+                        collisionY = (y,x,i)
+                    if self.collisionAABB(deplacementX,hitbox):
+                        collisionX = (y,x,i)
 
 
         return (collisionX, collisionY)
@@ -515,8 +531,14 @@ class Partie(Gameplay):
 
         #co = self.map.collisionObjects
 
-        fcx = fc[0] #indice de l'objet collided ou False
-        fcy = fc[1]
+        if fc[0] != None:
+            fcx = fc[0][2] #indice de l'objet collided ou False
+        else :
+            fcx = None
+        if fc[1] != None:
+            fcy = fc[1][2]
+        else :
+            fcy = None
         
         vpx = objet.vxr*velocity #velocité prévue selon x
         vpy = objet.vyr*velocity
@@ -529,9 +551,11 @@ class Partie(Gameplay):
             objet.x = fpx
         else:
             if objet.vxr == 1:
-                objet.x = self.co[fcx].x - objet.w
+                objet.x = self.map.grid[fc[0][0]][fc[0][1]][fcx].x - objet.w
+                #objet.x = self.co[fcx].x - objet.w
             elif objet.vxr == -1:
-                objet.x = self.co[fcx].x + self.co[fcx].w
+                objet.x = self.map.grid[fc[0][0]][fc[0][1]][fcx].x + self.map.grid[fc[0][0]][fc[0][1]][fcx].w
+                #objet.x = self.co[fcx].x + self.co[fcx].w
             objet.vx = 0
         
         if fcy== None:
@@ -539,9 +563,11 @@ class Partie(Gameplay):
             objet.y = fpy
         else:
             if objet.vyr == -1: # /!\ vers le haut
-                objet.y = self.co[fcy].y + self.co[fcy].h
+                objet.y = self.map.grid[fc[1][0]][fc[1][1]][fcy].y + self.map.grid[fc[1][0]][fc[1][1]][fcy].h
+                #objet.y = self.co[fcy].y + self.co[fcy].h
             elif objet.vyr == +1:
-                objet.y = self.co[fcy].y - objet.h
+                self.map.grid[fc[1][0]][fc[1][1]][fcy].y - objet.h
+                #objet.y = self.co[fcy].y - objet.h
             objet.vy = 0
 
         joueurCollision = None

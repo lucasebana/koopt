@@ -279,7 +279,7 @@ export class GameScene extends Phaser.Scene{
     }    
 
     updateHealth(){
-        console.log(this.energies[this.numero])
+        //console.log(this.energies[this.numero])
         for(var i=0; i< this.joueurs.length; i++){
             if (this.energies[i] === 0){
                     this.joueurs[i].alive = false
