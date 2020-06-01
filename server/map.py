@@ -83,8 +83,8 @@ class Map:
                     hitbox = Object(obj["name"],obj["id"],obj["x"],obj["y"],ds["h"],ds["w"],ds["x"],+ds["y"])
                     self.mapObjects.append(hitbox)
 
-                    indexGridY = obj["x"]//(self.width//self.gridSize*self.tileh)
-                    indexGridX = obj["y"]//(self.height//self.gridSize*self.tilew)
+                    indexGridY = obj["y"]//(self.width//self.gridSize*self.tileh)
+                    indexGridX = obj["x"]//(self.height//self.gridSize*self.tilew)
                     self.grid[indexGridY][indexGridX].append(hitbox)
     
     def changeObjectTo(self,object,str):
