@@ -28,6 +28,7 @@ export class GameScene extends Phaser.Scene{
         this.updateData();
     }
     preload(){
+        /* Chargement des ressources/images */
         this.load.spritesheet("armel", "static/assets/armel.png", {frameHeight: 64, frameWidth: 64});
         this.load.spritesheet("fleche", "static/assets/fleche.png", {frameHeight: 40, frameWidth: 139});
         this.load.spritesheet("food", "static/assets/burger.png", {frameHeight: 64, frameWidth: 64});
@@ -37,7 +38,7 @@ export class GameScene extends Phaser.Scene{
         this.load.tilemapTiledJSON('map', 'static/assets/maps/map_finale.json');
     }
     create(){
-
+        /* Initialisation d'objets du jeu */
         window.GameScene = this;
 
         /* Création de la scène */
@@ -64,13 +65,10 @@ export class GameScene extends Phaser.Scene{
 
         this.collision = map.createStaticLayer(2, tiles, 0, 0).setDepth(5);
         this.collision.visible = false
-        //this.collision2= map.createStaticLayer(3, tiles_atlas, 0, 0).setDepth(5);
-        //this.physics.add.collider(this.joueurs[this.numero], this.collision);
-        //this.physics.add.collider(this.mainplayer,this.collision)
-        //map.setCollision([601])
 
-        //this.arbre=map.createFromObjects("objets","arbre1",{key:'armel'})
         window.map=map
+
+        /* Initialisation d'objets des la map (arbres par ex.) */
         this.mapobjets = Array()
         
         map.filterObjects("objets",(param)=>{
@@ -89,11 +87,15 @@ export class GameScene extends Phaser.Scene{
             this.add.existing(object)
         })
         
-        /* Gestion de la caméra */
+        /* Définition des touches */
+
         this.keyboard = this.input.keyboard.addKeys("Z, Q, S, D");
         this.arrowKey = this.input.keyboard.addKeys("SPACE");
         this.foodKey = this.input.keyboard.addKeys("F");
         this.hitKey = this.input.keyboard.addKeys("SPACE");
+
+        
+        /* Gestion de la caméra */
         this.cameras.main.startFollow(this.mainplayer,false, 0.2, 0.2);
         this.physics.world.setBounds(0,0, map.widthInPixels, map.heightInPixels);
         this.scale.on("resize",this.resize,this)
@@ -121,7 +123,7 @@ export class GameScene extends Phaser.Scene{
     update(){
         /* Fonction appelée chaque frame */
         
-        this.updateData();//à bien faire en premier
+        this.updateData();
         
         this.sendData();
         
@@ -133,7 +135,6 @@ export class GameScene extends Phaser.Scene{
 
     updateData(){
         /* Fonction mettant à jour les données issues du serveur */
-        /* a benchmarquer ? */
         
        var d = window.gh.getData()
        for (var n_data = 0; n_data < d.length; n_data++){
@@ -149,9 +150,7 @@ export class GameScene extends Phaser.Scene{
             for(var i = 0; i < d[n_data].load_game.posx.length;i++){
                 p.push([t.posx[i],t.posy[i]]);
                 v.push([t.velx[i],t.vely[i]]);
-            }
-            //this.pos = p;
-            //this.vel = v;            
+            }        
         }
         
         if("update_pos" in d[n_data]){
@@ -183,7 +182,6 @@ export class GameScene extends Phaser.Scene{
             if (this.end != 0){
                 this.scene.stop()
             }
-            
         }
 
         if("update_gameItems" in d[n_data]){
@@ -233,15 +231,11 @@ export class GameScene extends Phaser.Scene{
         //window.gh.sendData("send_vel",[this.mainplayer.realVelocity.x,this.mainplayer.realVelocity.y])
     }
 
-    /*
-    on_position_clock(){
-        // Fonction callback horloge de position 
-        this.actualiserPosition = true;
-        
-    }
-    */
     updateObjects(){
+
         /* Fonction mettant à jour les joueurs et objets du jeu */
+
+        /* Mise à jour de la position des joueurs avec interpolation */
         for(var nj = 0; nj < this.joueurs.length;nj++){
             
                 if(this.actualiserPosition == true || 1 == 1){
@@ -264,26 +258,15 @@ export class GameScene extends Phaser.Scene{
                         });
                     }
                 }
-                //this.joueurs[nj].setPosition(this.pos[nj][0],this.pos[nj][1])
-                //this.joueurs[nj].setVelocity(this.vel[nj][0],this.vel[nj][1])
             
             
             if (this.vel[nj] != undefined){
-            this.joueurs[nj].velocity.x=this.vel[nj][0];//PROBLEME ICI LORSQU'IL Y A PLUSIEURS JOUEURS
+            this.joueurs[nj].velocity.x=this.vel[nj][0];
             this.joueurs[nj].velocity.y=this.vel[nj][1];
             }
             else {
                 this.vel[nj]=[0,0]
-            }
-            //this.joueurs[nj].setPosition(this.pos[nj][0],this.pos[nj][1])//this.pos[nj][1]
-            //console.log(this.pos[nj][1])
-            if(this.vel[nj] != undefined){ // si on a recu des donnees
-                //this.joueurs[nj].setVelocity(this.vel[nj][0],this.vel[nj][1])
-                //this.joueurs[nj].setPosition(this.pos[nj][0],this.pos[nj][1])
-                //console.log("POS : ",this.joueurs[nj].x,this.joueurs[nj].y, "REC : ",this.pos[nj][0],this.pos[nj][1])
-            }
-            //console.log(this.vel[nj][0],this.vel[nj][1])
-            
+            }            
             
             this.manger=this.mainplayer.eatin;
             this.nourriture.x=this.mainplayer.x
@@ -293,12 +276,10 @@ export class GameScene extends Phaser.Scene{
             this.joueurs[nj].context(this)
             
         }
-
-        //this.fleche.update()
-    }
-    
+    }    
 
     updateHealth(){
+        /* Mise à jour de la barre de vie */
         this.bar=game.scene.getScene("INTERFACE").healthbar
         for(var i =0; i< this.joueurs.length; i++){
             if (this.bar.value != this.energies[i]){
@@ -306,24 +287,7 @@ export class GameScene extends Phaser.Scene{
                     this.joueurs[i].alive= false
                 }
             }
-        }
-
-        /*const e= new Date();
-        this.secondes_passe=e.getTime()/1000-this.timestamp_ini;
-
-        this.diff=parseInt(this.secondes_passe-this.last_update);
-        if (this.diff>=1) {
-            /*for(var nj = 0; nj < this.joueurs.length;nj++){
-                this.joueurs[nj].damage(this.diff*0,1);
-            }*/
-           /* this.mainplayer.damage(-(this.diff*0.1));
-            this.last_update=this.secondes_passe;
-
-        }*/
-    
-    
-        
-        
+        }    
     }
 
     resize(gameSize,baseSize,displaySize,resolution){
