@@ -3,6 +3,7 @@ import random
 class Gameplay:
     
 
+    
 
     def calcul_vie(self):#on ajoutera ici tous les types de dommages
         t=time.time()
@@ -46,10 +47,10 @@ class Gameplay:
             #self.unit.test_nourriture(self)
         
     def addWood(self):
-        self.wood+=random.randint(5,15)
+        self.wood+=random.randint(self.addwood_min,self.addwood_max)
 
     def addFood(self):
-        self.food+=random.randint(20,40)
+        self.food+=random.randint(self.addfood_min,self.addfood_max)
         if self.food>self.food_init:
             self.food=self.food_init
         

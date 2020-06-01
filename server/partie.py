@@ -254,8 +254,11 @@ class Partie(Gameplay):
             for i in range(len(self.map.mapObjects)):
                 #if self.dist2(joueur.body,self.map.mapObjects[i])< 2500:
                 if self.map.mapObjects[i].name in ["arbre1","arbre2"]:
-                    if self.collisionAABB(bigHitbox,self.map.mapObjects[i]): 
-                        self.addWood()
+                    if self.collisionAABB(bigHitbox,self.map.mapObjects[i]):
+                        if self.map.mapObjects[i].name=="arbre1":
+                            self.addFood()
+                        if self.map.mapObjects[i].name=="arbre2":
+                            self.addWood()
                         toremove = i
             if toremove != -1:
                 #self.map.mapObjects.pop(toremove)

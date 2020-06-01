@@ -299,7 +299,8 @@ export class GameScene extends Phaser.Scene{
     
 
     updateHealth(){
-        for(var i =0; i< this.joueurs.length; i++){
+        console.log(this.energies[this.numero])
+        for(var i=0; i< this.joueurs.length; i++){
             if (this.energies[i] === 0){
                     this.joueurs[i].alive = false
                 }
