@@ -34,5 +34,6 @@ ou
 entrer l'URL http://addresseip:port
 
 PS : Si votre serveur possede déjà un serveur http il peut être opportun de rediriger un port vers celui de l'application.
-Par exemple sur un serveur apache dans le fichier de configuration httpd.conf:
-`ProxyPass /path/to/koopt/repository/server http://adresseip.com:port`
+Par exemple sur un serveur apache, on peut ajouter dans le fichier de configuration httpd.conf:
+
+`ProxyPass /path/to/koopt/repository/server http://adresseip:port`
