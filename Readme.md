@@ -23,12 +23,12 @@ Utilisation
 > Lancer le client dans le navigateur : 
 entrer l'URL http://localhost:8000
 
-### Executer à une ip et un port précis
-> Executer la commande suivante(le port par défaut est 8000) : 
+### Executer sur une ip et un port précis
+> Executer la commande suivante (le port par défaut est 8000) : 
 
-`$ cd server; python3 ./main.py --ip addresseip`
+`$ cd server; python3 ./main.py --ip adresseip`
 ou
-`$ cd server; python3 ./main.py --ip addresseip:port`
+`$ cd server; python3 ./main.py --ip adresseip:port`
 
 > Lancer le client dans le navigateur : 
 entrer l'URL http://addresseip:port
