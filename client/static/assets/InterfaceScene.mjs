@@ -149,7 +149,6 @@ foodAnimation(x,y){
 }
 updateEnd(){
     this.cas=game.scene.getScene("GAME").end
-    this.joueur=game.scene.getScene("GAME").mainplayer
     if (this.cas===0){//en cours
         return
     }
@@ -157,7 +156,6 @@ updateEnd(){
         this.add.text(game.config.width / 2, game.config.height / 2, 'GAME OVER', { fontSize: '32px', fill: '#fff' });
     }
     if (this.cas==2){
-        if (this.joueur.alive===true){//ne fonctionne surement pas (pb d'exportation de variable je pense)
         this.add.text(game.config.width / 2, game.config.height / 2, 'CONGRATULATIONS', { fontSize: '32px', fill: '#fff' });
         }
         else{
