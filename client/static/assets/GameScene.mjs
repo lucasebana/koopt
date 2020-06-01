@@ -299,13 +299,10 @@ export class GameScene extends Phaser.Scene{
     
 
     updateHealth(){
-        this.bar=game.scene.getScene("INTERFACE").healthbar
         for(var i =0; i< this.joueurs.length; i++){
-            if (this.bar.value != this.energies[i]){
-                if (this.bar.value === 0){
-                    this.joueurs[i].alive= false
+            if (this.energies[i] === 0){
+                    this.joueurs[i].alive = false
                 }
-            }
         }
 
         /*const e= new Date();
