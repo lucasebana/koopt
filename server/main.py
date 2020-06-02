@@ -7,7 +7,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--ip", help="Adresse IP du serveur de jeu")
     args = parser.parse_args()
-    if(args.ip.find(":") == -1):
+    if (args.ip == None or args.ip.find(":") == -1 ): # ! ou associatif à gauche
         s = Server(args.ip);
     else:
         ind = args.ip.find(":")
