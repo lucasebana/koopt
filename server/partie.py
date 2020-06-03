@@ -55,7 +55,7 @@ class Partie(Gameplay):
 
         #variables de GAMEPLAY
         self.damage=-100#dommage pour les coups
-        self.tree_damage=-100#dommage pour les arbres
+        self.tree_damage=-50#dommage pour les arbres
         self.distance_coups=2500
         self.food_init=500
         self.food=100*5
@@ -504,7 +504,7 @@ class Partie(Gameplay):
         indexGridY = int(deplacementY.y//(self.map.width//self.map.gridSize*self.map.tileh))
         indexGridX = int(deplacementY.x//(self.map.height//self.map.gridSize*self.map.tilew))
         
-
+        #on choisit uniquement les grilles pour 
         gridStartX = max(0,indexGridX-1)
         gridEndX = min(self.map.gridSize-1,indexGridX+1)
         gridStartY = max(0,indexGridY-1)
