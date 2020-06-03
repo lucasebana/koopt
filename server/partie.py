@@ -273,9 +273,6 @@ class Partie(Gameplay):
         if self.framecount==self.frame_fleche:
             self.joueurs[randint(0,len(self.joueurs)-1)].hasAmmo=True
 
-            
-
-
 
     async def load_sync(self):  
         '''methode envoyant aux clients tt les données du jeu à l'initialisation du client'''

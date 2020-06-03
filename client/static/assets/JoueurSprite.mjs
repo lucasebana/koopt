@@ -397,7 +397,7 @@ export class JoueurSprite extends Phaser.Physics.Arcade.Sprite {
             }
             
         }
-        this.textname.setPosition(this.x - this.textname.width/2, this.y + this.height + 5)
+        this.textname.setPosition(this.x - this.textname.width/2 + 30, this.y + this.height + 5)
         if (this.playable){
             this.controlPlayer(scene);
             this.attack();
