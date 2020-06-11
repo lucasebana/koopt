@@ -155,14 +155,10 @@ updateEnd(){
     if (this.cas===1){//défaite
         this.add.text(game.config.width / 2, game.config.height / 2, 'GAME OVER', { fontSize: '32px', fill: '#fff' });
     }
-    if (this.cas==2){
+    if (this.cas===2){
         this.add.text(game.config.width / 2, game.config.height / 2, 'CONGRATULATIONS', { fontSize: '32px', fill: '#fff' });
         }
-        else{
-            this.add.text(game.config.width / 2, game.config.height / 2, 'TOO BAD...', { fontSize: '32px', fill: '#fff' });
-        }
     }
-}
 
 function onWoodCompleteHandler(tween,targets,sprite){
     sprite.setActive(false).setVisible(false)

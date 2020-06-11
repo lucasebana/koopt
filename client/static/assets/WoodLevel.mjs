@@ -26,6 +26,7 @@ export class WoodLevel extends Phaser.Physics.Arcade.Sprite{
 
 
     draw(){
+        
         this.textname = this.place.add.text(this.x+10,this.y+20, this.value, 
             { font: '16px Courier', fill: '#FFFFFF', backgroundColor:"#000000", align:'center'}
             );

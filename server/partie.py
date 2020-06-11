@@ -562,7 +562,7 @@ class Partie(Gameplay):
                 if self.joueurs[i].alive:
                     bl=False
                 i+=1
-            if i==len(self.joueurs)-1 and bl:
+            if bl:
                 self.end=True
                 self.cas=1
 
