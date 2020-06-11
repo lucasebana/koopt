@@ -64,6 +64,15 @@ canvas{
     text-align:center;
 }
 
+
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300&display=swap');
+
+
+*{
+    font-family: 'Source Sans Pro', sans-serif !important;
+}
+
+
 .home img{
     width:100%;
 }
@@ -97,4 +106,30 @@ canvas{
     margin:30px auto;
     width:150px;
     height:50px;
+}
+
+.lobby{
+    top:40%;
+    font-size:17px;
+}
+
+.start_btn{
+    width:150px;
+    height:50px;
+}
+
+.lobby_title{
+    margin-top:30px;
+    margin-bottom: 10px;
+    font-size:20px;
+    font-weight:bold;
+}
+
+.kb{
+    color:rgb(240,10,10);
+    font-weight:bold;
+}
+
+.u{
+    text-decoration: underline;
 }

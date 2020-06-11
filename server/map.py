@@ -19,10 +19,17 @@ class Map:
 
     changedObjects = []
 
+    gridSize = 20
+
+    
+
+
     def __init__(self,src):
+        self.grid = [[[] for j in range(self.gridSize)] for i in range(self.gridSize)]
         self.src = src
 
         self.load(src)
+        
         pass
 
     def load(self,src):
@@ -52,7 +59,12 @@ class Map:
                 x = (i % self.width)*self.tileh
                 h = self.tileh
                 w = self.tilew
-                self.collisionObjects.append(Rect2(x,y,h,w))
+                col = Rect2(x,y,h,w)
+                self.collisionObjects.append(col)
+
+                indexGridY = y//(self.width//self.gridSize*self.tileh)
+                indexGridX = x//(self.height//self.gridSize*self.tilew)
+                self.grid[indexGridY][indexGridX].append(col)
         
     def setObjects(self):
         #pour l'instant les seuls objets sont des arbres...
@@ -68,7 +80,12 @@ class Map:
                     self.objectype[t].append(i)
                     obj = self.objetstiled[i]
                     datasprite = ds = self.dataObjects["frames"][t]["spriteSourceSize"] #infos relatives à la hitbox
-                    self.mapObjects.append(Object(obj["name"],obj["id"],obj["x"],obj["y"],ds["h"],ds["w"],ds["x"],+ds["y"]))
+                    hitbox = Object(obj["name"],obj["id"],obj["x"],obj["y"],ds["h"],ds["w"],ds["x"],+ds["y"])
+                    self.mapObjects.append(hitbox)
+
+                    indexGridY = obj["y"]//(self.width//self.gridSize*self.tileh)
+                    indexGridX = obj["x"]//(self.height//self.gridSize*self.tilew)
+                    self.grid[indexGridY][indexGridX].append(hitbox)
     
     def changeObjectTo(self,object,str):
         datasprite = ds = self.dataObjects["frames"][str]["spriteSourceSize"] #infos relatives à la hitbox
