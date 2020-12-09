@@ -44,4 +44,4 @@ Par exemple sur un serveur apache, on peut ajouter dans le fichier de configurat
     ProxyPass  http://adresseip:port
     ProxyPassReverse  http://adresseip:port
 </Location>
-
+`
